@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+	<title>Document</title>
+	<script src="./js/react.min.js"></script>
+	<script src="./js/react-dom.min.js"></script>
+	<script src="./js/babel.min.js"></script>
+</head>
+<body>
+	<div id="example">
+		
+	</div>
+</body>
+<script type="text/babel">
+	{/*
+		getDefaultProps设置组件属性的默认值,是一个函数,返回一个对象,对象内写属性名和方法
+	*/}
+
+	var Test = React.createClass({
+		getDefaultProps(){
+			return {
+				name: 'xiaohai'
+			};
+		},
+		render(){
+			return <div>{this.props.name}</div>
+		}
+	});
+
+	ReactDOM.render(
+		<Test />,
+		document.getElementById('example')
+	)
+</script>
+
+</html>

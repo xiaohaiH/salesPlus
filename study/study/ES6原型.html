@@ -1,0 +1,192 @@
+<!doctype html>
+
+<html>
+<head></head>
+<body>
+	<pre>
+		splice在第三个参数前加三个英文句号是将添加的数组拆解为单个数字并添加进去
+		例如:
+		var arr = [1,2];
+		var arr2 = [3,4,5];
+		初始:
+			arr.splice(arr.length,0,arr2);///[1,2,Array[3]].
+		加上三个点后:
+			arr.splice(arr.length,0,...arr2);///[1, 2, 3, 4, 5].
+	</pre>
+</body>
+<!-- 本页面分 构造函数(class)基本语法 和 class(构造函数)的继承两个script标签 -->
+<!-- <script>///class的解释说明和实例.
+	/*
+		1.	ES6中的类必须要用new来声明,直接使用会报错,跟ES5的构造函数有所区别
+		2.	ES6的语法:用class声明类,构造函数和原型都写在该方法内
+			construtor:代表构造函数
+			跟construtor同级的代表是该对象的原型  注: 方法之间不用加逗号(,)分隔,否则会报错
+		3.	ES6中是没有私有方法的
+				(1)默认是在方法 前加上(_)下划线来代表私有属性
+				(2)在外部定义方法,然后通过call改变this指向添加私有属性
+				(3)利用Symbol值的唯一性,将私有方法的名字命名为Symbol值.
+		4.	name属性: 返回紧跟在class关键字后面的类名
+		5.	static: 在方法前加上static关键字,表示该方法不会被实例继承,而是直接通过类来调用,称为'静态方法',可以被继承.
+		6.	Class的静态属性: 用等号赋值,在关键词前面加上static,分内部定义(提案中ES6)和外部定义
+		7.	new.target: 用于构造函数中,返回new命令作用于的函数,如果不是通过new命令调用的,返回undefined.
+
+		注: 构造函数未声明时,系统默认会生成一个空的构造函数.
+	*/
+
+	const test = Symbol('test');
+	const test2 = Symbol('test2');
+
+	class Point {
+		/* 内部定义静态属性 */
+		// static stateTest = 55;
+
+		constructor(x, y) {
+			this.x = x;
+			this.y = y;
+			// console.log(Point.name);
+
+		/* new.target属性 */
+		 console.log(new.target.name);
+		}
+		/* 公共属性 */
+		toString () {
+			return '(' + this.x + ', ' + this.y + ')';
+		}
+		/* 私有属性 */
+		_toString () {
+			ownone.call(this,123)
+			return '(' + this.x + ', ' + this.y + ')';
+		}
+		/* 利用symbol的唯一性将其作为私有方法 */
+		[test](x){
+			return this[test2] = x;
+		}
+
+
+
+		/* ES6存值和取值 */
+		get setTest (){
+			return this.val
+		}
+		set setTest (value) {
+			this.val = value;
+		}
+
+		/* 静态方法-static */
+		static setStatic(){
+			return 123;
+		}
+
+	}
+
+	function ownone(x){
+		return this.aaa = x;
+	}
+	console.log(new Point(1,2).toString());
+
+	console.log(Point.name);
+
+	/* 静态方法调用 */
+	console.log(Point.setStatic());
+	// console.log(new Point().setStatic())///错误调用.
+
+		/* 外部定义静态属性 */
+		Point.stateTest = 55;
+		console.log(Point.stateTest);
+
+		/* new.target */
+		function TargetTest(){
+			if(new.target === undefined){
+				throw new Error('请使用new来生成实例');
+			}else{
+				this.val = 123;
+			};
+		};
+		// console.log(new TargetTest());///使用了new 命令.
+		// console.log(TargetTest());///没有new 命令.
+</script> -->
+<script type="text/javascript">///class继承的解释说明和实例.
+	/*
+		1.	class通过extends关键字实现继承
+		2.	super: 
+				(1).当函数使用时,表示父类的构造函数,用来新建父类的this对象,只能放在子类的构造函数内 --- 子类是没有this对象的,必须调用super对象.
+				(2).当对象使用时,在普通方法中,指向父类的原型对象,在静态方法中,指向父类.
+		3.	Object.getPrototypeOf(构造函数): 通过该方法获取构造函数的父类
+
+		4.	__proto__: 
+				(1)子类的proto属性表示构造函数的继承,总是指向父类
+				(2)子类prototype的proto属性表示方法的继承,总是指向父类的prototype
+
+		5.对象继承扩展: 
+			(1)利用Object.setPrototypeOf()来实现继承,需要同时设置 构造函数 和 原型 -- 底部有实例.
+			(2)利用Object.create()来实现继承,需要同时设置 构造函数 和 原型,注: 要先声明原型相等,然后在声明实例相等 -- 底部有实例.
+	*/
+
+	class Point{
+		constructor(x,y){
+			this.x = x;
+			this.y = y;
+		}
+		
+		static toString(val){
+			console.log('这个是静态方法的值: ' + val);
+		}
+
+		toString(val){
+			console.log('这个是动态方法的值: ' + val);
+			return this.x + ' ' + this.y;
+		}
+	};
+
+	class ColorPoint extends Point{
+		constructor(x = 3,y = 5,color = 'blue'){
+			/* 此时super是当函数使用,代表父类的构造函数 */
+			super(x,y);
+			this.color = color;
+		}
+
+		static toString(val){
+			/* 此时的super当对象使用且在静态方法中,指向父类 */
+			super.toString(val);
+		}
+
+		toString(val){
+			/* 此时的super当对象使用且在普通方法中,指向父类的原型对象 --- Point.prototype.toString() */
+			// super.toString(val);
+			return this.color + ' ' + super.toString(val);
+		}
+	};
+	console.log(new ColorPoint(9,7,'red'));
+	/* 获取ColorPoint构造函数的父类 */
+	console.log(Object.getPrototypeOf(ColorPoint) === Point);
+
+  /* 静态方法调用 */
+	ColorPoint.toString(123);
+	/* 动态方法调用 */
+	new ColorPoint().toString(456);
+
+
+	/* __proto__ */
+	console.log(ColorPoint.__proto__ === Point);///子类的__proto__指向父类.
+	console.log(ColorPoint.prototype.__proto__ === Point.prototype);///子类原型的__proto__指向父类的原型.
+
+	/* 通过setPrototypeOf来实现继承,需要同时设置 prototype 和 构造函数 */
+	class A {};
+	class B {};
+	Object.setPrototypeOf(B.prototype,A.prototype);///使该构造函数的原型指向父类的原型.
+	Object.setPrototypeOf(B,A);///使该构造函数的实例指向与父类.
+	console.log(B.__proto__ === A,B.prototype.__proto__ === A.prototype);
+
+	/* 通过Object.create()来实现继承,需要同时设置 prototype 和 构造函数,注: 先声明原型,在声明实例 */
+	class C {};
+	let D = Object.create(C.prototype);
+	D = Object.create(C);
+	console.log(D.__proto__,D.prototype);
+	console.log(D.__proto__ === C,D.prototype === C.prototype);
+
+
+	var arr = [1,2];
+	arr.length -= 1;
+	console.log(arr);
+</script>
+</html>

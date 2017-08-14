@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./select2.min.css">
+    <script src="./jquery.min.js"></script>
+    <script src="./select2.full.min.js"></script>
+    <style>
+        select {
+            width: 5%;
+        }
+        
+        input {
+            display: inline-block;
+            width: auto!important;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 使select支持响应式布局.
+                在select标签中设置width:百分比,必须是行内样式,这样可以使其支持自适应布局 -->
+    <select style="width:100%">
+        <optionvalue="aa">fds</option>
+    </select>
+</body>
+<script>
+    /*  ///使select支持响应式布局.
+                    在select标签中设置width:百分比,必须是行内样式,这样可以使其支持自适应布局
+                */
+
+
+    ///设置默认选项.
+    $.fn.select2.defaults.set('theme', 'classic');
+
+
+    ///这个是设置清空默认选择项,显示placeholder.  当val中设置了参数时(参数本地数据为option的value值,自动添加时则为id值,其他值不生效),则自动添加该参数,多个以数组表示
+    $("select").select2().val('null').trigger("change");
+    // $("select").select2().val(['aa',1,2]).trigger("change");///这个是默认添加的值.
+
+    /// 添加自定义数据,通过data来添加,数组加对象的形式,默认数据属性的id和text.
+    ///启用添加自定义标签    tags: true.
+    ///启用多选    multiple: true.
+    ///启用可添加的最多数量   maximumSelectionLength: Number.
+    ///设置占位显示文字   placeholder: String.
+    ///隐藏搜索框   minimumResultsForSearch: Infinity.
+    var data = [{
+        id: 1,
+        text: '11111'
+    }, {
+        id: 2,
+        text: '2222'
+    }, {
+        id: 3,
+        text: '333333'
+    }, {
+        id: 4,
+        text: '44444'
+    }]
+    $('select').select2({
+        data: data,
+        tags: true,
+        multiple: true,
+        maximumSelectionLength: 10,
+        placeholder: 'testSelect',
+        allowClear: true,
+        minimumResultsForSearch: true,
+        minimumResultsForSearch: Infinity,
+        templateResult: tml
+    });
+
+    function tml(state) {
+        if (state.id) return state.text;
+        var $state = $(
+            '<span><img src="./1.png" class="img-flag" />' + state.text + '</span>'
+        );
+        return $state;
+    }
+
+    ///获取选中项    $("select").select2("data")[0] -> 单选
+    // $("select").select2("data") - > 多选
+
+    // var res = $("select").select2("data")[0]; //单选  
+    // var reslist = $("select").select2("data"); //多选
+    // if (res == undefined) {
+    //     alert("你没有选中任何项");
+    // }
+    // if (reslist.length) {
+    //     console.log(reslist)
+    // }
+
+    ///设置选项框是否可用.
+    // $("select").prop("disabled", false); ///可用.
+    // $("select").prop("disabled", true); ///不可用.
+</script>
+
+</html>

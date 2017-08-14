@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+	<title>Document</title>
+	<script src="./js/react.min.js"></script>
+	<script src="./js/react-dom.min.js"></script>
+	<script src="./js/babel.min.js"></script>
+</head>
+<body>
+	<div id="example">
+		
+	</div>
+</body>
+<script type="text/babel">
+	{/*
+
+	*/}
+	class Btn extends React.Component{
+		constructor(props){
+			super(props);
+			this.state = {
+				'flag': true,
+				two: 2,
+				three: 3
+			};
+				this.handleClick = this.handleClick.bind(this);
+			{/*
+				this.handleClick();
+			*/}
+		}
+
+		handleClick(){
+			this.setState((a,b,c) => {
+				console.log(a,b,c)
+			});
+			{/*
+			this.setState({'flag': !this.state.flag});
+				console.log(123)
+			*/}
+		}
+
+		render(){
+			return (
+				<button onClick={this.handleClick}>
+					{ this.state.flag ? 123 : 456 }
+				</button>
+			)
+		}
+	};
+	ReactDOM.render(
+		<Btn />,
+		document.getElementById('example')
+	);
+</script>
+
+</html>

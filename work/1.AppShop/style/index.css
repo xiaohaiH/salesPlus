@@ -1,0 +1,194 @@
+/* reset */
+
+p,
+li,
+ul,
+h3 {
+    margin: 0;
+    padding: 0;
+}
+
+li {
+    list-style: none;
+    line-height: normal;
+}
+
+
+/* 主体样式 */
+
+.main {
+    background: #F4F6F9;
+    /* margin:0 20px;
+    padding:0 15px; */
+}
+
+.main>.row {
+    margin: 0;
+    padding: 0;
+}
+
+
+/* 左侧导航样式 */
+
+.main .leftAside {
+    max-width: 300px;
+    padding: 0;
+    background: #F9F9F9;
+}
+
+.main .leftAside>ul>li>p {
+    padding: 1.1rem 0;
+    line-height: normal;
+    margin: 0;
+    color: #16325C;
+    border-top: 1px solid #EAEAEA;
+    border-bottom: 1px solid #EAEAEA;
+    padding-left: 20px;
+}
+
+.main .leftAside>ul>li>p>span {
+    font-size: 14px;
+    padding-right: 1rem;
+    padding-left: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    max-width: 80%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.main .leftAside>ul>li ul {
+    margin-left: 35px;
+    display: none;
+}
+
+.main .leftAside>ul>li ul li {
+    margin: 10px 0;
+    color: #16325C;
+    /* color: white; */
+    cursor: pointer;
+}
+
+.main .leftAside>ul>li ul li:hover {
+    color: #399DF0;
+}
+
+
+/* 导航栏激活样式 */
+
+.navActive {
+    background: #ccc;
+    border-radius: 5px;
+}
+
+
+/* 右侧主体内容样式 */
+
+.main .rightContent {
+    padding: 0;
+    border: 1px solid #E3E3E3;
+    border-left: 2px solid #E3E3E3;
+    /* text-align: center; */
+}
+
+.main .rightContent>h3 {
+    background: #F4F4F4;
+    padding: 1.1rem 0;
+    padding-left: 1rem;
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0;
+    border-bottom: 1px solid #E3E3E3;
+}
+
+.main .rightContent>h3 span {
+    font-size: 14px;
+}
+
+.main .rightContent>h3 i {
+    margin: 0 .4rem;
+}
+
+.main .rightContent .productBox {
+    padding: 0 15px;
+}
+
+.main .rightContent .productBox figure {
+    position: relative;
+    background: #F4F6F9;
+    z-index: 3;
+    margin-top: 1rem;
+}
+
+.main .rightContent .productBox figure figcaption {
+    background: white;
+    text-align: center;
+    font-size: 1.4rem;
+    padding-top: 1rem;
+}
+
+
+/* 设置免费和安装图标的颜色 */
+
+.main .rightContent .productBox figure figcaption p:nth-of-type(1) span {
+    color: white;
+    line-height: 20px;
+    padding: 0 1rem;
+    border-radius: 6px;
+    font-size: 12px;
+    margin-bottom: 6px;
+    text-shadow: 1px 1px 1px #666;
+}
+
+.free {
+    background: #12B7F5;
+}
+
+.charge {
+    background: #F66375;
+}
+
+.install {
+    background: #049BAF;
+}
+
+.notInstall {
+    background: #BBBBBB;
+}
+
+.main .rightContent .productBox figure figcaption p:nth-of-type(1) span:nth-of-type(1) {
+    margin-left: 12px;
+}
+
+.main .rightContent .productBox figure figcaption p:nth-of-type(1) span:nth-of-type(2) {
+    margin-right: 12px;
+}
+
+.main .rightContent .productBox figure figcaption p:nth-of-type(2) {
+    line-height: 32px;
+    border-top: 1px solid #EEEEEE;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* 翻页按钮样式 */
+
+.main .rightContent>.pageBtn {
+    text-align: center;
+    margin: 3rem 0;
+}
+
+.main .rightContent>.pageBtn button {
+    background-color: #A7B1C2;
+    border-color: #A7B1C2;
+    padding: 10px 30px;
+    outline: none;
+}
+
+.main .rightContent>.pageBtn button:nth-of-type(1) {
+    margin-right: 10rem;
+}

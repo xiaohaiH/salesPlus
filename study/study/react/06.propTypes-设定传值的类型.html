@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+	<title>Document</title>
+	<script src="./js/react.min.js"></script>
+	<script src="./js/react-dom.min.js"></script>
+	<script src="./js/babel.min.js"></script>
+</head>
+<body>
+	<div id="example">
+		
+	</div>
+</body>
+<script type="text/babel">
+	///组件的属性可以接受任意值，字符串、对象、函数等等都可以。有时，我们需要一种机制，验证别人使用组件时，提供的参数是否符合要求。.
+
+	{/*
+		propTypes可以有如下类型
+			array	-> 数组
+			bool	-> 布尔值
+			func	-> 函数
+			number	-> 数字
+			object	-> 对象
+			string	-> 字符串
+			symbol	-> symbol对象
+  	*/}
+
+
+	var userName = 'xiaohai';
+
+	var Test = React.createClass({
+		propTypes: {
+			name: React.PropTypes.string.isRequired
+		},
+		render(){
+			return <div>{this.props.name}</div>
+		}
+	});
+
+	ReactDOM.render(
+		<Test name={userName} />,
+		document.getElementById('example')
+	);
+</script>
+
+</html>

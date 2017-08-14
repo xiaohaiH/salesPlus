@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+	<title>Document</title>
+	<script src="./js/react.min.js"></script>
+	<script src="./js/react-dom.min.js"></script>
+	<script src="./js/babel.min.js"></script>
+</head>
+<body>
+	<div id="example">
+		
+	</div>
+</body>
+<script type="text/babel">
+	{/*
+		state: 状态改变机制,当状态发生改变时,render函数会自动调用.
+			props和state都用于描述组件,区别是this.props表示一旦定义,就不在改变的特性,而this.state会随着用户互动而发生改变.
+		getInitialState()函数返回一个对象,对象内设置初始的state;
+		
+		通过setState函数来更改state的值.
+	*/}
+
+	var Test = React.createClass({
+		getInitialState(){
+			return {
+				liked: 'false'
+			}
+		},
+		handleClick(){
+			this.setState({liked: !this.state.liked})
+		},
+		render(){
+			var textStatus = this.state.liked ? 'like' : 'don\'t like';
+			return (<div>
+				<p onClick={this.handleClick}>click this toggle {textStatus}</p>
+			</div>)
+		}
+	});
+	ReactDOM.render(
+		<Test></Test>,
+		document.getElementById('example')
+	)
+</script>
+
+</html>

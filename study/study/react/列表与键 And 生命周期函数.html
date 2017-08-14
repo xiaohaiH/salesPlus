@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="./js/react.js"></script>
+  <script src="./js/react-dom.js"></script>
+  <script src="./js/babel.min.js"></script>
+</head>
+
+<body>
+  <div>这个是循环遍历需通过设置key的例子</div>
+  <div id="root" style="margin:20px 0 0 60px;"></div>
+  <div>这个是生命周期函数的例子,props传值写了一句</div>
+  <div id="example" style="margin:20px 0 0 60px;"></div>
+
+</body>
+<script type="text/babel">
+  {/* 通过循环遍历获得的dom元素必须要设置key值,值在当前盒子中必须是唯一的 */}
+  function ListItem (props){
+    return <li>{props.value}</li>
+  };
+  function NumberList(props) {
+    const numbers = props.numbers;
+
+    return (
+      <ul>
+        {numbers.map((number) =>
+          <ListItem key={number.toString()} value={number} />
+        )}
+      </ul>
+    );
+  };
+  var arr = [1,2,3,4,5,6,7]
+  ReactDOM.render(
+    <NumberList numbers={arr} />,
+    document.getElementById('root')
+  );
+
+
+
+  {/* state中值如果是数组,想push数据进去可以这样写,但是这句话里面只能写这个方法,不能增加或修改其他的值,正常写法是可以的  ---->  this.setState((props)=>{{a:this.state.a.push('+1')}}); */}
+
+
+
+
+
+
+
+
+
+
+
+
+  function AABB(props){
+    return (<div onClick={props.onClick}>{props.ss}{props.aa}</div>)
+  }
+
+  class B extends React.Component{
+    constructor(props){
+      super(props);
+      this.state = {a: [123,456,789],b: 3444};
+      this.abc = this.abc.bind(this);
+    };
+    
+    abc(){
+      this.setState((props) => {
+        {
+          a: this.state.a.push('+1')
+        }
+      });
+    }
+
+    render(props){
+      return (<AABB ss={this.props.ss} onClick={this.abc} aa={this.state.a} />)
+      // return (<div ss='aaa' onClick={this.abc}> {console.log(props)} {this.state.a}  </div>)
+    }
+
+    // {/* 在页面渲染前运行 */}
+    componentWillMount(){
+      console.log('这是第一个,页面未渲染之前运行',this.state.a)
+    }
+
+    // {/* 在页面渲染完成后运行 */}
+    componentDidMount(){
+      console.log('这是第二个,页面渲染之后运行',this.state.a)
+    }
+
+    // {/* 在数据更新之前运行 */}
+    componentWillUpdate(a,b){
+      console.log('这是在数据更新前运行',this.state.a,this.state,a,b);
+    }
+
+    // {/* 在数据更新之后运行 */}
+    componentDidUpdate(a,b){
+      console.log('这是在数据更新后才运行',this.state.a,this.state,a,b)
+    }
+
+    // {/* 组件判断是否重新渲染时调用,必须有返回值,返回true则更新,返回false则不更新 */}
+    shouldComponentUpdate(a,b){
+      console.log(a,b, 'state值进行更改,是否同意=============');
+      return true;
+    }
+
+
+  };
+  ReactDOM.render(
+    <B ss='afda' />,
+    document.getElementById('example')
+  )
+
+
+
+
+
+</script>
+</html>

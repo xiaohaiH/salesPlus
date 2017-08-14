@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+	<title>Document</title>
+	<script src="./js/react.min.js"></script>
+	<script src="./js/react-dom.min.js"></script>
+	<script src="./js/babel.min.js"></script>
+</head>
+<body>
+	<div id="example">
+		
+	</div>
+</body>
+<script type="text/babel">
+	{/*
+		生命周期函数:参考链接(http://blog.csdn.net/u010945409/article/details/72874601)
+
+			getDefaultProps() -> 设置组件属性的默认值
+			getInitialState() -> 在组件加载之前调用一次,返回值作为this.state的初始值
+			componentWillMount() -> 在完成首次渲染之前调用
+			componentDidMount() -> 真实的DOM被渲染出来后调用
+
+			componentWillReceiveProps() -> 组件接收到新的props时调用,并将其作为参数nextProps使用
+			componentWillUpdate() -> 接受到新的props或者state后,进行渲染之前调用
+			componentDidUpdate() -> 完成渲染新的props或者state调用,此时可以访问到新的DOM元素
+			componentWillUnmount() -> 组件被移除之前调用,可以做一些清理工作,在conponentDidMount方法中添加的所有任务都需要在该方法中撤销
+
+		通过this下的refs来获取真实的dom节点
+	*/}
+
+	var Test = React.createClass({
+		componentDidMount(){
+			this.handleClick();
+		},
+		handleClick(){
+			console.log(this.refs.myText)
+			this.refs.myText.value = '我获取并更改了真实dom下的input的内容'
+		},
+		render(){
+			return (
+				<div>
+					<input ref='myText' />
+					<p><input /></p>
+				</div>
+			)
+		}
+	});
+	ReactDOM.render(
+		<Test />,
+		document.getElementById('example')
+	);
+</script>
+
+</html>

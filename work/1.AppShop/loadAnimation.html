@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<script src="./jquery.min.js"></script>
+	<style type="text/css">
+	html{
+		height:100%;
+	}
+		body{
+			background: #607D8B;
+			height:100%;
+		}
+	</style>
+</head>
+<body>
+	<div id="root"></div>
+</body>
+
+<script type="text/javascript">
+	function LoadAnimation(obj){///el: 代表包裹进度条的盒子,num: 进度条的数量,  width(可选): 进度条的宽度,height(可选): 进度条的高度,background(可选): 进度条的背景,transition(可选): 进度条的运动时间.
+
+		!(obj.num)&&(obj.num = 5);
+		!(obj.width)&&(obj.width = '10px');
+		!(obj.height)&&(obj.height = '50px');
+		!(obj.background)&&(obj.background = 'white');
+		!(obj.transition)&&(obj.transition = 'all .3s');
+
+		var self = this;
+		var el = $(obj.el).css({'position':'relative','height': '100%'}).append('<div />').children('div').css({
+			'width': (parseInt(obj.width) + 10) * parseInt(obj.num) ,
+			'height': obj.height,
+			'position': 'absolute',
+			'left': 0,
+			'right': 0,
+			'top': 0,
+			'bottom': parseInt(obj.height) / 2 + 'px',
+			'margin': 'auto'
+		});
+		for(var i=0;i<obj.num;i++){
+			el.append('<div />');
+		};
+		el.children('div').css({
+			'width': obj.width,
+			'height': obj.height,
+			'background': obj.background,
+			'transition': obj.transition,
+			'float': 'left',
+			'margin-right': '10px',
+		});
+		this.num = -1;
+		var timer = setInterval(function(){
+			self.shrink(obj,el)
+		},100);
+	};
+	LoadAnimation.prototype.shrink = function (obj,el){
+		el.children('div:eq(' + (this.num = (this.num + 1) % obj.num) + ')').css({'transform': 'scale(0)'});
+		(function(num){
+			setTimeout(function (){
+				el.children('div:eq(' + num + ')').css({'transform': 'scale(1)'});
+			},1500)
+		}(this.num));
+	};
+	var loadAnimation = new LoadAnimation({el: $('#root'),num: 10,height: '100px',background: '#A0B1B9'});
+</script>
+</html>

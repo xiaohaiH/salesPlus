@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+	<title>Document</title>
+	<script src="./js/react.min.js"></script>
+	<script src="./js/react-dom.min.js"></script>
+	<script src="./js/babel.min.js"></script>
+</head>
+<body>
+	<div id="example">
+		
+	</div>
+</body>
+<script type="text/babel">
+///this.props 对象的属性与组件的属性一一对应，但是有一个例外，就是 this.props.children 属性。它表示组件的所有子节点.
+
+///this.props.children 的值有三种可能：如果当前组件没有子节点，它就是 undefined ;如果有一个子节点，数据类型是 object ；如果有多个子节点，数据类型就是 array .
+
+
+	var Hello = React.createClass({
+		render(){
+			return (<div>
+			{React.Children.map(this.props.children,function(first,two){
+				console.log({first},{two})
+			})}
+			</div>)
+		}
+	});
+	ReactDOM.render(
+		<Hello name='XiaoHaiDong'>
+			<ul>
+				<li>第一个</li>
+				<li>第二个</li>
+			</ul>
+			<ul>
+				<li>第一个</li>
+				<li>第二个</li>
+			</ul>
+		</Hello>,
+		document.getElementById('example')
+	);
+</script>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+    <title>input实例--温度计</title>
+    <script src="./js/react.js"></script>
+    <script src="./js/react-dom.js"></script>
+    <script src="./js/babel.min.js"></script>
+</head>
+
+<body>
+    <div id="example">
+
+    </div>
+</body>
+<script type="text/babel">
+  /* 这个是将温度在华氏和摄氏两种单位之间转换的 */
+  function UnitConvert({unit,temperature}={}){
+    if(unit == 'fahrenheit'){
+      return (temperature * 9 / 5) + 32;
+    };
+    return (temperature - 32) * 5 / 9;
+  };
+  
+  /* 判断温度是否达标的显示 */
+  function WaterTemperatureSatisfy (props){
+    if(props.condition.fahrenheit >= 212 || props.condition.celsius >= 100){
+      return <div>水温达标了</div>
+    };
+    return <div>水温低于100度</div>
+  };
+
+  class ImportTemperature extends React.Component{
+    constructor(props){
+      super(props);
+      this.state = {
+        fahrenheit: '',
+        celsius: ''
+      };
+      this.ImportFahrenheit = this.ImportFahrenheit.bind(this);
+      this.ImportCelsius = this.ImportCelsius.bind(this);
+    }
+
+    /* 这个是输华氏的时候转换摄氏的温度 */
+    ImportFahrenheit(e){
+      this.setState({
+        fahrenheit: e.target.value,
+        celsius: UnitConvert({unit: 'celsius',temperature: e.target.value})
+      });
+    }
+
+    /* 这个是输摄氏的时候转换华氏的温度 */
+    ImportCelsius(e){
+      this.setState({
+        fahrenheit: UnitConvert({unit: 'fahrenheit',temperature: e.target.value}),
+        celsius: e.target.value
+      });
+    }
+
+    render(){
+      return (
+        <div>
+          <WaterTemperatureSatisfy condition={this.state} />
+          <input type='number' name='celsius' onChange={this.ImportCelsius} value={this.state.celsius} />
+          <br />
+          <input type='number' name='fahrenheit' onChange={this.ImportFahrenheit} value={this.state.fahrenheit} />
+        </div>
+      );
+    }
+  };
+  ReactDOM.render(
+    <ImportTemperature />,
+    document.getElementById('example')
+  );
+</script>
+</html>

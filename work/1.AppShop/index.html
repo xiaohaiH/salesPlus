@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./style/bootstrap.min.css">
+    <script src="./js/jquery.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="./style/index.css">
+    <style>
+        html {
+            height: 100%;
+        }
+        
+        body {
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 主体内容 -->
+    <div class="main container-fuild clearfix abcd">
+        <!-- 左侧导航栏 -->
+        <div class=" row">
+            <div class="leftAside col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                <ul></ul>
+            </div>
+            <!-- 右侧主体内容 -->
+            <div class="rightContent col-xs-10 col-sm-10 col-md-10 col-lg-10"></div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            var self = this;
+            new LoadAnimation({
+                el: $('.abcd'),
+                num: 10,
+                height: '100px',
+                background: '#A0B1B9'
+            });
+            var removeNum = 0;
+            /* 请求左边的数据 */
+            $.ajax({
+                url: 'http://easy-mock.com/mock/5982ebe4a1d30433d8525a35/example/leftNav/data',
+                data: '',
+                type: 'POST',
+                success: function(data) {
+                    /* 当数据请求完成后删除出场动画 */
+                    ++removeNum;
+                    if (removeNum === 2) {
+                        $('.loadAnimationBox').remove();
+                    };
+                    var leftAside = new LeftAside(data);
+                },
+                error: function(one, two) {
+                    console.log(one, two)
+                }
+            });
+            /* 请求右边的数据 */
+            $.ajax({
+                url: 'http://easy-mock.com/mock/5982ebe4a1d30433d8525a35/example/rightContent/all',
+                data: '',
+                type: 'POST',
+                success: function(data) {
+                    ++removeNum;
+                    if (removeNum === 2) {
+                        $('.loadAnimationBox').remove();
+                    };
+                    var rightContent = new RightContent(data, 'http://easy-mock.com/mock/5982ebe4a1d30433d8525a35/example/rightContent/all')
+                },
+                error: function(one, two) {
+                    console.log(one, two)
+                }
+            });
+        });
+        /* 模拟数据 */
+        var obj = {
+            leftAside: [{
+                title: '所有应用',
+                content: ""
+            }, {
+                title: '行业',
+                content: [{
+                    val: '互联网',
+                    productRequest: 'http://easy-mock.com/mock/5982ebe4a1d30433d8525a35/example/rightContent/single'
+                }, {
+                    val: '电子商务',
+                    productRequest: 'http://easy-mock.com/mock/5982ebe4a1d30433d8525a35/example/rightContent/single'
+                }, {
+                    val: '服务商',
+                    productRequest: 'http://easy-mock.com/mock/5982ebe4a1d30433d8525a35/example/rightContent/single'
+                }, {
+                    val: '自动刷新',
+                    productRequest: 'http://easy-mock.com/mock/5982ebe4a1d30433d8525a35/example/rightContent/single'
+                }]
+            }, {
+                title: '类目',
+                content: [{
+                    val: '手机',
+                    productRequest: 'http://easy-mock.com/mock/5982ebe4a1d30433d8525a35/example/rightContent/all'
+                }, {
+                    val: 'iPad',
+                    productRequest: 'http://easy-mock.com/mock/5982ebe4a1d30433d8525a35/example/rightContent/all'
+                }, {
+                    val: 'apple',
+                    productRequest: 'http://easy-mock.com/mock/5982ebe4a1d30433d8525a35/example/rightContent/all'
+                }, {
+                    val: '台式机',
+                    productRequest: 'http://easy-mock.com/mock/5982ebe4a1d30433d8525a35/example/rightContent/all'
+                }, {
+                    val: '一体机',
+                    productRequest: 'http://easy-mock.com/mock/5982ebe4a1d30433d8525a35/example/rightContent/all'
+                }, {
+                    val: '手提电脑',
+                    productRequest: 'http://easy-mock.com/mock/5982ebe4a1d30433d8525a35/example/rightContent/all'
+                }]
+            }, {
+                title: '自定义',
+                content: [{
+                    val: '手机',
+                    productRequest: 'http://easy-mock.com/mock/5982ebe4a1d30433d8525a35/example/rightContent/all'
+                }, {
+                    val: 'iPad',
+                    productRequest: 'http://easy-mock.com/mock/5982ebe4a1d30433d8525a35/example/rightContent/all'
+                }, {
+                    val: 'apple',
+                    productRequest: 'http://easy-mock.com/mock/5982ebe4a1d30433d8525a35/example/rightContent/all'
+                }, {
+                    val: '台式机',
+                    productRequest: 'http://easy-mock.com/mock/5982ebe4a1d30433d8525a35/example/rightContent/all'
+                }, {
+                    val: '一体机',
+                    productRequest: 'http://easy-mock.com/mock/5982ebe4a1d30433d8525a35/example/rightContent/all'
+                }, {
+                    val: '手提电脑',
+                    productRequest: 'http://easy-mock.com/mock/5982ebe4a1d30433d8525a35/example/rightContent/all'
+                }]
+            }]
+        };
+        /* 左侧导航栏 */
+        function LeftAside(obj) {
+            var $leftAside = $('.leftAside').find('ul');
+            $.each(obj, function(i, data) {
+                var $li = $('<li></li>').attr('class', 'topNavBox clearfix').appendTo($leftAside);
+                $li.append('<p></p>').find('p').append('<span></span>').attr({
+                    'class': 'clearfix topNav',
+                    'triangle': 'true'
+                }).find('span:nth-of-type(1)').attr('class', 'pull-left').html(data.title);
+                /* 确认有子级菜单数据为真的时候在创建三角符号和子级菜单 */
+                var c = data.content.length == 1 && data.content[0].val == data.title;
+                if (!c) {
+                    $li.find('p').append('<i />').find('i').addClass('caret');
+                    var $ul = $('<ul></ul>').appendTo($li).attr('class', 'clearfix');
+                    $.each(data.content, function(index, val) {
+                        $('<li></li>').appendTo($ul).html(val.val).attr({
+                            'class': 'secNav',
+                            'res': val.productRequest
+                        });
+                    });
+                } else {
+                    $li.addClass('gather');
+                };
+            });
+            /* 点击左侧导航请求数据 */
+            ///点击父类-无子级菜单.
+            $leftAside.on('click', 'li.gather', function(e) {
+                    if (!e) var e = window.event;
+                    e.stopPropagation();
+                    /* 保存点击元素的序号 */
+                    var TopNavIndex = $(this).index();
+                    $.ajax({
+                        url: obj[TopNavIndex].content[0].productRequest,
+                        data: '',
+                        type: 'POST',
+                        success: function(data) {
+                            $('.rightContent').children().remove();
+                            var rightContent = new RightContent(data, obj[TopNavIndex].content[0].productRequest);
+                        },
+                        error: function(one, two) {
+                            console.log(one, two)
+                        }
+                    });
+
+                })
+                ///点击子类.
+            $leftAside.on('click', 'li.secNav', function(e) {
+                    if (!e) var e = window.event;
+                    e.stopPropagation();
+                    /* 保存点击元素的序号 */
+                    $(this).parents('li').siblings().children('p').removeClass('navActive');
+                    $(this).parents('li').children('p').addClass('navActive')
+                    var TopNavIndex = $(this).parents('li:eq(0)').index();
+                    var SecIndex = $(this).index();
+                    $.ajax({
+                        url: obj[TopNavIndex].content[SecIndex].productRequest,
+                        data: '',
+                        type: 'POST',
+                        success: function(data) {
+                            $('.rightContent').children().remove();
+                            var rightContent = new RightContent(data, obj[TopNavIndex].content[0].productRequest);
+                        },
+                        error: function(one, two) {
+                            console.log(one, two)
+                        }
+                    });
+
+                })
+                /* 设置左侧初始被选中值的激活样式 */
+            $leftAside.find('p:eq(0)').addClass('navActive');
+
+            this.handleClickFlex();
+        };
+        /* 设置左侧导航点击收缩的功能 */
+        LeftAside.prototype.handleClickFlex = function() {
+            // var self = this;
+            var $topNavBox = $('.topNavBox');
+            $topNavBox.on('click', '.topNav', function() {
+                /* 设置三角形的旋转 */
+                var c = $(this).attr('triangle');
+                if (c == 'true') {
+                    $(this).find('i').css({
+                        'transition': 'transform .5s',
+                        'transform': 'rotate(180deg)'
+                    });
+                    $(this).attr('triangle', 'false');
+                } else {
+                    $(this).find('i').css({
+                        'transform': 'rotate(0deg)'
+                    });
+                    $(this).attr('triangle', 'true');
+                };
+                $topNavBox.find('p').removeClass('navActive');
+                $(this).addClass('navActive');
+                $(this).next().stop(false, false).slideToggle();
+            })
+        };
+
+        /* 右侧主体内容 */
+        /* 模拟数据 */
+        var objTwo = {
+            title: '所有应用',
+            total: 100,
+            const: 12,
+            start: 0,
+            content: [{
+                productName: '案例时间表1',
+                productImg: 'http://shop.salesnow.cn/upload/aplication/201706/1.jpg',
+                details: {
+                    productIntroduce: {
+                        title: '应用介绍',
+                        val: '查看案例保存的时间,大小等等123'
+                    },
+                    productNote: {
+                        title: '安装教程',
+                        val: ['安装步骤......', 1, 2, 3, 4, 5]
+                    },
+                    productVersion: {
+                        title: '版本号',
+                        val: '2.1.4'
+                    },
+                    productDown: {
+                        title: '下载',
+                        val: 'http://shop.salesnow.cn/upload/aplication/201706/1.jpg'
+                    }
+                }
+            }, {
+                productName: '案例时间表2',
+                productImg: 'http://shop.salesnow.cn/upload/aplication/201706/1.jpg',
+                details: {
+                    productIntroduce: {
+                        title: '应用介绍',
+                        val: '查看案例保存的时间,大小等等456'
+                    },
+                    productNote: {
+                        title: '安装步骤',
+                        val: ['安装步骤......', 1, 2, 3, 4, 5]
+                    },
+                    productVersion: {
+                        title: '版本号',
+                        val: '2.1.4'
+                    },
+                    productDown: 'http://shop.salesnow.cn/upload/aplication/201706/1.jpg'
+                }
+            }, {
+                productName: '案例时间表2',
+                productImg: 'http://shop.salesnow.cn/upload/aplication/201706/1.jpg',
+                details: {
+                    productIntroduce: {
+                        title: '应用介绍',
+                        val: '查看案例保存的时间,大小等等789'
+                    },
+                    productNote: {
+                        title: '安装步骤',
+                        val: ['安装步骤......', 1, 2, 3, 4, 5]
+                    },
+                    productVersion: {
+                        title: '版本号',
+                        val: '2.1.4'
+                    },
+                    productDown: 'http://shop.salesnow.cn/upload/aplication/201706/1.jpg'
+                }
+            }, {
+                productName: '案例时间表2',
+                productImg: 'http://shop.salesnow.cn/upload/aplication/201706/1.jpg',
+                details: {
+                    productIntroduce: {
+                        title: '应用介绍',
+                        val: '查看案例保存的时间,大小等等111'
+                    },
+                    productNote: {
+                        title: '安装步骤',
+                        val: ['安装步骤......', 1, 2, 3, 4, 5]
+                    },
+                    productVersion: {
+                        title: '版本号',
+                        val: '2.1.4'
+                    },
+                    productDown: 'http://shop.salesnow.cn/upload/aplication/201706/1.jpg'
+                }
+            }, {
+                productName: '案例时间表2',
+                productImg: 'http://shop.salesnow.cn/upload/aplication/201706/1.jpg',
+                details: {
+                    productIntroduce: {
+                        title: '应用介绍',
+                        val: '查看案例保存的时间,大小等等222'
+                    },
+                    productNote: {
+                        title: '安装步骤',
+                        val: ['安装步骤......', 1, 2, 3, 4, 5]
+                    },
+                    productVersion: {
+                        title: '版本号',
+                        val: '2.1.4'
+                    },
+                    productDown: 'http://shop.salesnow.cn/upload/aplication/201706/1.jpg'
+                }
+            }, {
+                productName: '案例时间表2',
+                productImg: 'http://shop.salesnow.cn/upload/aplication/201706/1.jpg',
+                details: {
+                    productIntroduce: {
+                        title: '应用介绍',
+                        val: '查看案例保存的时间,大小等等333'
+                    },
+                    productNote: {
+                        title: '安装步骤',
+                        val: ['安装步骤......', 1, 2, 3, 4, 5]
+                    },
+                    productVersion: {
+                        title: '版本号',
+                        val: '2.1.4'
+                    },
+                    productDown: 'http://shop.salesnow.cn/upload/aplication/201706/1.jpg'
+                }
+            }, {
+                productName: '案例时间表2',
+                productImg: 'http://shop.salesnow.cn/upload/aplication/201706/1.jpg',
+                details: {
+                    productIntroduce: {
+                        title: '应用介绍',
+                        val: '查看案例保存的时间,大小等等444'
+                    },
+                    productNote: {
+                        title: '安装步骤',
+                        val: ['安装步骤......', 1, 2, 3, 4, 5]
+                    },
+                    productVersion: {
+                        title: '版本号',
+                        val: '2.1.4'
+                    },
+                    productDown: 'http://shop.salesnow.cn/upload/aplication/201706/1.jpg'
+                }
+            }, {
+                productName: '案例时间表2',
+                productImg: 'http://shop.salesnow.cn/upload/aplication/201706/1.jpg',
+                details: {
+                    productIntroduce: {
+                        title: '应用介绍',
+                        val: '查看案例保存的时间,大小等等555'
+                    },
+                    productNote: {
+                        title: '安装步骤',
+                        val: ['安装步骤......', 1, 2, 3, 4, 5]
+                    },
+                    productVersion: {
+                        title: '版本号',
+                        val: '2.1.4'
+                    },
+                    productDown: 'http://shop.salesnow.cn/upload/aplication/201706/1.jpg'
+                }
+            }, {
+                productName: '案例时间表2',
+                productImg: 'http://shop.salesnow.cn/upload/aplication/201706/1.jpg',
+                details: {
+                    productIntroduce: {
+                        title: '应用介绍',
+                        val: '查看案例保存的时间,大小等等666'
+                    },
+                    productNote: {
+                        title: '安装步骤',
+                        val: ['安装步骤......', 1, 2, 3, 4, 5]
+                    },
+                    productVersion: {
+                        title: '版本号',
+                        val: '2.1.4'
+                    },
+                    productDown: 'http://shop.salesnow.cn/upload/aplication/201706/1.jpg'
+                }
+            }, {
+                productName: '案例时间表2',
+                productImg: 'http://shop.salesnow.cn/upload/aplication/201706/1.jpg',
+                details: {
+                    productIntroduce: {
+                        title: '应用介绍',
+                        val: '查看案例保存的时间,大小等等777'
+                    },
+                    productNote: {
+                        title: '安装步骤',
+                        val: ['安装步骤......', 1, 2, 3, 4, 5]
+                    },
+                    productVersion: {
+                        title: '版本号',
+                        val: '2.1.4'
+                    },
+                    productDown: 'http://shop.salesnow.cn/upload/aplication/201706/1.jpg'
+                }
+            }, {
+                productName: '案例时间表3',
+                productImg: 'http://shop.salesnow.cn/upload/aplication/201706/1.jpg',
+                details: {
+                    productIntroduce: {
+                        title: '应用介绍',
+                        val: '查看案例保存的时间,大小等等888'
+                    },
+                    productNote: {
+                        title: '安装步骤',
+                        val: ['安装步骤......', 1, 2, 3, 4, 5]
+                    },
+                    productVersion: {
+                        title: '版本号',
+                        val: '2.1.4'
+                    },
+                    productDown: 'http://shop.salesnow.cn/upload/aplication/201706/1.jpg'
+                }
+            }, {
+                productName: '案例时间表4',
+                productImg: 'http://shop.salesnow.cn/upload/aplication/201706/1.jpg',
+                details: {
+                    productIntroduce: {
+                        title: '应用介绍',
+                        val: '查看案例保存的时间,大小等等999'
+                    },
+                    productNote: {
+                        title: '安装步骤',
+                        val: ['安装步骤......', 1, 2, 3, 4, 5]
+                    },
+                    productVersion: {
+                        title: '版本号',
+                        val: '2.1.4'
+                    },
+                    productDown: 'http://shop.salesnow.cn/upload/aplication/201706/1.jpg'
+                }
+            }, ]
+        };
+        /// 数据标题可以分两种类型.
+        var objThree = {
+            title: {
+                titleType: '行业',
+                titleValue: '商品'
+            },
+            total: 12,
+            const: 12,
+            start: 0,
+            content: [{
+                productName: 'abcdefg',
+                productImg: 'http://shop.salesnow.cn/upload/aplication/201706/1.jpg',
+                details: {
+                    productIntroduce: {
+                        title: '应用介绍',
+                        val: '查看案例保存的时间,大小等等123'
+                    },
+                    productNote: {
+                        title: '安装步骤',
+                        val: ['安装步骤......', 1, 2, 3, 4, 5]
+                    },
+                    productVersion: {
+                        title: '版本号',
+                        val: '2.1.4'
+                    },
+                    productDown: 'http://shop.salesnow.cn/upload/aplication/201706/1.jpg'
+                }
+            }, {
+                productName: '你好啊',
+                productImg: 'http://shop.salesnow.cn/upload/aplication/201706/1.jpg',
+                details: {
+                    productIntroduce: {
+                        title: '应用介绍',
+                        val: '查看案例保存的时间,大小等等456'
+                    },
+                    productNote: {
+                        title: '安装步骤',
+                        val: ['安装步骤......', 1, 2, 3, 4, 5]
+                    },
+                    productVersion: {
+                        title: '版本号',
+                        val: '2.1.4'
+                    },
+                    productDown: 'http://shop.salesnow.cn/upload/aplication/201706/1.jpg'
+                }
+            }, {
+                productName: '我很好',
+                productImg: 'http://shop.salesnow.cn/upload/aplication/201706/1.jpg',
+                details: {
+                    productIntroduce: {
+                        title: '应用介绍',
+                        val: '查看案例保存的时间,大小等等789'
+                    },
+                    productNote: {
+                        title: '安装步骤',
+                        val: ['安装步骤......', 1, 2, 3, 4, 5]
+                    },
+                    productVersion: {
+                        title: '版本号',
+                        val: '2.1.4'
+                    },
+                    productDown: 'http://shop.salesnow.cn/upload/aplication/201706/1.jpg'
+                }
+            }]
+        };
+        /* 右侧主体内容区域  参数:obj: 获取到的对象, resUrl: 翻页需要请求的链接 */
+        function RightContent(obj, resUrl) {
+            var $rightContent = $('.rightContent');
+            /* 标题区域 */
+            /* 判断数据的类型 */
+            if (typeof obj.title === 'string') {
+                var $contentTitle = $('<h3 />').attr('class', 'contentTitle').html(obj.title);
+            } else if (obj.title instanceof Object) {
+                var $contentTitle = $('<h3 />').attr('class', 'contentTitle');
+                $contentTitle.append('<span /><i /><span />').find('span:nth-of-type(1)').html(obj.title.titleType).siblings('span:nth-of-type(2)').html(obj.title.titleValue).siblings('i:nth-of-type(1)').html('>');
+            };
+            $rightContent.append($contentTitle);
+            /* 应用商品区域 */
+            var $productBox = $('<div />').attr('class', 'clearfix productBox').appendTo($rightContent);
+            if (obj.content) {
+                $.each(obj.content, function(index, val) {
+                    /* 获取是否安装与付费 */
+                    var IsPay = val.Ispay == 1 ? 'charge' : 'free';
+                    var IsInstall = val.IsInstall == 1 ? 'install' : 'notInstall';
+                    var IsFufei = val.Ispay == 1 ? '付费' : '免费';
+                    var IsAnZhuang = val.IsInstall == 1 ? '已安装 <i class="fa fa-check-circle" aria-hidden="true" />' : '未安装';
+                    var $figure = $('<figure />').attr('class', 'product col-xs-4 col-sm-4 col-md-4 col-lg-3 ');
+                    $figure.append('<img /><figcaption />').children('img:nth-of-type(1)').attr({
+                        'class': 'img-responsive',
+                        'src': val.productImg
+                    }).siblings('figcaption:nth-of-type(1)').append('<p /><p />').children('p:nth-of-type(2)').html(val.productName).prev('p').append('<span /> <span />').addClass('clearfix').children('span:nth-of-type(1)').addClass(IsPay + ' pull-left').html(IsFufei).next('span').addClass(IsInstall + ' pull-right').html(IsAnZhuang);
+                    $figure.appendTo($productBox);
+                })
+            } else {
+                $productBox.append('<h3 />').children('h3').html('暂时没有这款应用!');
+            };
+            this.handleClickShow(obj);
+            this.AppStorePaging(obj, resUrl);
+        };
+        /* 在右侧主体内容的原型上写点击效果 */
+        RightContent.prototype.handleClickShow = function(obj) {
+            var $rightContent = $('.rightContent');
+            var self = this;
+            $rightContent.on('mouseover', 'figure', function() {
+                /* 保存进入应用的序号,使点击加号能读取到正确的数据. */
+                var productNumber = $(this).index();
+                var that = this;
+                new Mask({
+                    'parent': $rightContent.find('.productBox'),
+                    'backgroundColor': '196,196,196,.6',
+                    'zIndex': 10,
+                    'opacity': .6
+                });
+                $(this).css({
+                    'z-index': 11
+                });
+                new Mask({
+                    'parent': $(that),
+                    'backgroundColor': '0,0,0,.8',
+                    'color': 'white',
+                    'zIndex': 12,
+                    'fn': function() {
+                        var saveThis = this;
+                        $('<p />').css({
+                            'display': 'inline-block',
+                            'font-size': '1.5rem',
+                        }).appendTo($(saveThis)).append('<span /> <i />').find('span').attr({
+                            'class': 'glyphicon glyphicon-search',
+                            'aria-hidden': 'true'
+                        }).css({
+                            'color': 'white',
+                            'display': 'inline-block',
+                            'margin-right': '1rem',
+                            'font-size': '1.5rem',
+                            'cursor': 'pointer'
+                        }).siblings('i').attr({
+                            'class': 'glyphicon glyphicon-plus productDetails',
+                            'aria-hidden': 'true'
+                        }).css({
+                            'color': 'white',
+                            'display': 'inline-block',
+                            'cursor': 'pointer'
+                        });
+                        var c = $('.productDetails');
+                        c.on('click', function() {
+                            /* 截流,防止查看详情被多次点击 */
+                            if ($(saveThis).children('.detailsBox').length) {
+                                return false;
+                            };
+
+
+                            /* 设置详情页 */
+                            var $detailsShow = $('<div />');
+                            $.each(obj.content[productNumber].details, function(index, val) {
+                                /* 判断是不是下载按钮 */
+                                if (val.title == 'down') {
+                                    $detailsShow.append('<div />').children('div:last-child').append('<a />').find('a').attr('href', val.val).append('<button />').find('button').attr('class', 'btn btn-info').html('<span class="glyphicon glyphicon-cloud-download" style="padding-right:.5rem;" /> 下载').css({
+                                        'padding': '6px 2rem'
+                                    });
+                                    return true;
+                                };
+                                /* 判断内容是否有多个段落标签 */
+                                if (val.val instanceof Array) {
+                                    var d = $detailsShow.append('<div />').children('div:last-child').append('<h3 /> <p />').children('h3').html(val.title).next('p');
+                                    $.each(val.val, function(i, ValData) {
+                                        d.append('<span />').find('span:eq(' + i + ')').html(ValData);
+                                    });
+                                } else {
+                                    $detailsShow.append('<div />').children('div:last-child').append('<h3 /><p />').find('h3').html(val.title).next('p').html(val.val);
+                                };
+                            });
+
+                            /* 判断详情 left 是否超出屏幕 */
+                            if ($(document).width() - $(that).offset().left > $(that).width() * 2) {
+                                var detailsLeft = 'left';
+                                var datailsShadow = '0.5rem';
+                            } else {
+                                var detailsLeft = 'right';
+                                var datailsShadow = '-0.5rem';
+                            };
+                            $('<div />').appendTo(saveThis).attr('class', 'detailsBox').css({
+                                'position': 'absolute',
+                                'top': 0,
+                                [detailsLeft]: '100%',
+                                'background-color': 'white',
+                                'line-height': 'normal',
+                                'padding': '1rem 1.5rem',
+                                'min-width': '25rem',
+                                'max-width': '30rem',
+                                'max-height': '54rem',
+                                'min-height': '30rem',
+                                'overflow': 'auto',
+                                'text-align': 'left',
+                                'display': 'none',
+                                'box-shadow': datailsShadow + ' 0.5rem 20px 1px #919191'
+                            }).fadeIn('normal').append($detailsShow).children('div').find('div').css({
+                                'margin': '.5rem 0'
+                            }).find('h3').css('white-space', 'nowrap').parents('div.detailsBox').find('p').css({
+                                'font-size': '1.5rem',
+                                'margin': '1rem 0',
+                                'padding': '0 0 0 1rem'
+                            }).find('span').css({
+                                'display': 'block'
+                            });
+                        });
+                    }
+                });
+            });
+            $rightContent.on('mouseleave', 'figure', function() {
+                var that = this;
+                new Mask({
+                    del: $rightContent.find('.productBox'),
+                    fn: function() {
+                        $(that).css('z-index', 3);
+                    }
+                });
+                new Mask({
+                    del: $(that),
+                    fn: function() {
+                        $(that).css('z-index', 3);
+                    }
+                });
+            });
+        };
+        /* 右侧应用的分页按钮 */
+        RightContent.prototype.AppStorePaging = function(obj, resUrl) {
+            var $rightContent = $('.rightContent');
+            /* 当总数大于获取到的数量时,才显示翻页按钮 */
+            if (obj.total > obj.const+obj.start && obj.start == 0) {
+                $('<div />').appendTo($rightContent).addClass('pageBtn').append('<button /><button />').find('button:nth-of-type(1)').attr('disabled', 'disabled').addClass('btn btn-primary').html('上一页').next('button').addClass('btn btn-primary').html('下一页');
+            } else {
+                return false;
+            };
+            $rightContent.find('.pageBtn button').on('click', function() {
+                var self = this;
+                /* 当按钮被禁用时点击其他按钮解除对另外一个按钮的禁用 */
+                if ($(this).index() == 0) {
+                    $(this).next('button').removeAttr('disabled');
+                    $.ajax({
+                        url: resUrl,
+                        data: {
+                            start: obj.start + obj.const > obj.total ? obj.total : obj.start + obj.const
+                        },
+                        type: 'POST',
+                        success: function(data) {
+                            /* 当总数小于起始数量加上获取到的数量,禁用下一页按钮 */
+                            if (data.start + data.const >= data.total) {
+                                $(self).next('button').attr('disabled', 'disabled');
+                            };
+                            $('.rightContent').children().remove();
+                            var rightContent = new RightContent(data, resUrl);
+                        },
+                        error: function(one, two) {
+                            console.log(one, two)
+                        }
+                    });
+                } else {
+                    $(this).prev('button').removeAttr('disabled');
+                    $.ajax({
+                        url: resUrl,
+                        data: {
+                            start: obj.start - obj.const < 0 ? 0 : obj.start - obj.const
+                        },
+                        type: 'POST',
+                        success: function(data) {
+                            /* 当总数小于起始数量加上获取到的数量,禁用上一页按钮 */
+                            if (data.start - data.const <= 0) {
+                                $(self).prev('button').attr('disabled', 'disabled');
+                            };
+                            $('.rightContent').children().remove();
+                            var rightContent = new RightContent(data, resUrl);
+                        },
+                        error: function(one, two) {
+                            console.log(one, two)
+                        }
+                    });
+                };
+            })
+        };
+        /* 这个是遮罩层函数和参数说明  
+            
+            这个是遮罩层 
+            参数:obj:{
+                parent: 要遮罩的父元素,
+                backgroundColor: 遮罩层的颜色,以rgba的方式传输
+                zIndex: 遮罩层的默认层级,
+                // opacity: 设置透明度,
+                flag: Number 设置遮罩层数量,
+                del: 要删除的节点,写其父元素,
+                fn: 回调函数
+            }
+        */
+        function Mask(obj) {
+            this.flag = false;
+            this.productShade(obj);
+        };
+        Mask.prototype.productShade = function(obj) {
+            /* 设置默认参数 */
+            if (!obj) {
+                var obj = {
+                    'parent': $('body'),
+                    'backgroundColor': '0,0,0,.8',
+                    'zIndex': 10,
+                };
+            };
+            /* 删除遮罩层 */
+            if (obj.del) {
+                $(obj.del).children('.zhezhaoceng').remove();
+                obj.fn && obj.fn();
+                return false;
+            };
+            /* 截流 */
+            var c = obj.parent.children('.zhezhaoceng').length;
+            if (this.flag || c) {
+                // console.log('请设置这是第几个遮罩层');
+                return false;
+            };
+            this.flag = true;
+
+            !(obj.parent) && (obj.parent = $('body'));
+            !(obj.backgroundColor) && (obj.backgroundColor = '0,0,0,.8');
+            !(obj.zIndex) && (obj.zIndex = 10);
+            $('<div />').attr('class', 'zhezhaoceng').css({
+                'text-align': 'center',
+                'line-height': obj.parent.height() + 'px',
+                'background-color': 'rgba(' + obj.backgroundColor + ')',
+                'width': '100%',
+                'height': '100%',
+                'position': 'absolute',
+                'top': 0,
+                'left': 0,
+                'display': 'none',
+                'z-index': obj.zIndex
+            }).appendTo(obj.parent).fadeIn('normal', obj.fn ? obj.fn : "").parents(obj.parent).css({
+                'position': 'relative'
+            });
+        };
+
+        /* 页面加载动画 */
+        function LoadAnimation(obj) { ///el: 代表包裹进度条的盒子,num: 进度条的数量,  width(可选): 进度条的宽度,height(可选): 进度条的高度,background(可选): 进度条的背景,transition(可选): 进度条的运动时间.
+
+            !(obj.num) && (obj.num = 5);
+            !(obj.width) && (obj.width = '10px');
+            !(obj.height) && (obj.height = '50px');
+            !(obj.background) && (obj.background = 'white');
+            !(obj.transition) && (obj.transition = 'all .2s');
+
+            var self = this;
+            var el = $(obj.el).css({
+                'position': 'relative',
+                'height': '100%'
+            }).append('<div class="loadAnimationBox" />').children('div.loadAnimationBox').css({
+                'width': '100%',
+                'height': '100%',
+                'position': 'absolute',
+                'left': 0,
+                'top': 0,
+                'z-index': 99,
+                'background-color': 'white',
+            }).append('<div />').children('div').css({
+                'width': (parseInt(obj.width) + 10) * parseInt(obj.num),
+                'height': obj.height,
+                'position': 'absolute',
+                'left': 0,
+                'right': 0,
+                'top': 0,
+                'bottom': parseInt(obj.height) * 2 + 'px',
+                'margin': 'auto'
+            });
+            for (var i = 0; i < obj.num; i++) {
+                el.append('<div />');
+            };
+            el.children('div').css({
+                'width': obj.width,
+                'height': obj.height,
+                'background': obj.background,
+                'transition': obj.transition,
+                'float': 'left',
+                'margin-right': '10px',
+            });
+            this.num = -1;
+            var timer = setInterval(function() {
+                self.shrink(obj, el)
+            }, 100);
+        };
+        /* 页面加载动画 */
+        LoadAnimation.prototype.shrink = function(obj, el) {
+            el.children('div:eq(' + (this.num = (this.num + 1) % obj.num) + ')').css({
+                'transform': 'scale(0)'
+            });
+            (function(num) {
+                setTimeout(function() {
+                    el.children('div:eq(' + num + ')').css({
+                        'transform': 'scale(1)'
+                    });
+                }, 1300)
+            }(this.num));
+        };
+    </script>
+
+</html>

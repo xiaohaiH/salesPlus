@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0">
+    <title>Document</title>
+    <script src="./js/react.min.js.back"></script>
+    <script src="./js/react-dom.min.js.back"></script>
+    <script src="./js/babel.min.js.back"></script>
+</head>
+
+<body>
+    <div id="example">
+
+    </div>
+</body>
+<!-- 简化版 -->
+<script type="text/babel">
+  function Greeting(props){
+    let login = props.login;
+    if(login){
+      return (<h1>欢迎回来</h1>);
+    }else{
+      return (<h1>请登录</h1>);
+    };
+  };
+  function LogButton(props){
+    const btnStatus = props.login;
+    if(btnStatus){
+      return (<button onClick={props.onClick}>退出</button>);
+    }else{
+      return (<button onClick={props.onClick}>登录</button>);
+    };
+  };
+  class LoginControl extends React.Component{
+    constructor(){
+      super();
+      this.state = {
+        login: false
+      }; 
+      this.loginBtnClick = this.loginBtnClick.bind(this);
+    }
+    loginBtnClick(){
+      {/* 这三个方法都可以:方法一 */}
+      this.setState({login: !this.state.login });
+
+      {/* 这三个方法都可以:方法二 */}
+      {/* this.setState((props) => ({
+        login: !props.login
+      })); */}
+
+      {/* 方法三 */}
+     {/*  if(this.state.login){
+        this.setState({login: false});
+      }else{
+        this.setState({login: true});
+      }; */}
+    }
+
+    render(){
+      return (
+        <div>
+          <Greeting login={this.state.login} />
+          <LogButton onClick={this.loginBtnClick} login={this.state.login} />
+        </div>
+      );
+    }
+  };
+  ReactDOM.render(
+    <LoginControl />,
+    document.getElementById('example')
+  );
+</script>
+<!-- 官网版本 -->
+<!-- <script type="text/babel">
+  function UserGreeting(){ 
+    return (<h1>欢迎回来</h1>); 
+  };
+  function GuestGreeting(){
+    return (<h1>请登录</h1>);
+  };
+  function Greeting(props){
+    if(props.login){
+      return UserGreeting();
+    };
+    return GuestGreeting();
+  };
+  function LoginInClick(props){
+    return (
+      <button onClick={props.onClick}>登陆</button>
+    )
+  };
+  function LoginOutClick(props){
+    return (
+      <button onClick={props.onClick}>退出</button>
+    )
+  };
+  class LoginControl extends React.Component{
+    constructor(){
+      super();
+      this.state = {
+        login: false
+      };
+      this.logininClick = this.logininClick.bind(this);
+      this.loginoutClick = this.loginoutClick.bind(this);
+    }
+
+    logininClick(){
+      this.setState({login: true});
+    }
+
+    loginoutClick(){
+      this.setState({login: false});
+    }
+
+    render(){
+      let button = null;
+      if(this.state.login){
+        button = <LoginOutClick onClick={this.loginoutClick} />;
+      }else{
+        button = <LoginInClick onClick={this.logininClick} />
+      };
+      return (
+        <div>
+          <Greeting login={this.state.login} />
+          {button}
+        </div>
+      )
+    }
+  };
+  ReactDOM.render(
+    <LoginControl />,
+    document.getElementById('example')
+  ) 
+</script> -->
+</html>

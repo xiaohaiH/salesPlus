@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>箭头函数</title>
+</head>
+<body>
+	<pre>
+		
+	</pre>
+</body>
+<script>
+	/*
+		箭头函数 
+			四: 当代码块多于一条语句时,需要使用花括号{}将他们括起来,并使用return语句返回.
+			五: 当箭头函数直接返回一个对象时,需用括号()将对象包裹起来.
+			六: 箭头函数简化回调函数.
+			七: 函数可以写默认值,且是惰性求值的, 参数是默认声明的,所以不能再次 let 或 const 再次声明.
+			八: 对象的解构赋值与默认值结合使用.  注: 实参必须是要声明是个对象,否则会报错   解决办法:  对象默认声明为对象
+			九: rest参数: 形式为(...变量名),用于获取函数的多余参数,即为定义形参,却有实参,返回值为数组集合.
+
+		注意点: 
+			1. 箭头函数 函数体内的 this 指向,就是定义时所在的对象,而不是使用所在的对象.
+			2. 不可以当做构造函数,也就是说不可以使用 new 命令,否则会抛出一个错误.
+			3. 不可以使用 arguments 对象,该对象在函数体内不存在,要用可以使用 rest 参数来代替.
+			4. 不可以使用 yield 命令,因此箭头函数不能用作 Generator 函数
+	*/
+	// 一 : 不传参的写法
+		var f = () => 1;     /* 全等于 */  var f = function(){return 1;};
+		console.log(f());
+
+	// 二 : 传单个参数的写法
+		var f = v => v;     /* 全等于 */  var f = function(v){return v;};
+		console.log(f(2));
+
+	// 三 : 传多个参数的写法
+		var f = (a,b) => a + b;     /* 全等于 */  var f = function(a,b){return a + b;};
+		console.log(f(1,2));
+
+	// 四 : 代码块高于一条语句时
+		var f = (a,b) => {if(typeof (a + b) === 'number') return a + b;}
+		console.log(f(2,1))
+
+	// 五 : 箭头函数直接返回对象
+		var f = () => ({a: 1,b: 2});
+		console.log(f())
+
+	// 六 : 箭头函数简化回调函数
+		var f = [1,2,3].map((x) => x * x);    /* 全等于 */   var f = [1,2,3].map(function(x){ return x * x});
+		console.log(f)
+
+	// 七 : 函数指定默认值,惰性求值.
+		var f = (x = 5, y = 6,z = y+ 1) => console.log(x,y,z);
+		f();///5,6,7.
+
+	// 八 : 对象的解构赋值与默认值结合使用
+		// 例一:
+		var  f = ({x, y = 5}) => console.log(x,y);
+		f({x: 1});///1,5.
+		// 例二:
+		var  f = ({x, y = 5} = {}) => console.log(x,y);
+		f();///undefined,5.
+
+	// 九 : rest参数 形式为(...变量名)
+		var f = (a,b,c,...val) => {
+			console.log(a,b,c,val);
+			console.log(a,b,c,...val);
+		};
+		f(2,3,4,5,6,7,89,0);
+
+
+
+	// 注意点 this 的指向问题示例 箭头函数 this 实例
+		function ThisPoint(){
+			this.aa = 1;
+			setTimeout(() => {
+				console.log(++this.aa);
+			},1000)
+		};
+		console.log(new ThisPoint());///2.
+
+	// 原生 this 指向
+		function ThisPointEs5(){
+			this.aa = 1;
+			setTimeout(function (){
+				console.log(++this.aa);
+			},1000)
+		};
+		console.log(new ThisPointEs5());///NaN.
+</script>
+</html>

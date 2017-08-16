@@ -33,11 +33,11 @@ const isLogin = {
 
 /* 定义组件 */
 const LoginShow = withRouter(
-  ({history}) => (
+  (a) => (
     isLogin.isLogin ? (
       <div>
-        欢迎回来!
-        <button onClick={() => {isLogin.logOut(() => history.push('/'))}} >退出登录</button>
+        <span>欢迎回来!</span>
+        <button onClick={() => {isLogin.logOut(() => a.history.push('/'))}} >退出登录</button>
       </div>
     ) : (<div>你还没有登录!</div>)
   )
@@ -46,7 +46,7 @@ const Public = () => <h3>{'这个里面没有秘密,随便你看0.0'}</h3>;
 const Protected = () => <h3>既然你登录了,那就将这个秘密告诉你吧,你靠近点</h3>;
 
 /* 重定向 */
-const ProtectedRoute = ({component: Component, ...rest}) => {
+const ProtectedRoute = ({component: Component,...rest}) => {
   return (
     <Route {...rest} render={props => (
       isLogin.isLogin ? (<Component {...props}/>) : (<Redirect to={{pathname: '/login',state: {from: props.location}}} />)
@@ -66,7 +66,6 @@ class Login extends Component{
       }
     )
   }
-
   render(){
     const {from} = (this.props.location && this.props.location.state) || {from: {pathname: '/'}};
     const {isRedirect} = this.state;
@@ -83,8 +82,5 @@ class Login extends Component{
     )
   }
 };
-// const Login = () => (
-//   isLogin.isLogin ? <h3>既然你登录了,那就将这个秘密告诉你吧,你靠近点</h3> : <p><span>请先登录在查看</span><button onClick={isLogin.login(({history}) => {history.push('/login')})}></button></p>
-// );
 
 export default Auth;

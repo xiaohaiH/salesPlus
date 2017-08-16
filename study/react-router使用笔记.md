@@ -29,8 +29,6 @@ render methods 分别是：    props 分别是：    所有的 render method 都
           )}
         )
 
-
-
 path: string    如果不给path,那么路由将总是匹配
   例: <Route path="/users/:id" component={User} />
 
@@ -39,15 +37,18 @@ exact: bool     如果为 true,path 为 '/one' 的路由将不能匹配 '/one/tw
 strict: bool    对路径末尾斜杠的匹配。如果为 true。path 为 '/one/' 将不能匹配 '/one' 但可以匹配 '/one/two'。
 如果要确保路由没有末尾斜杠,那么 strict 和 exact 都必须同时为 true
 
+
+  ``` 
+## 二: Link react中的a链接
+```
 <Link>  为你的应用提供声明式,无障碍导航。
     to:  跳转到指定路径
     例:  <Link to="/courses" />    无附带参数跳转.
         <Link to={{pathname: '/course',search: '?sort=name',state: { price: 18 }}} />   携带参数跳转到指定路径
     replace: bool       ----      等于true 时,点击链接后将使用新地址替换掉上一次访问的地址
-
-
-
-
+```
+## 二: NavLink
+```
 <NavLink>   Link 的特殊版,为页面导航准备的。因为导航需要有 “激活状态”。
     activeClassName: String       ----      导航选中激活时候应用的样式名,默认样式名为 active
         例:  <NavLink to="/about" activeClassName="selected">MyBlog</NavLink>
@@ -56,26 +57,54 @@ strict: bool    对路径末尾斜杠的匹配。如果为 true。path 为 '/one
     exact: bool                   ----      若为 true,只有当访问地址严格匹配时激活样式才会应用
     strict: bool                  ----      若为 true,只有当访问地址后缀斜杠严格匹配（有或无）时激活样式才会应用
     isActive: func                ----      决定导航是否激活,或者在导航激活时候做点别的事情。不管怎样,它不能决定对应页面是否可以渲染。
+```
 
-
-
+## 二: Switch
+```
 <Switch>    只渲染出第一个与当前访问地址匹配的 <Route> 或 <Redirect>。
     children: node                ----      Switch 下的子节点只能是 Route 或 Redirect 元素,只有与当前访问地址匹配的第一个子节点才会被渲染, Route 元素用它们的 path 属性匹配, Redirect 元素使用它们的 from 属性匹配。如果没有对应的 path 或 from,那么它们将匹配任何当前访问地址。
     例: <Switch><Route/><Route/></Switch>
+```
 
-
+## 二: Redirect路由重定向  
+```
 <Redirect>                        ----      Redirect 渲染时将导航到一个新地址,这个新地址覆盖在访问历史信息里面的本该访问的那个地址
     to:           重定向的 URL 字符串 或 location 对象
     push: bool    若为真,重定向操作将会把新地址加入到访问历史记录里面,并且无法回退到前面的页面
     from: string  需要匹配的将要被重定向路径。
 
-<Prompt>          当用户离开当前页面前做出一些提示。
+在定义路由的render函数里写 Redirect 重定向函数
+    例:  
+      <Router path='/ab' render={() => <Redirect to='/aabbcc' />} />
+
+  还可以这样写 : 直接定义在外面,不过需要和 Switch 配合使用;
+    <Router>
+      <div>
+          <li><Link to='/'>首页</Link></li>
+          <li><Link to='/about'>关于(跳转到联系界面)</Link></li>
+        <Switch>
+          <Redirect from='/about' to='contact' />
+          <Route exact path='/' component={() => <h3>这个是首页</h3>} />
+          <Route path='/about' component={() => <h3>这个是关于我们,能看到这个说明重定向失效了</h3>} />
+        </Switch>
+      </div>
+    </Router>
+```
+
+## 二: prompt
+```
+<Prompt>  当用户离开当前页面前做出一些提示。  只能在路由之间跳转才有提示,例如关闭页面等是没有提示的!
     message: func || string     
     when: bool  通过设置一定条件要决定是否启用 Prompt
-      例:  <Prompt when={this.state.dirty} message={location => (`Are you sue you want to go to ${location.pathname}?` )} />
-
-
-  ``` 
+      例: 
+      <Router>
+        <div>
+          <Link to='/a'>aaaaaa</Link>
+          <Prompt when={true} message={location => (`Are you sue you want to go to ${location.pathname}?` )} />
+          <Route path='/a' render={() => <h3>跳转后的组件</h3>} />
+        </div>
+      </Router>
+```
 
 ## 二: history
 ```
@@ -150,7 +179,7 @@ strict: bool    对路径末尾斜杠的匹配。如果为 true。path 为 '/one
       
     当一个 Route 没有 path 时，它会匹配一切路径。
   ```
-  
+
 ## 三: basename: string
 ### 作用：为所有位置添加一个基准URL
 使用场景: 假如你需要把页面部署到服务器的二级目录,你可以使用 basename 设置到此目录

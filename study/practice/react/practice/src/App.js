@@ -14,6 +14,9 @@ import IsBlocking from './View/IsBlocking/IsBlocking';
 /* Switch 重定向和404页面 */
 import Lost from './View/SwitchAndNotMatch/index';
 
+/* 递归路径 */
+import RecursionPath from './View/RecursionPath/RecursionPath';
+
 class App extends Component {
   render() {
     return (
@@ -50,6 +53,12 @@ class App extends Component {
         <div style={{padding: '40px 50px',background: 'greenyellow'}}>
           <Lost />
         </div>
+
+        {/* 递归路径 */}
+        <div style={{padding: '40px 50px',background: 'darkorange'}}>
+          <RecursionPath />
+        </div>
+
       </div>
     );
   }

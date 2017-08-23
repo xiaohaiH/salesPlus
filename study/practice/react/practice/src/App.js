@@ -17,14 +17,14 @@ import Lost from './View/SwitchAndNotMatch/index';
 /* 递归路径 */
 import RecursionPath from './View/RecursionPath/RecursionPath';
 
+
 class App extends Component {
   render() {
     return (
-      <div>
+      <div onClickCapture={this.handleClick}>
         {/* <Home /> */}
         {/* <UrlArguments /> */}
-
-
+        
         {/* 抄官网做的 */}
         <div style={{padding: '40px 50px',background: 'orange'}}>
           <p style={{color:'white'}}>抄官网做的</p>
@@ -58,7 +58,6 @@ class App extends Component {
         <div style={{padding: '40px 50px',background: 'darkorange'}}>
           <RecursionPath />
         </div>
-
       </div>
     );
   }

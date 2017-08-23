@@ -1,0 +1,97 @@
+
+/*  树形菜单样式  */
+/* 树形菜单列表样式 start */
+    .hide{
+      display: none!important;
+    }
+    /* 搜索框 start*/
+    .searchBox {
+      position: relative;
+      margin-right: 20px;
+      width: 260px;
+    }
+    .searchBox .fa-search {
+      position: absolute;
+      top: 12px;
+      left: 8px;
+    }
+    .searchBox .filterinput {
+      outline: medium;
+      width: 93%;
+      border: 1px solid #eee;
+      /*margin-left: 8px;*/
+      text-indent: 22px;
+      height: 24px;
+      border-radius: 4px;
+
+      padding-right: 10px;
+      overflow: hidden;
+      white-space:nowrap;
+      text-overflow: ellipsis;
+    }
+    .searchBox .fa-times-circle {
+      position: absolute;
+      top: 11px;
+      right: 10px;
+      cursor:pointer;
+    }
+    .searchBox .fa-times-circle:hover::before,.edit span .fa:hover::before{
+      color:#337ab7;
+    }
+    .bgColor{
+      background-color:#ff0 !important;
+    }
+    /* 去掉多余的宽度 */
+    .container{
+      width: auto;
+    }
+    .row-fluid > .span4{
+      width: 100%;
+    }
+    .searchBox{
+      width: auto;
+      margin-right: 0;
+    }
+/* 树形菜单列表样式 end */
+/* 知识记录面板样式 start */
+    .knowledgePanel{
+      border: 1px solid #dddddd;
+      box-shadow: 0 0 3px -1px #dddddd;
+      border-radius: 3px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      width: 500px;
+    }
+    .knowledgePanel .knowledgeHeading{
+      background-color: #f5f5f5;
+      background-image: linear-gradient(top, #f6f6f6, #f3f3f4);
+      background-image: -webkit-linear-gradient(top, #f6f6f6, #f3f3f4);
+      background-image: -o-linear-gradient(top, #f6f6f6, #f3f3f4);
+      background-image: -ms-linear-gradient(top, #f6f6f6, #f3f3f4);
+      background-image: -moz-linear-gradient(top, #f6f6f6, #f3f3f4);
+      background-repeat: repeat-x;
+      text-shadow: 0px 1px #ffffff;
+      cursor: pointer;
+      text-decoration: none!important;
+      padding:11px 4px;
+      overflow: hidden;
+    }
+    .knowledgePanel .knowledgeHeading i{
+      width: 8%;
+      display: inline-block;
+      text-align: center;
+    }
+    .knowledgePanel .knowledgeHeading i img{
+      transition: transform .2s;
+    }
+    .knowledgePanel .knowledgeHeading h5{
+      color:#2b2b2b;
+      width: 91%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .knowledgePanel .knowledgeBody{
+      display: none;
+    }
+    /* 知识记录面板样式 end */

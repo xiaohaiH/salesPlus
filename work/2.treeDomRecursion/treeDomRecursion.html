@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>treeDomRecursion</title>
+</head>
+<link href='./jquery.treeview.css' rel='stylesheet' type='text/css'>
+<link href='./index.css' rel='stylesheet' type='text/css'>
+<script type="text/javascript" src="./jquery.min.js"></script>
+<script type="text/javascript" src="./jquery.treeview.js"></script>
+<body>
+  <div class="quickWidgetContainer accordion">
+      <!-- 知识记录面板 start -->
+      <div class="knowledgePanel">
+        <div class="knowledgeHeading clearfix">
+          <h5 class="knowledgeTitle pull-left">knowledgerecord</h5>
+        </div>
+        <div class="knowledgeBody">
+          <!-- 知识记录树状列表 start -->
+          <div class="container">
+            <input type="hidden" name="tree" value='{$TREE}' />
+            <input type="hidden" name="del" value="{$DELETE}" />
+            <input type="hidden" name="add" value="{$ADD}" />
+            <input type="hidden" name="edit" value="{$EDIT}" />
+            <input type="hidden" name="rootGrade" value="全部解决方案" />
+
+            <div class="row-fluid">
+              <div class="span4">
+                <div id="sidetreecontrol">
+                  <a href="?#">收起全部</a> | <a href="?#">展开全部</a>
+                </div>
+                <ul id="browser" class="filetree treeview">
+                  <li>
+                    <a class="tier_1" data-id="0">
+                      <b>全部解决方案</b>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <!-- 知识记录树状列表 end -->
+        </div>
+      </div>
+      <!-- 知识记录面板 end -->
+  </div>
+</body>
+<script type="text/javascript">
+  (function ($,win){
+  /* 知识记录面板的 header 部分,控制知识记录树状菜单的收缩 start */
+    var flagPanel = true;
+    $('body').on('click','.knowledgeHeading',function(){
+      var self = this;
+      var $knowledgeBody = $('.knowledgeBody');
+      /* 截流,防止动画累积 start */
+      var isAnimate = $(this).next('.knowledgeBody').is(':animated');
+      if(isAnimate){
+        return false;
+      };
+      /* 截流,防止动画累积 end */
+      if(flagPanel){
+        $(self).find('i.triangle img').css('transform','rotate(90deg)');
+        flagPanel = false;
+      }else{
+        $(self).find('i.triangle img').css('transform','rotate(0deg)');
+        flagPanel = true;
+      }
+      $knowledgeBody.slideToggle();
+    });
+  /* 知识记录面板的 header 部分,控制知识记录树状菜单的收缩 start */
+  /* 树状菜单 start */
+    var registerEvent = {
+      /*
+       * 树形结构调用
+       */
+      treeView : function(){
+        $("#browser").treeview({
+          animated: "medium",
+          control: "#sidetreecontrol",
+          persist: "location",
+          collapsed: true
+        });
+      },
+      /*
+       * 创建treeDom
+       */
+      treeDom : function(data){
+        var thisInstance = this;
+        var $rootLI = $("#browser li");
+        var liDom = function(data) {
+          var params={
+            grade: data.grade,
+            id: data.id,
+            name: data.name,
+            childNum: 0
+          };
+          var li = '<li id="menu'+ params.id +'"><a class="' + params.grade + '"  data-id="' + params.id + '"><b>' + params.name + '</b>' + '<span>(' + params.childNum + ')</span>' + '</a></li>';
+          // var li = '<li id="menu'+ params.id +'"><a class="' + params.grade + '"  data-id="' + params.id + '"><b>' + params.name + '</b>' + '</a></li>';
+          return li;
+        };
+
+
+        //递归树管理对象函数
+        var treeManage=function(){
+          //创建树
+          var createTree=function(rawData){///rawData: 总数据.
+            /* 设置递归函数,在有子级的情况下调用自身 */
+            function recursionTree(dom){///dom: 将总数据列表遍历后单个传进来处理.
+              for(var oneLevel in dom){
+                var childNum = 0; ///判断子级的数量.
+                var childNode = ''; ///存储子级节点.
+                if(dom.children){
+                  for(var key in dom.children){
+                    childNum++;
+                    childNode += recursionTree(dom.children[key]);
+                  };
+                  childNode = `<li id="menu${dom.id}"><a class="${dom.grade}" data-id="${dom.id}"><b>${dom.name}</b><span>(${childNum})</span></a><ul>${childNode}</ul></li>`;
+                }else{
+                  childNode += liDom(dom);
+                };
+              };
+                return childNode;
+            };
+            //生成Dom树
+            var oneLevel = '';///一级节点.
+            var oneLevelLength = rawData.length;///一级节点长度.
+            for(var i = 0;i < oneLevelLength;i++){
+              oneLevel += recursionTree(rawData[i]);
+            };
+            var c = $rootLI.children('a').children('b').html(); ///保存顶级节点的值.
+            $rootLI.append(`<ul>${oneLevel}</ul>`).children('a').children('b').html(c + '(' + rawData.length + ')');
+          };
+          return {
+            createTree:createTree,
+          }
+        }();
+        //生成树木
+        treeManage.createTree(data);
+        thisInstance.treeEvent();
+
+
+        /* 这里是给 li 做个点击事件,点击 li 可以展开收缩列表 */
+        $('#browser').on('click','li',function(){
+          var self = this;
+          var c1 = $(self).children('ul').length;
+          /* 判断是否有子级菜单 */
+          if(c1){
+            if($(self).children('ul').is(':animated')){
+              return false;
+            };
+            var c2 = $(self).attr('class');
+            /* 这个判断是更改左侧 +- 号变化的 class,左侧的 +- 分两种情况,一种带 last,一种不带 */
+            if((/last/g.test(c2) || /last/g.test(c2))){
+              $(self).toggleClass('lastCollapsable lastExpandable').children('div').toggleClass('lastCollapsable-hitarea lastExpandable-hitarea');
+            };
+            $(self).toggleClass('collapsable expandable').children('div').toggleClass('collapsable-hitarea expandable-hitarea').nextAll('ul:eq(0)').slideToggle();
+          };
+          /* 发送请求 */
+          var url = 'http://easy-mock.com/mock/599cee78059b9c566dcc0cfe/work/knowledge';
+          var params = {
+            id: $(self).children('a').data('id')
+          };
+          $.ajax({
+            url: url,
+            data: params,
+            type: 'POST',
+            success: function(data){
+              var $tbody = $('#jList tbody');
+              $tbody.empty();
+              thisInstance.renduTbody(data,$tbody);
+            },
+            error: function(a,b){
+              console.log(a,b);
+            }
+          });
+          return false;
+        });
+      },
+
+
+
+      /* 获取数据后添加到 tbody 中,td 中的数据和添加到哪个节点中 */
+      renduTbody: function(data,addParent){
+        $.each(data,function(i,val){
+          var $tr = $('<tr id="' + val.id + '" data-id="' + val.recordid + '" data-recordurl="' + val.recordurl + '" />').appendTo(addParent).attr('class', 'listViewEntries');
+          var $td = '<td />';
+          var $a = '<a />';
+          /* 添加单元格并加入到表格中 */
+          $tr.append($td,$td,$td,$td,$td,$td,$td).find('td:eq(0)').append('<input type="checkbox" />').children('input').attr('value',val.recordid).addClass('listViewEntriesCheckBox').parent('td').next('td').attr('data-field-type','string').html(val.number).next('td').attr('data-field-type','string').html(val.issue).next('td').attr('data-field-type','string').html(val.theme).next('td').attr('data-field-type','owner').html(val.userid).next('td').attr('data-field-type','datetime').html(val.create_time).next('td').append('<div />').children('div').addClass('actions pull-right').append('<span />').children('span').addClass('actionImages').append($a,$a,$a).children('a:eq(0)').attr('href',val.connect.detail).append('<i />').children('i').attr('title','详细信息').addClass('icon-th-list alignMiddle').parent('a').next('a').attr('href',val.connect.edit).append('<i />').children('i').attr('title','编辑').addClass('icon-pencil alignMiddle').parent('a').next('a').addClass('deleteRecordButton').append('<i />').attr('title','删除').addClass('icon-trash alignMiddle');
+
+          $.each($tr.children(),function(i,childNode){
+            var b = $(childNode);
+            var c = b.children().length;
+            if(!c){
+              b.addClass('listViewEntryValue');
+            };
+            b.addClass('medium');
+          });
+        });
+      },
+
+
+
+      /*
+       * treeDom渲染
+       */
+      renduDom : function(){
+        var thisInstance = this;
+        var data = '';
+        // alert('弹出');
+        /*模拟数据*/
+        if(!data){
+          var data = '[{"id":"13","name":"17","way":"","grade":"tier_2","children":{"1":{"id":"14","name":"fdas1","grade":"tier_3","way":"","children":{"11":{"id":"29","name":"3ere","grade":"tier_4","way":"","children":{"14":{"id":"32","name":"2","grade":"tier_5","way":"","children":{"19":{"id":"37","name":"3aaa","grade":"tier_6","way":""}}},"21":{"id":"39","name":"1wwe","grade":"tier_5","way":""},"23":{"id":"41","name":"3fff","grade":"tier_5","way":""}}},"13":{"id":"31","name":"fff2","grade":"tier_4","way":""},"24":{"id":"42","name":"sss2","grade":"tier_4","way":""}}},"22":{"id":"40","name":"3ddd","grade":"tier_3","way":""}}},{"id":"15","name":"typ3","way":"typ3","grade":"tier_2","children":{"16":{"id":"34","name":"6546","grade":"tier_3","way":"typ3\/6546","children":{"17":{"id":"35","name":"545454","grade":"tier_4","way":"typ3\/6546\/545454","children":{"26":{"id":"44","name":"123","grade":"tier_5","way":"typ3\/6546\/545454\/123"}}}}}}},{"id":"16","name":"type1","way":"type1","grade":"tier_2"},{"id":"17","name":"type1","way":"type1","grade":"tier_2"},{"id":"18","name":"type5","way":"type5","grade":"tier_2","children":{"6":{"id":"23","name":"1sss","grade":"tier_3","way":"type5\/1"},"7":{"id":"24","name":"2g","grade":"tier_3","way":"type5\/2"},"8":{"id":"25","name":"5ddf","grade":"tier_3","way":"type5\/5"},"9":{"id":"26","name":"4","grade":"tier_3","way":"type5\/4","children":{"10":{"id":"27","name":"2ffsa66","grade":"tier_4","way":"type5\/4\/2"}}},"25":{"id":"43","name":"123","grade":"tier_3","way":"type5\/123"}}},{"id":"30","name":"1b","way":"","grade":"tier_2"},{"id":"33","name":"a15934","way":"","grade":"tier_2"},{"id":"36","name":"13f0.5b","way":"","grade":"tier_2"},{"id":"38","name":"22.b","way":"","grade":"tier_2"}]';
+        }
+        data = JSON.parse(data);
+        thisInstance.treeDom(data);
+      },
+/* 初始化|调用控件 */
+      treeEvent : function(){
+        this.treeView();
+      },
+      init : function() {
+        this.renduDom();
+      }
+    };
+    registerEvent.init();
+  /* 树状菜单 end */
+  }(jQuery,window));
+</script>
+</html>

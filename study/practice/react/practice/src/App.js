@@ -16,6 +16,11 @@ import Lost from './View/SwitchAndNotMatch/index';
 
 /* 递归路径 */
 import RecursionPath from './View/RecursionPath/RecursionPath';
+/* 递归路径第二遍练习 */
+import RecursionPathParctice from './View/RecursionPath/parcticeAndFormSubmit';
+
+/* 侧边栏 */
+import SideBar from './View/SideBar/sidebar';
 
 
 class App extends Component {
@@ -24,26 +29,30 @@ class App extends Component {
       <div onClickCapture={this.handleClick}>
         {/* <Home /> */}
         {/* <UrlArguments /> */}
-        
-        {/* 抄官网做的 */}
-        <div style={{padding: '40px 50px',background: 'orange'}}>
-          <p style={{color:'white'}}>抄官网做的</p>
-          <Redirect />
+
+        <div style={{overflow: 'hidden',background: 'purple'}}>
+          {/* 抄官网做的 */}
+          <div style={{padding: '40px 5%',background: 'orange',float: 'left',width: '40%'}}>
+            <p style={{color:'white'}}>抄官网做的</p>
+            <Redirect />
+          </div>
+          {/* 模仿官网做的 */}
+          <div style={{padding: '40px 5%',background: 'darkviolet',float: 'right',width: '40%'}}>
+            <p style={{color:'white'}}>模仿官网做的</p>
+            <Indexa />
+          </div>
         </div>
-        {/* 模仿官网做的 */}
-        <div style={{padding: '40px 50px',background: 'darkviolet'}}>
-          <p style={{color:'white'}}>模仿官网做的</p>
-          <Indexa />
-        </div>
-        {/* 呃,简化版,没官网写的好 */}
-        <div style={{padding: '40px 50px',background: 'violet'}}>
-          <p style={{color:'white'}}>呃,简化版,没官网写的好</p>
-          <Test />
-        </div>
-        {/* 利用原型写的,跟test类似 */}
-        <div style={{padding: '40px 50px',background: 'yellowgreen'}}>
-          <p style={{color:'white'}}>利用原型写的,跟test类似</p>
-          <LastRedirect />
+        <div style={{overflow: 'hidden',background: 'purple'}}>
+          {/* 呃,简化版,没官网写的好 */}
+          <div style={{padding: '40px 5%',background: 'violet',float: 'left',width: '40%'}}>
+            <p style={{color:'white'}}>呃,简化版,没官网写的好</p>
+            <Test />
+          </div>
+          {/* 利用原型写的,跟test类似 */}
+          <div style={{padding: '40px 5%',background: 'yellowgreen',float: 'right',width: '40%'}}>
+            <p style={{color:'white'}}>利用原型写的,跟test类似</p>
+            <LastRedirect />
+          </div>
         </div>
         
         {/* 组件跳转弹出提示框 */}
@@ -53,10 +62,18 @@ class App extends Component {
         <div style={{padding: '40px 50px',background: 'greenyellow'}}>
           <Lost />
         </div>
-
-        {/* 递归路径 */}
-        <div style={{padding: '40px 50px',background: 'darkorange'}}>
-          <RecursionPath />
+        <div style={{overflow: 'hidden',background: 'purple'}}>
+          {/* 递归路径 */}
+          <div style={{padding: '40px 5%',background: 'darkorange',float: 'left',width: '40%'}}>
+            <RecursionPath />
+          </div>
+          {/* 递归路径第二遍练习 */}
+          <div style={{padding: '40px 5%',background: 'violet',float: 'right',width: '40%'}}>
+            <RecursionPathParctice />
+          </div>
+        </div>
+        <div style={{padding: '40px 50px',background: 'dark'}}>
+          <SideBar />
         </div>
       </div>
     );

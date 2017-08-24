@@ -17,6 +17,12 @@
       <li><a href="http://vue-loader.vuejs.org/" target="_blank">vue-loader</a></li>
       <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
     </ul>
+    <!-- 这个是表单自动提交 start -->
+    <form ref='myForm' action='http://www.baidu.com' method='get'>
+      <input type="text">
+      <input type="submit" value="123">
+    </form>
+    <!-- 这个是表单自动提交 end -->
   </div>
 </template>
 
@@ -26,6 +32,16 @@ export default {
   data () {
     return {
       msg: 'Welcome to Your Vue.js App'
+    }
+  },
+  created(){
+    this.$nextTick(()=>{
+      this.submitForm();
+    })
+  },
+  methods: {
+    submitForm(){
+      this.$refs.myForm.submit()
     }
   }
 }

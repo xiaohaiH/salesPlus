@@ -7,11 +7,18 @@
 
 <script>
 export default {
-  name: 'app'
+  name: 'app',
+  data(){
+    return {
+      ulStyle: {
+        name: ''
+      }
+    }
+  },
 }
 </script>
 
-<style>
+<style scope>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

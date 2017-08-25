@@ -18,11 +18,16 @@
       <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
     </ul>
     <!-- 这个是表单自动提交 start -->
-    <form ref='myForm' action='http://www.baidu.com' method='get'>
+    <!-- <form ref='myForm' action='http://www.baidu.com' method='get'>
       <input type="text">
       <input type="submit" value="123">
-    </form>
+    </form> -->
     <!-- 这个是表单自动提交 end -->
+    <ul :style='ulStyle.name'>
+      <li class="a">1</li>
+      <li class="a">2</li>
+      <li class="a">3</li>
+    </ul>
   </div>
 </template>
 
@@ -31,17 +36,27 @@ export default {
   name: 'hello',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      msg: 'Welcome to Your Vue.js App',
+      ulStyle: {
+        name: ''
+      }
     }
   },
   created(){
     this.$nextTick(()=>{
       this.submitForm();
-    })
+    });
+    this.test();
   },
   methods: {
     submitForm(){
-      this.$refs.myForm.submit()
+      // this.$refs.myForm.submit();
+    },
+
+    test(){
+      /* 两种方式修改 data 中的值,推荐使用第二种 */
+      this.ulStyle.name = 'background:red;';
+      this.$set(this.ulStyle,'name','background:violet;');
     }
   }
 }
@@ -61,6 +76,9 @@ ul {
 li {
   display: inline-block;
   margin: 0 10px;
+}
+.a{
+  display: block;
 }
 
 a {

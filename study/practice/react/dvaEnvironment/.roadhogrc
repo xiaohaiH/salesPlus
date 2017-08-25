@@ -3,6 +3,7 @@
   "env": {
     "development": {
       "extraBabelPlugins": [
+        ["import", { "libraryName": "antd", "style": "css" }],
         "dva-hmr",
         "transform-runtime"
       ]
@@ -11,6 +12,13 @@
       "extraBabelPlugins": [
         "transform-runtime"
       ]
+    }
+  },
+  "proxy": {
+    "/api": {
+      "target": "http://jsonplaceholder.typicode.com/",
+      "changeOrigin": true,
+      "pathRewrite": { "^/api" : "" }
     }
   }
 }

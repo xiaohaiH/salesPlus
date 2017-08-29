@@ -1,8 +1,10 @@
 import React from 'react';
-import { Router, Route, Switch } from 'dva/router';
-// import IndexPage from './routes/IndexPage';
+import { Router, Route } from 'dva/router';
+import { Switch } from 'react-router-dom';
+import IndexPage from './routes/IndexPage';
 import products from './routes/products';
 
+console.log(Switch)
 
 function RouterConfig({ history }) {
   return (

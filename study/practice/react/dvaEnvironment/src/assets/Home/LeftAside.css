@@ -1,0 +1,40 @@
+.leftAside{
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 10;
+  height: 100%;
+  background: #2F4050;
+}
+.bigAside{
+  width: 240px;
+}
+.smallAside{
+  width: auto;
+}
+
+/* 顶部样式 */
+.asideTop{
+  padding: 0 0 0 24px;
+  color: #A7B1C2;
+}
+.asideTop a{
+}
+
+
+.list{
+  height: 100%;
+  background: #2F4050;
+}
+/* 覆盖列表选中的样式 */
+.ant-menu.ant-menu-dark .ant-menu-item-selected{
+  background: #293846!important;
+  height:200px!important;
+}
+
+.navShrink{
+  position: absolute;
+  right: 0;
+  top: 10px;
+  z-index: 11;
+}

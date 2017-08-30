@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'dva';
+import { Link } from 'dva/router';
 import List from '../components/list';
 
 const Products = ({ dispatch, products }) => {
@@ -13,6 +14,7 @@ const Products = ({ dispatch, products }) => {
     <div>
       <h2>List of Products</h2>
       <List onDelete={handleDelete} products={products} />
+      <li><Link to='/'>home</Link></li>
     </div>
   );
 };

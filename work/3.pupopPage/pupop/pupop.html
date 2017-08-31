@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <!-- <link rel="stylesheet" type="text/css" href="./bootstrap.min.css"> -->
+  <script src="./jquery.min.js"></script>
+  <!-- <script src="./bootstrap.min.js"></script> -->
+  <style type="text/css">
+    body{
+      /*font-family: 'Open Sans', 'Lucida Grande', Verdana, Tahoma, Arial, sans-serif !important;
+      color:#2b2b2b;*/
+    }
+    .container .listTop{
+      overflow: hidden;
+      clear: both;
+    }
+    .container h3{
+      font-size: 24px;
+      margin: 20px 0 25px 0;
+      text-align: center;
+    }
+    /* 搜索框 */
+    .searchBox{
+      width: 66%;
+      float: left;
+      overflow: hidden;
+    }
+    .searchBox div{
+      float: right;
+      overflow: hidden;
+      width: 50%;
+    }
+    .searchBox div form{
+      /*float: right;
+      width: 50%;*/
+    }
+    .searchBox div form input{
+      outline: none;
+      border: 1px solid #CCCCCC;
+    }
+    .searchBox div form input[type="text"]{
+      width: 210px;
+      height: 26px;
+      margin: 0;
+      padding: 0 0 0 5px;
+      color: #9FA19F;
+      float: left;
+    }
+    .searchBox div form input[type="submit"]{
+      width: 32px;
+      height:28px;
+      float: left;
+      border-left: none;
+      cursor: pointer;
+      background: url(./img/glyphicons-halflings.png) no-repeat -40px 5px;
+    }
+    .searchBox div form input[type="submit"]:hover{
+      background-color: #F5F5F5;
+    }
+    .innerShadow{
+      box-shadow: 0 0 6px 1px #D8D8D8 inset;
+    }
+    /* 翻页按钮 */
+    .flipOver {
+      float: right;
+      max-width: 33%;
+      overflow: hidden;
+    }
+    .flipOver button{
+      float: left;
+      width: 36px;
+      height: 28px;
+      border: 1px solid #DEDEDE;
+      background: white;
+      outline: none;
+      cursor: pointer;
+    }
+    .flipOver button:disabled{
+      cursor: no-drop;
+      background: #EFEFEF;
+    }
+    .flipOver button:nth-child(2){
+      border-left: none;
+      border-right: none;
+    }
+    .flipOver button:hover{
+      background: #EFEFEF;
+    }
+    .flipOver button i{
+      display: block;
+      width: 14px;
+      height: 14px;
+      background: url(./img/glyphicons-halflings.png) no-repeat;
+    }
+    .flipOver button:nth-child(1) i{
+      background-position: -430px -72px;
+    }
+    .flipOver button span{
+      display: block;
+      width: 14px;
+      height: 14px;
+      margin-left: 5px;
+      background: url(./img/vtGlyph.png) no-repeat 0 0;
+    }
+    .flipOver button:nth-child(3) i{
+      margin-left: 5px;
+      background-position: -457px -72px;
+    }
+    /* table */
+    .listBottom table{
+      margin-top: 20px;
+      font-size: 12px;
+      width: 100%;
+      border: 1px solid #DDDDDD;
+      border-collapse: collapse;
+      border-radius: 4px;
+    }
+    .listBottom table th{
+      background-image: linear-gradient(top, #f6f6f6, #f3f3f4);
+      background-image: -webkit-linear-gradient(top, #f6f6f6, #f3f3f4);
+      background-image: -ms-linear-gradient(top, #f6f6f6, #f3f3f4);
+      background-image: -moz-linear-gradient(top, #f6f6f6, #f3f3f4);
+      background-image: -o-linear-gradient(top, #f6f6f6, #f3f3f4);
+      border: none;
+      background-color: #f5f5f5;
+      vertical-align: bottom;
+      font-weight: bold;
+    }
+    .listBottom table th,.listBottom table td{
+      padding: 8px;
+      line-height: 18px;
+      text-align: left;
+    }
+    .listBottom table th a{
+      color: #444444;
+      text-decoration: none;
+    }
+
+    .listBottom table tbody tr{
+      border-top: 1px solid #DDDDDD;
+    }
+    .listBottom table tbody tr:hover{
+      background-color: #F5F5F5;
+    }
+    .listBottom table tbody tr td{
+      padding: 5px 6px!important;
+      vertical-align: middle;
+      cursor: pointer;
+      text-align: left;
+      color: #2B2B2B;
+    }
+    .listBottom table tbody tr td:nth-child(1),.listBottom table tbody tr td:nth-child(2){
+      color: #595959;
+    }
+
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="listTop">
+      <h3>客户</h3>
+      <div class="searchBox">
+        <div>
+          <form method="POST" onsubmit="return false;">
+            <input type="text" placeholder="查找..." name="searchInput">
+            <input type="submit" value=" " name="putIn">
+          </form>
+        </div>
+      </div>
+      <div class="flipOver">
+        <button disabled="disabled"><i></i></button>
+        <button><span></span></button>
+        <button disabled="disabled"><i></i></button>
+      </div>
+    </div>
+    <div class="listBottom">
+      <table>
+        <thead>
+          <tr>
+            <th><a href="javascript:void(0);">客户名称</a></th>
+            <th><a href="javascript:void(0);">负责人</a></th>
+            <th><a href="javascript:void(0);">创建时间</a></th>
+            <th><a href="javascript:void(0);">修改时间</a></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>范德萨范德萨范德萨</td>
+            <td>范德萨</td>
+            <td>放大范德萨</td>
+            <td>范德萨范德萨发方法</td>
+          </tr>
+          <tr>
+            <td>范德萨范德萨范德萨</td>
+            <td>范德萨</td>
+            <td>放大范德萨</td>
+            <td>范德萨范德萨发方法</td>
+          </tr>
+          <tr>
+            <td>范德萨范德萨范德萨</td>
+            <td>范德萨</td>
+            <td>放大范德萨</td>
+            <td>范德萨范德萨发方法</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+<script type="text/javascript">
+  !function ($,win){
+    /* 按钮点击样式 start */
+    var $inputText = $('.searchBox input[name="searchInput"]');
+    var $putIn = $('.searchBox input[name="putIn"]');
+    var $btn = $('.flipOver');
+    $inputText.on('focus',function(){
+      $(this).addClass('innerShadow');
+    }).on('blur',function(){
+      $(this).removeClass('innerShadow');
+    });
+    $putIn.on('mousedown',function(){
+      $(this).addClass('innerShadow');
+    }).on('mouseup',function(){
+      $(this).removeClass('innerShadow');
+    }).on('mouseout',function(){
+      $(this).removeClass('innerShadow');
+    });
+    $btn.on('mousedown','button',function(){
+      $(this).addClass('innerShadow');
+    }).on('mouseup','button',function(){
+      $(this).removeClass('innerShadow');
+    }).on('mouseout','button',function(){
+      $(this).removeClass('innerShadow');
+    });
+    /* 按钮点击样式 end */
+
+    /* incident */
+    $putIn.on('click',function(){
+      var c = $(this).prev('input').val();
+      if(c.replace(/(\s)/g,'')){
+        SendAjax(c);
+      };
+    });
+    function SendAjax(params){
+      $.ajax({
+        url: url,
+        data: params,
+        type: 'POST',
+        success: function(data){
+          console.log(data);
+        },
+        error: function(a,b){
+          console.log(a,b);
+        }
+      });
+    };
+  }(jQuery,window);
+</script>
+</html>

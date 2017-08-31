@@ -1,0 +1,55 @@
+
+import pxtorem from 'postcss-pxtorem';
+
+const path = require('path');
+
+
+const svgSpriteDirs = [
+  require.resolve('antd-mobile').replace(/warn\.js$/, ''), // antd-mobile 内置svg
+  path.resolve(__dirname, 'src/assets/icon-core'),  // 业务代码本地私有 svg 存放目录
+];
+
+export default {
+
+
+  "entry": "src/index.js",
+
+
+  "env": {
+    "development": {
+      "extraBabelPlugins": [
+        "dva-hmr",
+        "transform-runtime",
+        ["import", { "libraryName": "antd-mobile", "style":true }]
+      ]
+    },
+    "production": {
+      "extraBabelPlugins": [
+        "transform-runtime",
+        ["import", { "libraryName": "antd-mobile", "style":true }]
+      ]
+    }
+  },
+
+
+  "autoprefixer": {
+    "browsers": [
+      "iOS >= 8", "Android >= 4"
+    ]
+  },
+
+  extraPostCSSPlugins: [
+    pxtorem({
+      rootValue: 100,
+      propWhiteList: [],
+    }),
+  ],
+
+  svgSpriteLoaderDirs: svgSpriteDirs,
+
+  // 配置主题 暂时屏蔽 需要配置打开
+ "theme": "./theme.js"
+
+
+}
+

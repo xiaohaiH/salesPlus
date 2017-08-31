@@ -20,5 +20,6 @@
       "changeOrigin": true,
       "pathRewrite": { "^/api" : "" }
     }
-  }
+  },
+  "theme": "./theme.js"
 }

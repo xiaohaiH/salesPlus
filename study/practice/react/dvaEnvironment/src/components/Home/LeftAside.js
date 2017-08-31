@@ -51,9 +51,9 @@ class LeftAside extends React.Component {
           className={style.list}
           defaultSelectedKeys={['1']}
           // defaultOpenKeys={['sub1']}
-          mode="inline"
+          mode="vertical"
           theme="dark"
-          inlineCollapsed={this.state.collapsed}
+          // inlineCollapsed={this.state.collapsed}
         >
           <Menu.Item key="1">
             <Icon type="pie-chart" />
@@ -73,6 +73,7 @@ class LeftAside extends React.Component {
             <Menu.Item key="7">Option 7</Menu.Item>
             <Menu.Item key="8">Option 8</Menu.Item>
           </SubMenu>
+          <Menu.Divider className={style.dividingLine} ></Menu.Divider>
           <SubMenu key="sub2" title={<span><Icon type="appstore" /><span>Navigation Two</span></span>}>
             <Menu.Item key="9">Option 9</Menu.Item>
             <Menu.Item key="10">Option 10</Menu.Item>

@@ -18,23 +18,32 @@
   padding: 0 0 0 24px;
   color: #A7B1C2;
 }
-.asideTop a{
-}
-
-
-.list{
-  height: 100%;
-  background: #2F4050;
-}
-/* 覆盖列表选中的样式 */
-.ant-menu.ant-menu-dark .ant-menu-item-selected{
-  background: #293846!important;
-  height:200px!important;
-}
 
 .navShrink{
   position: absolute;
   right: 0;
   top: 10px;
   z-index: 11;
+}
+.asideTop a{
+}
+
+/* .leftAside ul {
+  background: #2F4050!important;
+}
+.leftAside ul span,.leftAside ul li,.leftAside ul div{
+  font-size:16px!important;
+} */
+.list{
+  height: 100%;
+}
+/* 覆盖列表选中的样式 */
+.ant-menu.ant-menu-dark .ant-menu-item-selected{
+  background-color: red!important;
+  height:200px!important;
+}
+.dividingLine{
+  background-color: #455262!important;
+  margin-bottom: 15px!important;
+  margin-top: 5px!important;
 }

@@ -53,7 +53,7 @@ class LeftAside extends React.Component {
           // defaultOpenKeys={['sub1']}
           mode="vertical"
           theme="dark"
-          // inlineCollapsed={this.state.collapsed}
+          inlineCollapsed={this.state.collapsed}
         >
           <Menu.Item key="1">
             <Icon type="pie-chart" />

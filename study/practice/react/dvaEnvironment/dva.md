@@ -37,3 +37,32 @@ const app = dva({
     }
 不懂的话可参考 vue -> build\webpack.base.conf.js 文件.
 ```
+
+## 修改 ant 的主题样式
+```
+在 package.json 或 .roadhogrc 中添加 theme 方法  -> 推荐 .roadhogrc 中添加
+  示例一: 直接输入
+    "entry": "src/index.js",
+    "theme": {
+      "@primary-color": "blue"
+    },
+  示例二: 指引方式
+    "entry": "src/index.js",
+    "theme": {
+      "@primary-color": "blue"
+    },
+注意: .roadhogrc -> extraBabelPlugins -> import -> style 必须设置为 true,不能为 "css"
+  示例: 
+  "entry": "src/index.js",
+  "theme": {
+    "@primary-color": "blue"
+  },
+  "env": {
+    "development": {
+      "extraBabelPlugins": [
+        ["import", { "libraryName": "antd", "style": true }],
+        "dva-hmr",
+        "transform-runtime"
+      ]
+    },
+```

@@ -1,9 +1,10 @@
 {
   "entry": "src/index.js",
+  "theme": "./theme",
   "env": {
     "development": {
       "extraBabelPlugins": [
-        ["import", { "libraryName": "antd", "style": "css" }],
+        ["import", { "libraryName": "antd", "style": true }],
         "dva-hmr",
         "transform-runtime"
       ]
@@ -20,6 +21,5 @@
       "changeOrigin": true,
       "pathRewrite": { "^/api" : "" }
     }
-  },
-  "theme": "./theme.js"
+  }
 }

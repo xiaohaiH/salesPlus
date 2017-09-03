@@ -8,7 +8,7 @@ import Home from './routes/Home/Home';
 function RouterConfig({ history }) {
   return (
     <Router history={history}>
-      <Route path="/products" component={Products} />
+  { /*<Route path="/products" component={Products} />*/ }
       <Route path='/home' component={Home} />
       <Route path="/" component={IndexPage} />
     </Router>

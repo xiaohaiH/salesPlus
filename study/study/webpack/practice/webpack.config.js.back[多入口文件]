@@ -1,0 +1,12 @@
+/* 多入口文件输出 */
+const path = require('path');
+module.exports = {
+  entry: {
+    bundle1: './src/index.js',
+    bundle2: './src/index2.js'
+  },
+  output: {
+    filename: '[name].js',
+    path: path.resolve(__dirname,'dist')
+  }
+}

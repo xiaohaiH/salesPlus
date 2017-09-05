@@ -1,0 +1,11 @@
+body{
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-transition: all 1s;
+  transition: all 1s;
+  -webkit-transform: translate(5px,10px);
+          transform: translate(5px,10px);
+  display: block;
+  border-radius: 15px;
+}

@@ -1,8 +1,0 @@
-body{
-  display: flex;
-  transition: all 1s;
-  transform: translate(5px,10px);
-  display: block;
-  border-radius: 15px;
-}
-input::-webkit-input-placeholder { color:#00f; }

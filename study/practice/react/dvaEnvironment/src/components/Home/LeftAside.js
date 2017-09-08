@@ -24,9 +24,11 @@ const AsideTop = ({onClick,type}) => {
           这里是个变量 <Icon type="caret-down" style={{color: '#8095A8'}} />
         </figcaption>
       </figure>
-      <Button className={style.navShrink} type="primary" onClick={onClick} >
-        <Icon type={type} />
-      </Button>
+      {/* <Button className={style.navShrink} type="primary" onClick={onClick} > */}
+       <div className={style.navShrink} onClick={onClick} >
+       <Icon type={type} />
+       </div>
+      {/* </Button> */}
     </div>
   );
 };
@@ -46,7 +48,7 @@ class LeftAside extends React.Component {
   render() {
     return (
       <div className={style.leftAside + ' ' + this.state.listWidth} >
-        <AsideTop type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'} onClick={this.toggleCollapsed} />
+        <AsideTop type={this.state.collapsed ? 'double-right' : 'double-left'} onClick={this.toggleCollapsed} />
         <Menu
           className={style.list}
           defaultSelectedKeys={['1']}

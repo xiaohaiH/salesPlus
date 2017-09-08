@@ -35,6 +35,7 @@
   font-size:16px!important;
 } */
 .list{
+  width: 100%;
   height: 100%;
 }
 /* 覆盖列表选中的样式 */

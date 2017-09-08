@@ -30,7 +30,12 @@ module.exports = {
         use: Ex.extract({
           fallback: 'style-loader',
           use: [
-            {loader: 'css-loader'},
+            {
+              loader: 'css-loader',
+              options: {
+                minimize: true
+              }
+            },
             {loader: 'postcss-loader'},
             {loader: 'less-loader'}
           ]
@@ -72,6 +77,6 @@ module.exports = {
         quality: '95-100'
       }
     }),
-    new Ex('main.css')
+    new Ex('home.css')
   ]
 }

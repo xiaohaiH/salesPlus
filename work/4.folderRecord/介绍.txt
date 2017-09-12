@@ -1,0 +1,5 @@
+这个是工具->文档下左侧的文件夹面板  路径: SalesNow_Origin\layouts\vlayout\modules\snow\  -> 在 SideBar.tpl 中引入,
+
+
+
+面板介绍:  通过 data-target 属性中对应的 id 来进行菜单的伸缩.

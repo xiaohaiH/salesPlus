@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'dva';
 import { Link } from 'dva/router';
 import { Menu, Icon, Button } from 'antd';
-import style from '@/assets/Home/LeftAside.css';
+import styled from '@/assets/Home/LeftAside.less';
 
 const SubMenu = Menu.SubMenu;
 
@@ -18,39 +18,92 @@ const userInfo = () => {
 const AsideTop = ({onClick,type}) => {
   return (
     <div>
-      <figure className={style.asideTop} >
+      <figure className={styled.asideTop} >
         <Icon type="smile" style={{color: '#58A3D2', fontSize: '54px'}} />
         <figcaption>
           这里是个变量 <Icon type="caret-down" style={{color: '#8095A8'}} />
         </figcaption>
       </figure>
-      {/* <Button className={style.navShrink} type="primary" onClick={onClick} > */}
-       <div className={style.navShrink} onClick={onClick} >
-       <Icon type={type} />
-       </div>
+      {/* <Button className={styled.navShrink} type="primary" onClick={onClick} > */}
+      <p className={styled.navShrink} onClick={onClick}>
+        <Icon type={type} />
+      </p>
       {/* </Button> */}
     </div>
   );
 };
 
 
+const ListBox = ({api}) => {
+    const list = (listData) => {
+      return listData.map((val,i) => {
+        if(val.val === 'cutOff'){
+          return (<Menu.Divider key={val.val} className={styled.dividingLine} />);
+        };
+        let c = '';
+        if(val.children){
+          c = list(val.children);
+        };
+        if(c){
+          return (<SubMenu key={val.val} title={(<span><Icon type={val.icon} /><span>{val.val}</span></span>)} >{c}</SubMenu>);
+        }else{
+          return (<Menu.Item key={val.val}><Icon type={val.icon}/> <span>{val.val}</span></Menu.Item>);
+        };
+      });
+    }
+    return (
+    <Menu
+      className={styled.list}
+      defaultSelectedKeys={['1']}
+      // defaultOpenKeys={['sub1']}
+      mode="vertical"
+      theme="dark"
+      // inlineCollapsed={this.state.collapsed}
+    >
+    {list(listApi.content)}
+    </Menu>
+  );
+}
+
 class LeftAside extends React.Component {
   state = {
     collapsed: false,
-    listWidth: 'bigAside___3NOt1'
+    listWidth: styled.bigAside
   }
   toggleCollapsed = () => {
     this.setState({
       collapsed: !this.state.collapsed,
-      listWidth: this.state.collapsed ? 'bigAside___3NOt1' : 'smallAside___3NOt1'
+      listWidth: this.state.collapsed ? styled.bigAside : styled.smallAside
     });
   }
   render() {
     return (
-      <div className={style.leftAside + ' ' + this.state.listWidth} >
+      <div className={`${styled.leftAside} ${this.state.listWidth}`} >
+        <AsideTop type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'} onClick={this.toggleCollapsed} />
+        <ListBox />
+      </div>
+    );
+  }
+}
+
+/*
+class LeftAside extends React.Component {
+  state = {
+    collapsed: false,
+    listWidth: styled.bigAside
+  }
+  toggleCollapsed = () => {
+    this.setState({
+      collapsed: !this.state.collapsed,
+      listWidth: this.state.collapsed ? styled.bigAside : styled.smallAside
+    });
+  }
+  render() {
+    return (
+      <div className={`${this.state.listWidth} ${styled.leftAside}`} >
         <AsideTop type={this.state.collapsed ? 'double-right' : 'double-left'} onClick={this.toggleCollapsed} />
         <Menu
-          className={style.list}
+          className={styled.list}
           defaultSelectedKeys={['1']}
           // defaultOpenKeys={['sub1']}
           mode="vertical"
@@ -75,7 +128,7 @@ class LeftAside extends React.Component {
             <Menu.Item key="7">Option 7</Menu.Item>
             <Menu.Item key="8">Option 8</Menu.Item>
           </SubMenu>
-          <Menu.Divider className={style.dividingLine} ></Menu.Divider>
+          <Menu.Divider className={styled.dividingLine} ></Menu.Divider>
           <SubMenu key="sub2" title={<span><Icon type="appstore" /><span>Navigation Two</span></span>}>
             <Menu.Item key="9">Option 9</Menu.Item>
             <Menu.Item key="10">Option 10</Menu.Item>
@@ -89,5 +142,6 @@ class LeftAside extends React.Component {
     );
   }
 }
+*/
 
 export default connect()(LeftAside);

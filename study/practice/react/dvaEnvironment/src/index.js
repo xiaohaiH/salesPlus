@@ -13,6 +13,7 @@ const app = dva({
   history: browserHistory
 });
 
+
 // 2. Plugins
 // app.use({});
 

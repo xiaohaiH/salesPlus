@@ -5,13 +5,13 @@ import { Table, Popconfirm, Button } from 'antd';
 const List = ({ onDelete, products }) => {
   const columns = [{
     title: 'Name',
-    dataIndex: 'name',
+    dataIndex: 'name'
   }, {
     title: 'Actions',
     render: (text, record) => {
       return (
         <Popconfirm title="Delete?" onConfirm={() => onDelete(record.id)}>
-          <Button>Delete</Button>
+          <Button title='delete'>Delete</Button>
         </Popconfirm>
       );
     },
@@ -20,6 +20,7 @@ const List = ({ onDelete, products }) => {
     <Table
       dataSource={products}
       columns={columns}
+      rowKey={record => record.id}
     />
   );
 };

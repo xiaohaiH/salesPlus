@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 
 
 class Counter extends Component{
-  constructor(props){
-    super(props)
-  }
+  // constructor(props){
+  //   super(props)
+  // }
 
   /* 将按钮返回给页面 */
   render(){

@@ -145,15 +145,17 @@
         function LeftAside(obj) {
             var $leftAside = $('.leftAside').find('ul');
             $.each(obj, function(i, data) {
-                var $li = $('<li></li>').attr('class', 'topNavBox clearfix').appendTo($leftAside);
+                var c = data.content.length == 1 && data.content[0].val == data.title;
+                var $li = $('<li></li>').addClass('clearfix').appendTo($leftAside);
                 $li.append('<p></p>').find('p').append('<span></span>').attr({
-                    'class': 'clearfix topNav',
+                    'class': 'clearfix' + (c ? '' : ' topNav'),
                     'triangle': 'true'
                 }).find('span:nth-of-type(1)').attr('class', 'pull-left').html(data.title);
                 /* 确认有子级菜单数据为真的时候在创建三角符号和子级菜单 */
-                var c = data.content.length == 1 && data.content[0].val == data.title;
-                if (!c) {
-                    $li.find('p').append('<i />').find('i').addClass('caret');
+                if (c) {
+                    $li.addClass('gather');
+                } else {
+                    $li.addClass('topNavBox').find('p').append('<i />').find('i').addClass('caret');
                     var $ul = $('<ul></ul>').appendTo($li).attr('class', 'clearfix');
                     $.each(data.content, function(index, val) {
                         $('<li></li>').appendTo($ul).html(val.val).attr({
@@ -161,8 +163,6 @@
                             'res': val.productRequest
                         });
                     });
-                } else {
-                    $li.addClass('gather');
                 };
             });
             /* 点击左侧导航请求数据 */

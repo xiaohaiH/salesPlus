@@ -1,0 +1,309 @@
+/* reset */
+p, li, ul, h3 {
+  margin: 0;
+  padding: 0;
+}
+li {
+  list-style: none;
+  line-height: normal;
+}
+
+/* 主体样式 */
+.main {
+  background: white;
+  min-height: 797px;
+}
+.main>.row {
+  margin: 0;
+  padding: 0;
+}
+
+/* 左侧导航样式 */
+.main .leftAside {
+  max-width: 300px;
+  padding: 0;
+  background: #F9F9F9;
+  min-height: 797px;
+}
+.main .leftAside>ul>li>p {
+  padding: 1.1rem 0;
+  line-height: normal;
+  margin: 0;
+  color: #16325C;
+  border-top: 1px solid #EAEAEA;
+  border-bottom: 1px solid #EAEAEA;
+  padding-left: 20px;
+}
+.main .leftAside>ul>li>p>span {
+  font-size: 14px;
+  padding-right: 1rem;
+  padding-left: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  max-width: 80%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.main .leftAside>ul>li ul {
+  margin-left: 35px;
+  display: none;
+}
+.main .leftAside>ul>li ul li {
+  margin: 10px 0;
+  color: #16325C;
+  cursor: pointer;
+}
+.main .leftAside>ul>li ul li:hover {
+  color: #399DF0;
+}
+
+/* 导航栏激活样式 */
+.navActive {
+  background: #ccc;
+}
+.topNav i {
+  -webkit-transition: -webkit-transform .5s;
+  transition: -webkit-transform .5s;
+  transition: transform .5s;
+  transition: transform .5s, -webkit-transform .5s;
+}
+
+/* 右侧主体内容样式 */
+.main .rightContent {
+  padding: 0;
+  border-top: 1px solid #E3E3E3;
+  border-right: 1px solid #E3E3E3;
+  border-left: 2px solid #E3E3E3;
+  min-height: 797px;    /* text-align: center; */
+}
+/* 标题样式 */
+.main .rightContent .mainTitleNav{
+  height: 43px;
+  line-height: 43px;
+  font-size: 14px;
+  background: #F4F4F4;
+  border-top: 1px solid #E3E3E3;
+  border-bottom: 1px solid #E3E3E3;
+}
+.main .rightContent .mainTitleNav::after{
+  content: '';
+  display: block;
+  clear: both;
+}
+.main .rightContent .mainTitleNav h3 {
+  float: left;
+  font-size: inherit;
+  line-height: inherit;
+  /*padding: 1.26rem 0;*/
+  padding-left: 1rem;
+  font-weight: bold;
+  margin: 0;
+}
+/* .main .rightContent .mainTitleNav h3 span {
+  font-size: 14px;
+}
+.main .rightContent .mainTitleNav h3 i {
+  margin: 0 .4rem;
+} */
+.main .rightContent .mainTitleNav div {
+  float: right;
+  width: 25%;
+  height: 100%;
+  padding-right: 1rem;
+  line-height: normal;
+  background: none;
+}
+.main .rightContent .mainTitleNav div::before {
+  content: '';
+  height: 100%;
+  display: inline-block;
+  vertical-align: middle;
+}
+.main .rightContent .mainTitleNav div p {
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  width: 97%;
+  height: 25px;
+  line-height: 100%;
+  display: inline-block;
+  vertical-align: middle;
+}
+.main .rightContent .mainTitleNav div p input {
+  margin: 0;
+  padding: 0;
+  float: left;
+  width: 88%;
+  height: 100%;
+  line-height: inherit;
+  background: none;
+  border: none;
+  outline: none;
+  padding-left: 14px;
+}
+.main .rightContent .mainTitleNav div p input:focus {
+  box-shadow: none;
+}
+.main .rightContent .mainTitleNav div p span {
+  float: right;
+  width: 11%;
+  height: 100%;
+  line-height: inherit;
+}
+.main .rightContent .mainTitleNav div p span::before {
+  content: '';
+  display: inline-block;
+  width: 0;
+  height: 100%;
+  vertical-align: middle;
+}
+.main .rightContent .mainTitleNav div p span i {
+  vertical-align: middle;
+}
+/* 内容样式 */
+.main .rightContent .productBox {
+  padding: 0 15px;
+}
+.main .rightContent .productBox figure {
+  position: relative;
+  background: white;
+  z-index: 3;
+  margin-top: 1rem;
+}
+.main .rightContent .productBox figure figcaption {
+  background: white;
+  text-align: center;
+  font-size: 1.4rem;
+  padding-top: 1rem;
+
+  padding-bottom: .5rem;
+  padding-top: 1rem;
+}
+.detailBtn {
+  border-color: #46b8da !important;
+}
+
+/* 设置免费和安装图标的颜色 */
+.main .rightContent .productBox figure figcaption p{
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.main .rightContent .productBox figure figcaption p:nth-of-type(1) span {
+  color: white;
+  line-height: 20px;
+  padding: 0 1rem;
+  border-radius: 6px;
+  font-size: 12px;
+  margin-bottom: 6px;
+  text-shadow: 1px 1px 1px #666;
+}
+.free {
+  background: #12B7F5;
+}
+.charge {
+  background: #F66375;
+}
+.install {
+  background: #049BAF;
+}
+.notInstall {
+  background: #BBBBBB;
+}
+.main .rightContent .productBox figure figcaption p:nth-of-type(1) span:nth-of-type(1) {
+  margin-left: 12px;
+}
+.main .rightContent .productBox figure figcaption p:nth-of-type(1) span:nth-of-type(2) {
+  margin-right: 12px;
+}
+.main .rightContent .productBox figure figcaption p:nth-of-type(2) {
+  line-height: 32px;
+  border-top: 1px solid #EEEEEE;
+}
+
+/* 翻页按钮样式 */
+.main .rightContent .pageBtn {
+  text-align: center;
+  margin: 3rem 0;
+}
+.main .rightContent .pageBtn button {
+  background-color: #12A0D6;
+  border-color: #12A0D6 !important;
+  padding: 10px 30px;
+  outline: none;
+}
+.main .rightContent .pageBtn button:nth-of-type(1) {
+  margin-right: 10rem;
+}
+
+/* 详情样式 */
+.detailMoreBox {
+  display: inline-block;
+  font-size: 1.5rem;
+}
+.detailMore {
+  color: white;
+  display: inline-block;
+  margin-right: 1rem;
+  font-size: 1.5rem;
+  cursor: pointer
+}
+.detailsBox {
+  position: absolute;
+  background-color: white;
+  line-height: normal;
+  padding: 1rem 1.5rem;
+  min-width: 25rem;
+  max-width: 30rem;
+  max-height: 34rem;
+  min-height: 30rem;
+  overflow: auto;
+  text-align: left;
+  display: none;
+}
+.detailsBox > div div {
+  margin: .5rem 0;
+}
+.detailsBox > div h3 {
+  white-space: nowrap;
+  font-size: 22px;
+}
+.detailsBox > div p {
+  margin: 1rem 0;
+  padding: 0 0 0 1rem;
+}
+.detailsBox > div p span {
+  font-size: 1.5rem;
+  display: block;
+}
+.detailsBox .detailsResFail{
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+}
+/* 设置右侧图片的高度 */
+@media only screen and (min-width : 1660px) {
+    figure img{
+        width:95%;
+        height:300px!important;
+    }
+}
+@media only screen and (max-width: 1660px){
+    figure img{
+        width:95%;
+        height:200px!important;
+    }
+}
+@media only screen and (max-width: 1200px){
+    figure img{
+        width:95%;
+        height:150px!important;
+    }
+}
+@media only screen and (max-width: 760px){
+    figure img{
+        width:95%;
+        height:400px!important;
+    }
+}

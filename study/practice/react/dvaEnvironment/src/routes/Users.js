@@ -1,16 +1,20 @@
 import React from 'react';
 import { connect } from 'dva';
 import styles from './Users.css';
+import UsersCom from '../components/Users/Users';
+import MainLayout from '../components/MainLayout/MainLayout';
 
-function Users() {
+function Users({ location  }) {
   return (
-    <div className={styles.normal}>
-      Route Component: Users
-    </div>
+    <MainLayout location={location}>
+      <div className={styles.normal}>
+        <UsersCom />
+      </div>
+    </MainLayout>
   );
 }
 
-function mapStateToProps() {
+function mapStateToProps(state) {
   return {};
 }
 

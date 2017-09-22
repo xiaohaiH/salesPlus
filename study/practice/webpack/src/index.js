@@ -1,7 +1,6 @@
 
-function ss({b=1} = {}){
-  console.log(b)
-}
-ss()
-ss()
-ss()
+require('./loading.js');
+
+require.ensure(['./ss.js'],function(require){
+  require('./a.js')
+})

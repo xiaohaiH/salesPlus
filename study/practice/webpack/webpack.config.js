@@ -53,10 +53,6 @@ module.exports ={
     }),
     new HtmlPlugin({
       template: path.resolve(__dirname,'src/index.html')
-    }),
-    new HtmlPlugin({
-      template: path.resolve(__dirname,'src/index.html'),
-      filename: 'test.html'
     })
   ],
   devServer: {

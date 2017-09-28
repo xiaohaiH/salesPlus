@@ -1,0 +1,45 @@
+98行开始
+        /* 2017-9-26 by haidongxiao 在某些模块中不弹窗直接返回值 start */
+        if (true) {
+            // if (需要判断的模块) {
+            var title = $('input[name="title"]');
+            var lastname = $('input[name="lastname"]');
+            var department = $('input[name="department"]');
+            var leadsource = $('select[name="leadsource"]');
+            /* 值为空时,提示用户 start */
+            if (!leadsource.val()) {
+                console.log('选择框');
+                var error = app.vtranslate('JS_GLOBAL_SEARCH_KEY_NULL');
+                leadsource.validationEngine('showPrompt', error, '', "topLeft", true);
+                return false
+            } else {
+                leadsource.validationEngine('hide');
+            };
+            if (!title.val()) {
+                var error = app.vtranslate('JS_GLOBAL_SEARCH_KEY_NULL');
+                title.validationEngine('showPrompt', error, '', "topLeft", true);
+                return false
+            };
+            if (!lastname.val()) {
+                var error = app.vtranslate('JS_GLOBAL_SEARCH_KEY_NULL');
+                lastname.validationEngine('showPrompt', error, '', "topLeft", true);
+                return false
+            };
+            if (!department.val()) {
+                var error = app.vtranslate('JS_GLOBAL_SEARCH_KEY_NULL');
+                department.validationEngine('showPrompt', error, '', "topLeft", true);
+                return false
+            };
+            params['title'] = title.val();
+            params['lastname'] = lastname.val();
+            params['department'] = department.val();
+            /* 值为空时,提示用户 end */
+        }
+        /* 2017-9-26 在某些模块中不弹窗直接返回值 end */
+
+
+149行开始
+        /* 2017-9-26 by haidongxiao 判断返回值为 false 时,不执行下列代码  start  */
+        if (!this.getPopUpParams(parentElem)) return false;
+        var params = this.getPopUpParams(parentElem);
+        /* 2017-9-26  start  */

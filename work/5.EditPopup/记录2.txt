@@ -1,0 +1,29 @@
+253行开始
+        /* by haidongxiao 2017-9-27 在某些模块中点击列表后发送请求渲染指定字段,然后关闭弹窗 start */
+        if (true) {
+            var getId = row.data('id');
+            var getName = row.data('name');
+            var getInfo = row.data('info');
+            var params = {
+                id: getId,
+                name: getName,
+                info: getInfo
+            }
+            $.ajax({
+                url: 'http://easy-mock.com/mock/59af6c27e0dc6633419e609c/AppStore/select2Value',
+                data: params,
+                type: 'POST',
+                dataType: 'json',
+                success: function(data) {
+                    if (!data.success) return false;
+                    var dataResult = data.result;
+                    $('#related_to_display', opener.document).val(54321);
+                    window.close()
+                },
+                error: function(one, two) {
+                    console.log(one, two)
+                }
+            })
+            return false
+        };
+        /* by haidongxiao 在某些模块中点击列表后发送请求渲染指定字段,然后关闭弹窗 end */

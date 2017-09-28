@@ -1,0 +1,1 @@
+export default () => <h3>test 页面</h3>

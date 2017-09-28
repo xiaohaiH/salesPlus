@@ -1,0 +1,1 @@
+export default () => <h3>test 的子组件</h3>

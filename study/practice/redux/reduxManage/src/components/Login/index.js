@@ -6,8 +6,10 @@ const FormItem = Form.Item;
 
 class LoginForms extends Component{
   constructor(props){
+    console.log(11)
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this)
+    console.log(this.props)
   }
   handleSubmit(e){
     e.preventDefault();
@@ -16,40 +18,49 @@ class LoginForms extends Component{
         console.log('报错了:', err);
         return false
       };
-      console.log(this.props.dispatch)
-      this.props.dispatch && this.props.dispatch({ type: 'app/login', payload: value })
+      this.props.dispatch && this.props.dispatch({ type: 'userLogin/login', payload: value })
     })
   }
   render(){
     const { getFieldDecorator } = this.props.form;
-    return (
-      <Form onSubmit={ this.handleSubmit } className='login-form'>
-        <FormItem>
+    const { sss } = this.props.userLogin;
+    console.log(sss)
+    const { show, msg } = this.props.userLogin.userLoginHint;
+    const hint = msg ? '用户名错误' : '密码错误';
+    if(sss == 10 || sss == 11){
+      return (
+        <Form onSubmit={ this.handleSubmit } className='login-form'>
           {
-            getFieldDecorator('username',{
-              rules: [{ required: true, message: '请输入用户名' }]
-            })(<Input prefix={ <Icon type='user' style={{ fontSize: 13 }} /> } placeholder='用户名' />)
+            show ? (<div><span>{ hint }</span></div>) : ''
+            // show ? '' : (<div><span>{ hint }</span></div>)
           }
-        </FormItem>
-        <FormItem>
-          {
-            getFieldDecorator('password',{
-              rules: [{ required: true, message: '请输入密码' }]
-            })(
-              <Input type='password' prefix={ <Icon type='lock' style={{ fontSize: 13 }} /> } placeholder='密码' />
-            )
-          }
-        </FormItem>
-        <FormItem>
-          <Button type='primary' htmlType='submit' className='login-form-button'>登录</Button>
-        </FormItem>
-      </Form>
-    )
+          <FormItem>
+            {
+              getFieldDecorator('username',{
+                rules: [{ required: true, message: '请输入用户名' }]
+              })(<Input prefix={ <Icon type='user' style={{ fontSize: 13 }} /> } placeholder='用户名' />)
+            }
+          </FormItem>
+          <FormItem>
+            {
+              getFieldDecorator('password',{
+                rules: [{ required: true, message: '请输入密码' }]
+              })(
+                <Input type='password' prefix={ <Icon type='lock' style={{ fontSize: 13 }} /> } placeholder='密码' />
+              )
+            }
+          </FormItem>
+          <FormItem>
+            <Button type='primary' htmlType='submit' className='login-form-button'>登录</Button>
+          </FormItem>
+        </Form>
+      )
+    }
   }
 };
 
 const LoginForm = Form.create()(LoginForms);
-const mapStateToProps = ({ app }) => {
-  return { app }
+const mapStateToProps = ({ userLogin }) => {
+  return { userLogin }
 }
 export default connect(mapStateToProps)(LoginForm)

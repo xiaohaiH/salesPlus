@@ -13,6 +13,7 @@ function IndexPage() {
         <li>To get started, edit <code>src/index.js</code> and save to reload.</li>
         <li><a href="https://github.com/dvajs/dva-docs/blob/master/v1/en-us/getting-started.md">Getting Started</a></li>
         <li><Link to='/login'>login</Link></li>
+        <liL><Link to='/table'>antd 表单</Link></liL>
         <li><Link to='/test'>test</Link></li>
         <li><Link to='/test/child'>test子组件->child</Link></li>
       </ul>

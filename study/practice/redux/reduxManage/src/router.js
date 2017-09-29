@@ -24,6 +24,11 @@ const RouteConfig = ({ history, app }) => {
     {
       path: '/test/child',
       component: () => import('./components/Test/Child/')
+    },
+    {
+      path: '/table',
+      models: () => [ import('./models/Tabel') ],
+      component: () => import('./components/Table/')
     }
   ];
   return (

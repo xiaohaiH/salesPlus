@@ -1,18 +1,18 @@
 import fetch from 'dva/fetch';
-
-function parseJson(response){
-  return response.json()
+const resJson = (res) => res.json();
+const checkStatus = (res) => {
+  if(res.status >= 200 && res.status < 300){
+    return res
+  }
+  const err = new Error(res.statusText);
+  err.response = res;
+  throw err
 }
-function checkoutStatus(response){
-  if(response.status >= 200&& response.status < 300)return response;
-  const error = new Error(response.statusText);
-  error.response = response;
-  throw error
-}
-export default function request(url, options){
-  return fetch(url, options)
-    .then(checkoutStatus)
-    .then(parseJson)
+const headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+export default function res(url, { method = 'POST', headers = headers, body = '', ...params }){
+  return fetch(url, { method, headers, body, ...params })
+    .then(checkStatus)
+    .then(resJson)
     .then(data => data)
-    .catch(err => ({ err }))
+    .catch(err => err)
 }

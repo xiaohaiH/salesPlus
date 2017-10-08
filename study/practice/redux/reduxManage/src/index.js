@@ -1,14 +1,20 @@
 import dva from 'dva';
 import './index.css';
 import { browserHistory as history } from 'dva/router';
+import createLoading from 'dva-loading';
 
 // 1. Initialize
 const app = dva({
-  history
+  history,
+  onError(e) {
+    message.error(e.message, 3);
+  },
 });
 
 // 2. Plugins
-// app.use({});
+app.use(createLoading({
+  global: true
+}));
 
 // 3. Model
 // app.model(require('./models/Login'));

@@ -1,0 +1,52 @@
+.loginBox{
+  width: 300px;
+  margin: 0 auto;
+  position: relative;
+}
+.hint{
+  margin: 1rem 0 .5rem;
+  color: #F04134;
+}
+.hint span{
+  font-size: 1rem;
+  padding-left: .5rem;
+}
+/* loading */
+.refreshBox{
+  position: absolute;
+  z-index: 10 ;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  background: rgba(38,153,235,.2);
+}
+.refreshBox .refresh{
+  position: absolute;
+  width: inherit;
+  text-align: center;
+  left: 0;
+  top: 50%;
+  margin-top: -10%;
+}
+
+.state a{
+  float: right;
+}
+/* 登陆按钮 */
+.btn{
+  text-align: center;
+}
+.btn button{
+  width: 30%;
+}
+.btn button:nth-child(1){
+  float: left;
+}
+.btn button:nth-child(2){
+  float: right;
+}
+.logoBox{
+  text-align: center;
+  margin: 2rem 0 0 0;
+}

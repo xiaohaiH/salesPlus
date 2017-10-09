@@ -15,11 +15,11 @@ const RouterConfig = ({ history, app}) => {
       models: () => [ import('./models/login/login') ],
       component: () => import('./routes/login/index')
     },
-    // {
-    //   path: '/home',
-    //   models: () => import('./models/home'),
-    //   component: () => import('./routes/home')
-    // }
+    {
+      path: '/home',
+      models: () => [ import('./models/home/home') ],
+      component: () => import('./routes/home/home')
+    }
   ];
   return(
     <Router history={history}>

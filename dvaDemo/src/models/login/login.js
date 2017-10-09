@@ -2,7 +2,7 @@ import req from '../../utils/request';
 import { routerRedux } from 'dva/router';
 import { stringify } from 'query-string';
 
-const delay = (time) => new Promise(resolve => setTimeout(resolve,time))
+// const delay = (time) => new Promise(resolve => setTimeout(resolve,time))
 export default {
   namespace: 'login',
   state: {
@@ -50,11 +50,13 @@ export default {
   effects: {
     *loginRes({ payload }, { put, call }){
       yield put({ type: 'loading', payload: true });
-      yield call(delay, 2000);
-      const { code, data } = yield call(req,'http://localhost/dvaDemoLogin.php',{ body: JSON.stringify({ ...payload }) });
+      // yield call(delay, 2000);
+      // const { code, data } = yield call(req,'http://localhost/dvaDemoLogin.php',{ body: JSON.stringify({ ...payload }) });
+      // const s = yield call(req,'http://localhost:99/homes.php',{ body: JSON.stringify({ ...payload }) });
+      const { code, data } = { code: 'success', userInfo: { name: 'a', token: 123, permission: 456 } };
       if(code === 'success'){
         yield put({ type: 'success', payload: { ...data } });
-        yield put(routerRedux.push('/table'))
+        yield put(routerRedux.push('/home'))
       }else{
         yield put({ type: 'fail', payload: { ...data } })
       };

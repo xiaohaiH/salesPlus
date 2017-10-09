@@ -13,6 +13,7 @@ class Tables extends Component{
     this.delete = this.delete.bind(this);
   }
   edit(value){
+    console.log(value)
     const { content } = this.props.home;
     this.props.dispatch({ type: 'home/resEdit', payload: { value, content } })
   }
@@ -23,7 +24,7 @@ class Tables extends Component{
     let { header, content } = this.props.home;
     /* 处理 header 的数据 */
     header.map((val, index) => {
-      const cellEditable = content[index].editable;
+      const cellEditable = content.length && content[index]['name'].editable;
       if(val['dataIndex'] === 'name'){
         if(!val['editable']){
           val['render'] = (text) => <a>{text}</a>
@@ -31,15 +32,15 @@ class Tables extends Component{
       };
       if(val['title'] === '操作'){
         val['render'] = (text, record) => {
-          console.log(val)
           return (
             <p>
               {
-                cellEditable ? <a style={{marginRight: '1rem'}}
-                  onClick={() => this.edit(record)}>编辑</a> : <Popconfirm title="确定删除?" onConfirm={() => this.delete(record.name)} okText="确认" cancelText="取消">
-                <a>Delete</a>
+                !cellEditable ? <a style={{marginRight: '1rem'}} onClick={() => this.edit(record)}>编辑</a> : <Popconfirm title="确定删除?" onConfirm={() => this.delete(record.name)} okText="确认" cancelText="取消">
+                <a style={{marginRight: '1rem'}}>保存</a>
+                <a style={{marginRight: '1rem'}}>取消</a>
               </Popconfirm>
               }
+              {/* <a style={{marginRight: '1rem'}} onClick={() => this.edit(record)}>编辑</a> */}
               <Popconfirm title="确定删除?" onConfirm={() => this.delete(record.name)} okText="确认" cancelText="取消">
                 <a>Delete</a>
               </Popconfirm>

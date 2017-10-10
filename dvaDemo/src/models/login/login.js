@@ -50,14 +50,15 @@ export default {
   effects: {
     *loginRes({ payload }, { put, call }){
       yield put({ type: 'loading', payload: true });
-      // yield call(delay, 2000);
-      // const { code, data } = yield call(req,'http://localhost/dvaDemoLogin.php',{ body: JSON.stringify({ ...payload }) });
-      // const s = yield call(req,'http://localhost:99/homes.php',{ body: JSON.stringify({ ...payload }) });
+      // const { code, data } = yield call(req,'http://localhost:99/dvaDemoLogin.php',{ body: JSON.stringify({ ...payload }) });
       const { code, data } = { code: 'success', userInfo: { name: 'a', token: 123, permission: 456 } };
+      console.log(code)
       if(code === 'success'){
         yield put({ type: 'success', payload: { ...data } });
+        localStorage.setItem('login','true');
         yield put(routerRedux.push('/home'))
       }else{
+        localStorage.setItem('login','false');
         yield put({ type: 'fail', payload: { ...data } })
       };
       yield put({ type: 'loading', payload: false })

@@ -5,7 +5,8 @@ export default {
   namespace: 'home',
   state: {
     header: [],
-    content: []
+    content: [],
+    // addSataus: false
   },
   reducers: {
     success(state, { payload: { ...result } }){
@@ -14,16 +15,23 @@ export default {
         ...result
       }
     },
-    'delete'(state, { payload: { name }}){
+    'delete'(state, { payload: { id }}){
       return {
         ...state,
-        content: state.content.filter((val) => val.name !== name)
+        content: state.content.filter((val) => val.id !== id)
       }
     },
-    edit(state,{ payload: { content } }){
+    editStatusManage(state, { payload: { content } }){
       return {
         ...state,
         content
+      }
+    },
+    save(state, { payload: { ...data } }){
+      console.log(data)
+      return {
+        ...state,
+        ...data
       }
     }
   },
@@ -48,26 +56,29 @@ export default {
       const contentData = yield call(req, 'http://localhost:99/homeData.php', { body: stringify(params) });
       yield put({ type: 'success', payload: { content: contentData } })
     },
-    *resDelete({ payload: { name } }, { call, put }){
+    *resDelete({ payload: { id } }, { call, put }){
       const params = {
         type: 'delete',
-        name
+        id
       };
       const { success } = yield call(req, 'http://localhost:99/homeManageData.php', { body: stringify(params) });
       if(success){
-        yield put({ type: 'delete', payload: { name}})
+        yield put({ type: 'delete', payload: { id } })
       }
     },
-    *resEdit({ payload: { value, content } }, { call, put }){
-      let updataValIndex = content.findIndex(val => val.name.value === value.name);
-      let updataVal = content.find(val => val.name.value === value.name);
+    *resEditStatusManage({ payload: { value, content, type } }, { call, put }){
+      let updataValIndex = content.findIndex(val => val.id === value.id);
+      let updataVal = content.find(val => val.id === value.id);
       for(const k in updataVal){
         if(typeof updataVal[k].editable !== 'undefined'){
           updataVal[k].editable = !updataVal[k].editable;
         }
+        if(typeof updataVal[k] === 'object' && type !== 'save'){
+          updataVal[k].value = value[k];
+        }
       };
       content[updataValIndex] = updataVal;
-      yield put({ type: 'edit', payload: { content }})
+      yield put({ type: 'editStatusManage', payload: { content }})
     }
   },
   subscriptions: {

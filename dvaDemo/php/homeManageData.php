@@ -3,7 +3,7 @@
   header('Access-Control-Allow-Origin: *');
   $post = $_POST;
   $type = $post['type'];
-  $name = $post['name'];
+  $id = $post['id'];
   /* 
     中间一段逻辑处理完成后;
   */

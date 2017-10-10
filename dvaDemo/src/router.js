@@ -1,9 +1,7 @@
 import { Router, Route, Switch } from 'dva/router';
+import { routerRedux } from 'dva/router';
 import dynamic from 'dva/dynamic';
 
-const Test = (nextState, replace) => {
-  console.info('routerEnter:', nextState)
-}
 const RouterConfig = ({ history, app}) => {
   const notFound = dynamic({
     app,
@@ -21,18 +19,32 @@ const RouterConfig = ({ history, app}) => {
       component: () => import('./routes/home/home')
     }
   ];
+  /* 验证用户是否登录 start */
+  history.listen(({ pathname }) => {
+    const examineLogin = localStorage.getItem('login');
+    if(pathname === '/'){
+      if(examineLogin === 'true'){
+        app._store.dispatch(routerRedux.replace('/home'))
+      }
+    }else{
+      if(examineLogin !== 'true'){
+        app._store.dispatch(routerRedux.replace('/'))
+      }
+    }
+  })
+  /* 验证用户是否登录 end */
   return(
     <Router history={history}>
       <Switch>
         {
           routes.map(({ path, ...dynamics }, key) => (
-            <Route exact onChange={Test} onEnter={Test} key={key} path={path} component={dynamic({
+            <Route exact key={key} path={path} component={dynamic({
               app,
               ...dynamics
             })}  />
           ))
         }
-        <Route exact onChange={Test} onEnter={Test} component={notFound} />
+        <Route exact component={notFound} />
       </Switch>
     </Router>
   )

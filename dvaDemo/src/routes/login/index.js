@@ -62,7 +62,7 @@ const stateTo = ({ login }) => {
 };
 export default connect(stateTo)(loginCom)
 
-/*
+/* 
 import { Table,  Popconfirm } from 'antd';
 
 class EditableCell extends React.Component {
@@ -206,16 +206,13 @@ class EditableTable extends React.Component {
     Object.keys(data[index]).forEach((item) => {
       if (data[index][item] && typeof data[index][item].editable !== 'undefined') {
         data[index][item].editable = false;
-        data[index][item].status = type;
+        // data[index][item].status = type;
       }
     });
-    this.setState({ data }, () => {
-      Object.keys(data[index]).forEach((item) => {
-        if (data[index][item] && typeof data[index][item].editable !== 'undefined') {
-          delete data[index][item].status;
-        }
-      });
-    });
+    // console.log(data);
+    // return false;
+    this.setState({ data });
+    console.log(data)
   }
   render() {
     const { data } = this.state;

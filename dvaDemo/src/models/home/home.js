@@ -36,7 +36,14 @@ export default {
     modalStatus(state, { payload: { addModalStatus } }){
       return {
         ...state,
-        addModalStatus
+        addModalStatus,
+      }
+    },
+    add(state, { payload: { content } }){
+      return {
+        ...state,
+        content,
+        addModalStatus: false
       }
     }
   },
@@ -85,10 +92,21 @@ export default {
       content[updataValIndex] = updataVal;
       yield put({ type: 'editStatusManage', payload: { content }})
     },
-    *resSave({ payload }, { call, put }){
-      const { success } = yield call(req, 'http://localhost:99/homeManageData.php', { body: stringify(payload) });
-      if(success){
-        yield put({ type: 'save', payload: { ...payload } })
+    *resAdd({ payload: { content, val } }, { call, put }){
+      const { code } = yield call(req, 'http://localhost:99/homeSaveData.php', { body: stringify(val) });
+      let obj = {
+        id: content.length + 1
+      };
+      for(const key in val){
+        if(typeof val[key] !== 'boolean'){
+          obj[key] = {};
+          obj[key].value = val[key] || '' ;
+          val[key + 'Editable'] && (obj[key].editable = false)
+        }
+      }
+      if(code){
+        content.push(obj);
+        yield put({ type: 'add', payload: { content } })
       }
     }
   },

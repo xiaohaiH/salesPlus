@@ -50,8 +50,8 @@ export default {
   effects: {
     *loginRes({ payload }, { put, call }){
       yield put({ type: 'loading', payload: true });
-      // const { code, data } = yield call(req,'http://localhost:99/dvaDemoLogin.php',{ body: JSON.stringify({ ...payload }) });
-      const { code, data } = { code: 'success', userInfo: { name: 'a', token: 123, permission: 456 } };
+      const { code, data } = yield call(req,'http://localhost:99/dvaDemoLogin.php',{ body: JSON.stringify({ ...payload }) });
+      // const { code, data } = { code: 'success', userInfo: { name: 'a', token: 123, permission: 456 } };
       if(code === 'success'){
         yield put({ type: 'success', payload: { ...data } });
         localStorage.setItem('login','true');

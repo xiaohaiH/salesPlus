@@ -1,6 +1,6 @@
 import { connect } from 'dva';
 import React, { Component } from 'react';
-import { Table, Icon, Popconfirm, Input, Button, Form, Radio, Modal } from 'antd';
+import { Table, Icon, Popconfirm, Input, Button, Form, Radio, Modal, Row, Col, Checkbox } from 'antd';
 import styled from './home.less';
 const FormItem = Form.Item;
 
@@ -13,7 +13,7 @@ const Forms = ({ forms }) => {
   const { getFieldDecorator } = forms;
   const formItemLayout = {
     labelCol: { span: 5 },
-    wrapperCol: { span: 14 },
+    wrapperCol: { span: 16 },
   };
   const buttonItemLayout = {
     wrapperCol: { span: 14, offset: 4 },
@@ -24,29 +24,65 @@ const Forms = ({ forms }) => {
         label="姓名"
         {...formItemLayout}
       >
-      {
-        getFieldDecorator('userName',{
-          rules: [{ required: true, message: '请输入姓名' }]
-        })(<Input name='userName' placeholder='姓名' />)
-      }
+        <Row gutter={8}>
+          <Col span={18}>
+            {
+              getFieldDecorator('name',{
+                rules: [{ required: true, message: '请输入姓名' }]
+              })(<Input name='name' placeholder='姓名' />)
+            }
+          </Col>
+          <Col span={6}>
+            {
+              getFieldDecorator('nameEditable',{
+                valuePropName: 'checked',
+                initialValue: true,
+              })(<Checkbox disabled >可编辑</Checkbox>)
+            }
+          </Col>
+        </Row>
       </FormItem>
       <FormItem
         label="年龄"
         {...formItemLayout}
       >
-        {
-          getFieldDecorator('age')(<Input  name='age' placeholder="年龄" />)
-        }
+        <Row gutter={8}>
+          <Col span={18}>
+            {
+              getFieldDecorator('age')(<Input  name='age' placeholder="年龄" />)
+            }
+          </Col>
+          <Col span={6}>
+            {
+              getFieldDecorator('ageEditable',{
+                valuePropName: 'checked',
+                initialValue: false
+              })(<Checkbox>可编辑</Checkbox>)
+            }
+          </Col>
+        </Row>
       </FormItem>
       <FormItem
         label="地址"
         {...formItemLayout}
       >
-        {
-          getFieldDecorator('address',{
-            rules: [{ required: true, message: '请输入地址' }]
-          })(<Input name='address' placeholder="地址" />)
-        }
+        <Row gutter={8}>
+          <Col span={18}>
+            {
+              getFieldDecorator('address',{
+                rules: [{ required: true, message: '请输入地址' }]
+              })(<Input name='address' placeholder="地址" />)
+            }
+          </Col>
+          <Col span={6}>
+            {
+              getFieldDecorator('addressEditable',{
+                valuePropName: 'checked',
+                initialValue: true
+              })(<Checkbox>可编辑</Checkbox>)
+            }
+          </Col>
+        </Row>
       </FormItem>
     </Form>
   )
@@ -127,21 +163,23 @@ class Tables extends Component{
   }
   /* 点击添加按钮后的保存按钮 */
   addHandleOk(){
-    const { home: { addModalStatus }, dispatch } = this.props;
+    const { home: { addModalStatus, content }, dispatch } = this.props;
     this.props.form.validateFields((err, val) => {
       if (err) {
         console.error('请填写:',err);
         return false
       };
-      dispatch({ type: 'resSave', payload: { ...val } })
+      for(let key in val){
+        console.log(val[key])
+        val[key] === undefined && (val[key] = '');
+      }
+      dispatch({ type: 'home/resAdd', payload: { content, val } })
     });
   }
   /* 点击添加按钮后的取消按钮 */
   addHandleCancel(){
     const { home: { addModalStatus }, dispatch } = this.props;
     dispatch({ type: 'home/modalStatus', payload: { addModalStatus: !addModalStatus } })
-    // const { addModalStatus } = this.props.home;
-    // // this.setState({ addModalStatus: !addModalStatus })
   }
   /* 这个 table 顶部的添加按钮文字 */
   headerTitle(text){
@@ -154,6 +192,7 @@ class Tables extends Component{
   }
   render(){
     let { home: { header, content, addModalStatus }, form } = this.props;
+    console.log(this.props.home.content)
     const eleFlag = (flag, record) => {
       if(!flag){
         return (

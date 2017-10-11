@@ -9,95 +9,84 @@ const tables = (props) => {
 };
 
 /* 点击添加后出现的表单 start */
-class Forms extends Component{
-  constructor(props) {
-    super(props);
-    this.state = {
-      formLayout: 'horizontal',
-    };
-  }
-  render() {
-    const { formLayout } = this.state;
-    const formItemLayout = formLayout === 'horizontal' ? {
-      labelCol: { span: 5 },
-      wrapperCol: { span: 14 },
-    } : null;
-    const buttonItemLayout = formLayout === 'horizontal' ? {
-      wrapperCol: { span: 14, offset: 4 },
-    } : null;
-    return (
-      <div>
-        <Form layout={formLayout}>
-          <FormItem
-            label="姓名"
-            {...formItemLayout}
-          >
-            <Input placeholder="姓名" />
-          </FormItem>
-          <FormItem
-            label="年龄"
-            {...formItemLayout}
-          >
-            <Input placeholder="年龄" />
-          </FormItem>
-          <FormItem
-            label="地址"
-            {...formItemLayout}
-          >
-            <Input placeholder="地址" />
-          </FormItem>
-        </Form>
-      </div>
-    );
-  }
+const Forms = ({ forms }) => {
+  const { getFieldDecorator } = forms;
+  const formItemLayout = {
+    labelCol: { span: 5 },
+    wrapperCol: { span: 14 },
+  };
+  const buttonItemLayout = {
+    wrapperCol: { span: 14, offset: 4 },
+  };
+  return (
+    <Form>
+      <FormItem
+        label="姓名"
+        {...formItemLayout}
+      >
+      {
+        getFieldDecorator('userName',{
+          rules: [{ required: true, message: '请输入姓名' }]
+        })(<Input name='userName' placeholder='姓名' />)
+      }
+      </FormItem>
+      <FormItem
+        label="年龄"
+        {...formItemLayout}
+      >
+        {
+          getFieldDecorator('age')(<Input  name='age' placeholder="年龄" />)
+        }
+      </FormItem>
+      <FormItem
+        label="地址"
+        {...formItemLayout}
+      >
+        {
+          getFieldDecorator('address',{
+            rules: [{ required: true, message: '请输入地址' }]
+          })(<Input name='address' placeholder="地址" />)
+        }
+      </FormItem>
+    </Form>
+  )
 }
 /* 点击添加后出现的表单 end */
 /* 点击添加后弹出的模态框 start */
-// const ModalBox = ({ visible,  }) => {
-//   return (
-//     <Modal
-//       title='添加用户'
-//       onOk={() => this.handleOk()}
-//       onCancel={() => this.handleCancel()}
-//       okText='添加'
-//       cancelText='取消'
-//       visible={visible}
-//       maskClosable={true}
-//     >
-//       <Forms />
-//     </Modal>
-//   )
-// }
-class ModalBox extends Component{
-  constructor(props){
-    super(props)
-    this.handleOk = this.handleOk.bind(this)
-    this.handleCancel = this.handleCancel.bind(this)
-  }
-  handleOk(){
-
-  }
-  handleCancel(){
-    console.log(this.state)
-    this.setState({ visible: false })
-  }
-  render(){
-    let { visible } = this.state;
-    return (
-      <Modal
-        title='添加用户'
-        onOk={() => this.handleOk()}
-        onCancel={() => this.handleCancel()}
-        okText='添加'
-        cancelText='取消'
-        visible={visible}
-        maskClosable={true}
-      >
-        <Forms />
-      </Modal>
-    )
-  }
+const ModalBox = ({ visible, onOk, onCancel, forms }) => {
+  return (
+    <Modal
+      title='添加用户'
+      onOk={onOk}
+      onCancel={onCancel}
+      okText='添加'
+      cancelText='取消'
+      visible={visible}
+      maskClosable={true}
+    >
+      <Forms forms={forms} />
+    </Modal>
+  )
 }
+// class ModalBox extends Component{
+//   render(){
+//     let { visible, onOk, onCancel, form } = this.props;
+//     return (
+//       <Modal
+//         title='添加用户'
+//         onOk={onOk}
+//         onCancel={onCancel}
+//         okText='添加'
+//         cancelText='取消'
+//         visible={visible}
+//         maskClosable={true}
+//       >
+//         <Forms forms={this.props.form} />
+//       </Modal>
+//     )
+//   }
+// }
+// const ModalBox = Form.create()(ModalBoxs);
 /* 点击添加后弹出的模态框 end */
 
 class Tables extends Component{
@@ -108,8 +97,10 @@ class Tables extends Component{
     this.save = this.save.bind(this);
     this.valueChange = this.valueChange.bind(this);
     this.handleAdd = this.handleAdd.bind(this);
+    this.addHandleOk = this.addHandleOk.bind(this);
+    this.addHandleCancel = this.addHandleCancel.bind(this);
   }
-  state = { addModalStatus: false }
+  /* 编辑时状态管理 */
   editStatusManage(value){
     const { content } = this.props.home;
     this.props.dispatch({ type: 'home/resEditStatusManage', payload: { value, content } })
@@ -123,15 +114,34 @@ class Tables extends Component{
     const { content } = this.props.home;
     this.props.dispatch({ type: 'home/resEditStatusManage', payload: { value, content, type: 'save' } })
   }
-  /* 用户编辑后的事件 */
+  /* 用户改变 input 框的值的事件 */
   valueChange(e, key, index){
     const alterValue = e.target.value;
     const { content } = this.props.home;
     content[index][key]['value'] = alterValue;
   }
+  /* 点击添加按钮 */
   handleAdd(){
-    const { addModalStatus } = this.state;
-    this.setState({ addModalStatus: !addModalStatus })
+    const { home: { addModalStatus }, dispatch } = this.props;
+    dispatch({ type: 'home/modalStatus', payload: { addModalStatus: !addModalStatus } })
+  }
+  /* 点击添加按钮后的保存按钮 */
+  addHandleOk(){
+    const { home: { addModalStatus }, dispatch } = this.props;
+    this.props.form.validateFields((err, val) => {
+      if (err) {
+        console.error('请填写:',err);
+        return false
+      };
+      dispatch({ type: 'resSave', payload: { ...val } })
+    });
+  }
+  /* 点击添加按钮后的取消按钮 */
+  addHandleCancel(){
+    const { home: { addModalStatus }, dispatch } = this.props;
+    dispatch({ type: 'home/modalStatus', payload: { addModalStatus: !addModalStatus } })
+    // const { addModalStatus } = this.props.home;
+    // // this.setState({ addModalStatus: !addModalStatus })
   }
   /* 这个 table 顶部的添加按钮文字 */
   headerTitle(text){
@@ -143,7 +153,7 @@ class Tables extends Component{
     )
   }
   render(){
-    let { header, content } = this.props.home;
+    let { home: { header, content, addModalStatus }, form } = this.props;
     const eleFlag = (flag, record) => {
       if(!flag){
         return (
@@ -206,13 +216,10 @@ class Tables extends Component{
       }
       return obj
     });
-    
-    let { addModalStatus } = this.state;
-
     return (
       <div>
         {
-          addModalStatus ? <ModalBox visible={ addModalStatus } /> : ''
+          addModalStatus ? <ModalBox visible={ addModalStatus } onOk={() => this.addHandleOk()} onCancel={() => this.addHandleCancel()} forms={form} /> : ''
         }
         <Table
           style={{ textAlign: 'center' }}
@@ -240,5 +247,6 @@ class Tables extends Component{
 const mapStateToProps = (state) => {
   return state
 }
+const Tabless = Form.create()(Tables);
 
-export default connect(mapStateToProps)(Tables);
+export default connect(mapStateToProps)(Tabless);

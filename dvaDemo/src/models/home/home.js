@@ -6,7 +6,7 @@ export default {
   state: {
     header: [],
     content: [],
-    // addSataus: false
+    addModalStatus: false
   },
   reducers: {
     success(state, { payload: { ...result } }){
@@ -28,10 +28,15 @@ export default {
       }
     },
     save(state, { payload: { ...data } }){
-      console.log(data)
       return {
         ...state,
         ...data
+      }
+    },
+    modalStatus(state, { payload: { addModalStatus } }){
+      return {
+        ...state,
+        addModalStatus
       }
     }
   },
@@ -79,6 +84,12 @@ export default {
       };
       content[updataValIndex] = updataVal;
       yield put({ type: 'editStatusManage', payload: { content }})
+    },
+    *resSave({ payload }, { call, put }){
+      const { success } = yield call(req, 'http://localhost:99/homeManageData.php', { body: stringify(payload) });
+      if(success){
+        yield put({ type: 'save', payload: { ...payload } })
+      }
     }
   },
   subscriptions: {

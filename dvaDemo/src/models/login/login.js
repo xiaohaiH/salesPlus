@@ -52,7 +52,6 @@ export default {
       yield put({ type: 'loading', payload: true });
       // const { code, data } = yield call(req,'http://localhost:99/dvaDemoLogin.php',{ body: JSON.stringify({ ...payload }) });
       const { code, data } = { code: 'success', userInfo: { name: 'a', token: 123, permission: 456 } };
-      console.log(code)
       if(code === 'success'){
         yield put({ type: 'success', payload: { ...data } });
         localStorage.setItem('login','true');

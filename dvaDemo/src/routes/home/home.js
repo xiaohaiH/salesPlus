@@ -4,6 +4,7 @@ import { Table, Icon, Popconfirm, Input, Button, Form, Radio, Modal, Row, Col, C
 import styled from './home.less';
 const FormItem = Form.Item;
 
+let storeData ={};
 const tables = (props) => {
   return (<Table columns={columns} dataSource={data} />)
 };
@@ -135,6 +136,9 @@ class Tables extends Component{
     this.handleAdd = this.handleAdd.bind(this);
     this.addHandleOk = this.addHandleOk.bind(this);
     this.addHandleCancel = this.addHandleCancel.bind(this);
+    this.headerTitle = this.headerTitle.bind(this);
+    this.filterValue = this.filterValue.bind(this);
+    storeData = this.props.home.content;
   }
   /* 编辑时状态管理 */
   editStatusManage(value){
@@ -170,9 +174,9 @@ class Tables extends Component{
         return false
       };
       for(let key in val){
-        console.log(val[key])
         val[key] === undefined && (val[key] = '');
       }
+      Object.assign(storeData,content)
       dispatch({ type: 'home/resAdd', payload: { content, val } })
     });
   }
@@ -190,9 +194,37 @@ class Tables extends Component{
       </div>
     )
   }
+  /* 筛选按钮状态 */
+  handleFilterStatus(visible){
+    const { dispatch } = this.props;
+    dispatch({ type: 'home/filterVisible', payload: { visible } })
+  }
+  /* 筛选事件 */
+  filterValue(e){
+    const searchValue = e.target.value;
+    let { home: { content }, dispatch } = this.props;
+    const reg = new RegExp((searchValue), 'g');
+    let filterResult = content.map(val => {
+      const result = val.name.value.match(reg);
+      if(!result){
+        return false
+      }
+      const obj = { ... val };
+      obj.name.value = (
+        <span>
+          {
+            val.name.value.split(reg).map((value, i) => (i > 0 ? [ <span className={styled.highlight}>{result[0]}</span>, value ] : value))
+          }
+        </span>
+      )
+      return obj
+    }).filter(val => val);
+    console.log(filterResult)
+    dispatch({ type: 'home/filterResult', payload: { filterResult } })
+  }
   render(){
-    let { home: { header, content, addModalStatus }, form } = this.props;
-    console.log(this.props.home.content)
+    console.log(this.props.home)
+    let { home: { header, content, addModalStatus, filterStatus }, form } = this.props;
     const eleFlag = (flag, record) => {
       if(!flag){
         return (
@@ -226,6 +258,11 @@ class Tables extends Component{
         if(!val['editable']){
           val['render'] = (text) => <a>{text}</a>
         }
+        val['filterDropdown'] = (<div><Input onChange={this.filterValue} type='text' /></div>);
+        val['filterIcon'] = (<Button style={{ width: 'auto' }}>筛选</Button>);
+        val['filtered'] = true;
+        val['filterDropdownVisible'] = filterStatus;
+        val['onFilterDropdownVisibleChange'] = (visible) => this.handleFilterStatus(visible)
       };
       if(val['title'] === '操作'){
         val['render'] = (text, record, i) => {
@@ -237,6 +274,13 @@ class Tables extends Component{
               }
             </p>
           )
+        }
+      }else{
+        val['sorter'] = (a, b) => {
+          if(typeof a[val['dataIndex']] === 'number'){
+            return a[val['dataIndex']] - b[val['dataIndex']]
+          }
+          return a[val['dataIndex']].length - b[val['dataIndex']].length
         }
       };
       return val

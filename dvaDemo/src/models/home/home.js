@@ -6,7 +6,9 @@ export default {
   state: {
     header: [],
     content: [],
-    addModalStatus: false
+    contentBack: [],
+    addModalStatus: false,
+    filterStatus: false
   },
   reducers: {
     success(state, { payload: { ...result } }){
@@ -22,9 +24,10 @@ export default {
       }
     },
     editStatusManage(state, { payload: { content } }){
+      console.log(state.content[0].name.value, state.contentBack[0].name.value, content)
       return {
         ...state,
-        content
+        // content
       }
     },
     save(state, { payload: { ...data } }){
@@ -40,33 +43,52 @@ export default {
       }
     },
     add(state, { payload: { content } }){
+      console.log(state, content)
       return {
         ...state,
         content,
         addModalStatus: false
       }
+    },
+    filterVisible(state, { payload: { visible:filterStatus } }){
+      return {
+        ...state,
+        filterStatus
+      }
+    },
+    filterResult(state, { payload: { filterResult:content } }){
+      return {
+        ...state,
+        content
+      }
     }
   },
   effects: {
     *resHeaderData({ payload }, { call, put }){
-      const obj = {
-        name: 'a',
+      const name = localStorage.getItem('name');
+      const token = localStorage.getItem('token');
+      const permission = localStorage.getItem('permission');
+      const params = {
+        name,
         header: true,
-        token: 123,
-        permission: 'common'
+        token,
+        permission
       };
-      const headerData = yield call(req, 'http://localhost:99/homeData.php', { body: stringify(obj) });
+      const headerData = yield call(req, 'http://localhost:99/homeData.php', { body: stringify(params) });
       yield put({ type: 'success', payload: { header: headerData } })
     },
     *resBodyData({ payload }, { call, put }){
+      const name = localStorage.getItem('name');
+      const token = localStorage.getItem('token');
+      const permission = localStorage.getItem('permission');
       const params = {
-        name: 'a',
+        name,
         header: false,
-        token: 123,
-        permission: 'common'
+        token,
+        permission
       };
       const contentData = yield call(req, 'http://localhost:99/homeData.php', { body: stringify(params) });
-      yield put({ type: 'success', payload: { content: contentData } })
+      yield put({ type: 'success', payload: { content: contentData, contentBack: contentData } })
     },
     *resDelete({ payload: { id } }, { call, put }){
       const params = {

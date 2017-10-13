@@ -4,10 +4,8 @@ import { Table, Icon, Popconfirm, Input, Button, Form, Radio, Modal, Row, Col, C
 import styled from './home.less';
 const FormItem = Form.Item;
 
-let storeData ={};
-const tables = (props) => {
-  return (<Table columns={columns} dataSource={data} />)
-};
+/* 深度拷贝 */
+const deepCopy = obj => JSON.parse(JSON.stringify(obj));
 
 /* 点击添加后出现的表单 start */
 const Forms = ({ forms }) => {
@@ -105,25 +103,6 @@ const ModalBox = ({ visible, onOk, onCancel, forms }) => {
     </Modal>
   )
 }
-// class ModalBox extends Component{
-//   render(){
-//     let { visible, onOk, onCancel, form } = this.props;
-//     return (
-//       <Modal
-//         title='添加用户'
-//         onOk={onOk}
-//         onCancel={onCancel}
-//         okText='添加'
-//         cancelText='取消'
-//         visible={visible}
-//         maskClosable={true}
-//       >
-//         <Forms forms={this.props.form} />
-//       </Modal>
-//     )
-//   }
-// }
-// const ModalBox = Form.create()(ModalBoxs);
 /* 点击添加后弹出的模态框 end */
 
 class Tables extends Component{
@@ -138,11 +117,12 @@ class Tables extends Component{
     this.addHandleCancel = this.addHandleCancel.bind(this);
     this.headerTitle = this.headerTitle.bind(this);
     this.filterValue = this.filterValue.bind(this);
-    storeData = this.props.home.content;
+    const { content } = this.props.home;
   }
   /* 编辑时状态管理 */
   editStatusManage(value){
-    const { content } = this.props.home;
+    let { content } = this.props.home;
+    content = deepCopy(content);
     this.props.dispatch({ type: 'home/resEditStatusManage', payload: { value, content } })
   }
   /* 删除用户 */
@@ -151,13 +131,15 @@ class Tables extends Component{
   }
   /* 用户编辑后保存或取消编辑 */
   save(value){
-    const { content } = this.props.home;
+    let { content } = this.props.home;
+    content = deepCopy(content);
     this.props.dispatch({ type: 'home/resEditStatusManage', payload: { value, content, type: 'save' } })
   }
   /* 用户改变 input 框的值的事件 */
   valueChange(e, key, index){
     const alterValue = e.target.value;
-    const { content } = this.props.home;
+    let { content } = this.props.home;
+    content = deepCopy(content);
     content[index][key]['value'] = alterValue;
   }
   /* 点击添加按钮 */
@@ -167,7 +149,8 @@ class Tables extends Component{
   }
   /* 点击添加按钮后的保存按钮 */
   addHandleOk(){
-    const { home: { addModalStatus, content }, dispatch } = this.props;
+    let { home: { addModalStatus, content }, dispatch } = this.props;
+    content = deepCopy(content);
     this.props.form.validateFields((err, val) => {
       if (err) {
         console.error('请填写:',err);
@@ -176,7 +159,6 @@ class Tables extends Component{
       for(let key in val){
         val[key] === undefined && (val[key] = '');
       }
-      Object.assign(storeData,content)
       dispatch({ type: 'home/resAdd', payload: { content, val } })
     });
   }
@@ -203,6 +185,7 @@ class Tables extends Component{
   filterValue(e){
     const searchValue = e.target.value;
     let { home: { content }, dispatch } = this.props;
+    content = deepCopy(content);
     const reg = new RegExp((searchValue), 'g');
     let filterResult = content.map(val => {
       const result = val.name.value.match(reg);
@@ -219,12 +202,12 @@ class Tables extends Component{
       )
       return obj
     }).filter(val => val);
-    console.log(filterResult)
     dispatch({ type: 'home/filterResult', payload: { filterResult } })
   }
   render(){
-    console.log(this.props.home)
     let { home: { header, content, addModalStatus, filterStatus }, form } = this.props;
+    header = deepCopy(header);
+    content = deepCopy(content);
     const eleFlag = (flag, record) => {
       if(!flag){
         return (
@@ -328,6 +311,7 @@ class Tables extends Component{
 }
 
 const mapStateToProps = (state) => {
+  console.log(state)
   return state
 }
 const Tabless = Form.create()(Tables);

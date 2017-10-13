@@ -4,7 +4,7 @@ import { Link } from 'dva/router';
 import styled from './login.less';
 const FormItem = Form.Item;
 
-/* class NormalLoginForm extends React.Component {
+class NormalLoginForm extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
@@ -60,7 +60,7 @@ const loginCom = Form.create()(NormalLoginForm);
 const stateTo = ({ login }) => {
   return { login }
 };
-export default connect(stateTo)(loginCom) */
+export default connect(stateTo)(loginCom)
 
 /*  */
 
@@ -170,7 +170,7 @@ class App extends React.Component {
 export default connect()(App) */
 
 
-
+/* 
 import { Table,  Popconfirm } from 'antd';
 
 class EditableCell extends React.Component {
@@ -336,4 +336,4 @@ class EditableTable extends React.Component {
   }
 }
 
-export default connect()(EditableTable)
+export default connect()(EditableTable) */

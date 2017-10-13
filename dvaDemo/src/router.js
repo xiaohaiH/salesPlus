@@ -20,18 +20,18 @@ const RouterConfig = ({ history, app}) => {
     }
   ];
   /* 验证用户是否登录 start */
-  // history.listen(({ pathname }) => {
-  //   const examineLogin = localStorage.getItem('login');
-  //   if(pathname === '/'){
-  //     if(examineLogin === 'true'){
-  //       app._store.dispatch(routerRedux.replace('/home'))
-  //     }
-  //   }else{
-  //     if(examineLogin !== 'true'){
-  //       app._store.dispatch(routerRedux.replace('/'))
-  //     }
-  //   }
-  // })
+  history.listen(({ pathname }) => {
+    const examineLogin = localStorage.getItem('login');
+    if(pathname === '/'){
+      if(examineLogin === 'true'){
+        app._store.dispatch(routerRedux.replace('/home'))
+      }
+    }else{
+      if(examineLogin !== 'true'){
+        app._store.dispatch(routerRedux.replace('/'))
+      }
+    }
+  })
   /* 验证用户是否登录 end */
   return(
     <Router history={history}>

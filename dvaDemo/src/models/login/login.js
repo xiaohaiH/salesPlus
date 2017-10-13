@@ -50,6 +50,7 @@ export default {
   effects: {
     *loginRes({ payload }, { put, call }){
       yield put({ type: 'loading', payload: true });
+      // const { code, data } = yield call(req,'http://easy-mock.com/mock/59cdb90da0ab222a113b8030/parctice/login',{ body: JSON.stringify({ ...payload }) });
       const { code, data } = yield call(req,'http://localhost:99/dvaDemoLogin.php',{ body: JSON.stringify({ ...payload }) });
       if(code === 'success'){
         const { userLoginStatus : login, userInfo: { token, permission, name } } = data;

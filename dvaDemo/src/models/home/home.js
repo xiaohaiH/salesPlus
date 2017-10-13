@@ -17,8 +17,13 @@ export default {
   state: {
     header: [],
     content: [],
+    /* content 备份的数据,在筛选的时候操作 */
     contentBack: [],
+    /* 编辑时保存的数据 */
+    editValue: {},
+    /* 添加用户时的状态 */
     addModalStatus: false,
+    /* 过滤时的状态 */
     filterStatus: false
   },
   reducers: {
@@ -35,24 +40,37 @@ export default {
         contentBack: state.content.filter(val => val.id !== id)
       }
     },
+    /* 编辑用户的状态管理 */
     editStatusManage(state, { payload: { content } }){
       return {
         ...state,
-        content
+        content,
+        /* 点击编辑或取消编辑时清空编辑时暂存的值 */
+        editValue: {}
       }
     },
+    /* 编辑时用户改变的值 */
+    editChangeValue({ editValue, ...val }, { payload: { editValue: result } }){
+      return {
+        ...val,
+        editValue: Object.assign(editValue, result)
+      }
+    },
+    /* 编辑用户后保存 */
     save(state, { payload: { ...data } }){
       return {
         ...state,
         ...data
       }
     },
+    /* 添加用户弹出的 modal 状态 */
     modalStatus(state, { payload: { addModalStatus } }){
       return {
         ...state,
         addModalStatus,
       }
     },
+    /* 添加用户 */
     add(state, { payload: { ...val } }){
       return {
         ...state,
@@ -60,12 +78,14 @@ export default {
         addModalStatus: false
       }
     },
+    /* 筛选用户是否显示的状态 */
     filterVisible(state, { payload: { visible:filterStatus } }){
       return {
         ...state,
         filterStatus
       }
     },
+    /* 筛选的结果 */
     filterResult(state, { payload: { filterResult:content } }){
       return {
         ...state,
@@ -79,6 +99,7 @@ export default {
         header: true,
         ...keys
       };
+      // const headerData = yield call(req, 'http://easy-mock.com/mock/59cdb90da0ab222a113b8030/parctice/table/head', { body: stringify(params) });
       const headerData = yield call(req, 'http://localhost:99/homeData.php', { body: stringify(params) });
       yield put({ type: 'success', payload: { header: headerData } })
     },
@@ -87,6 +108,7 @@ export default {
         header: false,
         ...keys
       };
+      // const content = yield call(req, 'http://easy-mock.com/mock/59cdb90da0ab222a113b8030/parctice/table/body', { body: stringify(params) });
       const content = yield call(req, 'http://localhost:99/homeData.php', { body: stringify(params) });
       let contentBack = deepCopy(content);
       yield put({ type: 'success', payload: { content, contentBack } })
@@ -96,30 +118,44 @@ export default {
         type: 'delete',
         id
       };
-      const { success } = yield call(req, 'http://localhost:99/homeManageData.php', { body: stringify(params) });
-      if(success){
+      // const { code } = yield call(req, 'http://easy-mock.com/mock/59cdb90da0ab222a113b8030/parctice/dataManage', { body: stringify(params) });
+      const { code } = yield call(req, 'http://localhost:99/homeManageData.php', { body: stringify(params) });
+      if(code){
         yield put({ type: 'delete', payload: { id } })
       }
     },
-    *resEditStatusManage({ payload: { value, content, type } }, { call, put }){
-      let ss = content.slice(0);
-      let updataValIndex = ss.findIndex(val => val.id === value.id);
-      let updataVal = ss.find(val => val.id === value.id);
-      for(const k in updataVal){
-        if(typeof updataVal[k].editable !== 'undefined'){
-          updataVal[k].editable = !updataVal[k].editable;
-        }
-        if(typeof updataVal[k] === 'object' && type !== 'save'){
-          updataVal[k].value = value[k];
+    *resEditStatusManage({ payload: { id, content } }, { call, put }){
+      let alterValIndex = content.find(val => val.id === id);
+      let alterVal = content.find(val => val.id === id);
+      /* 改变编辑时的状态 */
+      for(const k in alterVal){
+        if(typeof alterVal[k].editable !== 'undefined'){
+          alterVal[k].editable = !alterVal[k].editable;
         }
       };
-      ss[updataValIndex] = updataVal;
-      yield put({ type: 'editStatusManage', payload: { content: ss }})
+      content[alterValIndex] = alterVal;
+      yield put({ type: 'editStatusManage', payload: { content }})
+    },
+    *resSave({ payload : { id, content, editValue } }, { call, put }){
+      let index = content.findIndex(val => val.id === id); 
+      let val = Object.assign({}, content[index], editValue);
+      for(let key in content[index]){
+        if(typeof content[index][key].editable !== 'undefined'){
+          val[key]['editable'] = false
+        }
+      };
+      content[index] = val;
+      // let { code } = yield call(req, 'http://easy-mock.com/mock/59cdb90da0ab222a113b8030/parctice/dataManage', { body: stringify(val) });
+      let { code } = yield call(req, 'http://localhost:99/homeSaveData.php', { body: stringify(val) });
+      if(code){
+        yield put({ type: 'save', payload: { content, contentBack: deepCopy(content) } })
+      }
     },
     *resAdd({ payload: { content, val } }, { call, put }){
-      const { code } = yield call(req, 'http://localhost:99/homeSaveData.php', { body: stringify(val) });
+      // const { code } = yield call(req, 'http://easy-mock.com/mock/59cdb90da0ab222a113b8030/parctice/dataManage', { body: stringify(val) });
+      const { code } = yield call(req, 'http://localhost:99/homeAddData.php', { body: stringify(val) });
       let obj = {
-        id: content.length + 1
+        id: parseInt(content[content.length - 1]['id']) + 1
       };
       for(const key in val){
         if(typeof val[key] !== 'boolean'){

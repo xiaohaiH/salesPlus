@@ -119,28 +119,33 @@ class Tables extends Component{
     this.filterValue = this.filterValue.bind(this);
     const { content } = this.props.home;
   }
-  /* 编辑时状态管理 */
-  editStatusManage(value){
-    let { content } = this.props.home;
-    content = deepCopy(content);
-    this.props.dispatch({ type: 'home/resEditStatusManage', payload: { value, content } })
-  }
   /* 删除用户 */
   delete(id){
     this.props.dispatch({ type: 'home/resDelete', payload: { id } })
   }
-  /* 用户编辑后保存或取消编辑 */
-  save(value){
+  /* 编辑时状态管理 */
+  editStatusManage(id){
     let { content } = this.props.home;
     content = deepCopy(content);
-    this.props.dispatch({ type: 'home/resEditStatusManage', payload: { value, content, type: 'save' } })
+    this.props.dispatch({ type: 'home/resEditStatusManage', payload: { id, content } })
   }
   /* 用户改变 input 框的值的事件 */
   valueChange(e, key, index){
-    const alterValue = e.target.value;
-    let { content } = this.props.home;
+    let inputEditChangeValue = e.target.value;
+    let { home: { editValue }, dispatch } = this.props;
+    let obj = {
+      [key]: {
+        value: inputEditChangeValue
+      }
+    };
+    dispatch({ type: 'home/editChangeValue', payload: { editValue: obj } })
+  }
+  /* 用户编辑后保存 */
+  save(id){
+    let { content, editValue } = this.props.home;
     content = deepCopy(content);
-    content[index][key]['value'] = alterValue;
+    editValue = deepCopy(editValue);
+    this.props.dispatch({ type: 'home/resSave', payload: { id, content, editValue } })
   }
   /* 点击添加按钮 */
   handleAdd(){
@@ -156,6 +161,7 @@ class Tables extends Component{
         console.error('请填写:',err);
         return false
       };
+      /* 将未填写的值改成空格 */
       for(let key in val){
         val[key] === undefined && (val[key] = '');
       }
@@ -184,15 +190,15 @@ class Tables extends Component{
   /* 筛选事件 */
   filterValue(e){
     const searchValue = e.target.value;
-    let { home: { content }, dispatch } = this.props;
-    content = deepCopy(content);
+    let { home: { contentBack }, dispatch } = this.props;
+    let content = deepCopy(contentBack);
     const reg = new RegExp((searchValue), 'g');
     let filterResult = content.map(val => {
       const result = val.name.value.match(reg);
       if(!result){
-        return false
+        return null
       }
-      const obj = { ... val };
+      const obj = { ...val };
       obj.name.value = (
         <span>
           {
@@ -202,34 +208,28 @@ class Tables extends Component{
       )
       return obj
     }).filter(val => val);
+    console.log(filterResult);
     dispatch({ type: 'home/filterResult', payload: { filterResult } })
   }
   render(){
     let { home: { header, content, addModalStatus, filterStatus }, form } = this.props;
     header = deepCopy(header);
-    content = deepCopy(content);
+    // content = deepCopy(content);
     const eleFlag = (flag, record) => {
       if(!flag){
         return (
           <span>
-            <a style={{marginRight: '1rem'}} onClick={() => this.editStatusManage(record)}>编辑</a>
+            <a style={{marginRight: '1rem'}} onClick={() => this.editStatusManage(record.id)}>编辑</a>
             <Popconfirm title="确定删除?" onConfirm={() => this.delete(record.id)} okText="确认" cancelText="取消">
               <a>Delete</a>
             </Popconfirm>
           </span>
         )
       };
-      let dataDispose = {};
-      Object.keys(record).map(key => {
-        if(typeof record[key] === 'object'){
-          return dataDispose[key] = record[key].props.defaultValue
-        }
-        return dataDispose[key] = record[key]
-      });
       return (
         <span>
-          <a style={{marginRight: '1rem'}} onClick={() => this.save(dataDispose)}>保存</a>
-          <Popconfirm title="放弃更改?" onConfirm={() => this.editStatusManage(dataDispose)} okText="确认" cancelText="取消">
+          <a style={{marginRight: '1rem'}} onClick={() => this.save(record.id)}>保存</a>
+          <Popconfirm title="放弃更改?" onConfirm={() => this.editStatusManage(record.id)} okText="确认" cancelText="取消">
             <a style={{marginRight: '1rem'}}>取消</a>
           </Popconfirm>
         </span>
@@ -311,7 +311,6 @@ class Tables extends Component{
 }
 
 const mapStateToProps = (state) => {
-  console.log(state)
   return state
 }
 const Tabless = Form.create()(Tables);

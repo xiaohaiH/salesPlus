@@ -1,7 +1,7 @@
 import { deepCopy } from '../../components/snow/deepCopy';
 import { routerRedux } from 'dva/router';
 import { stringify } from 'query-string';
-import { loginLocalStorage } from '../../components/snow/localStorage.js';
+import { setLocalStorage } from '../../components/snow/localStorage.js';
 /* 模拟登录 */
 import { verify } from '../../components/verify/login';
 
@@ -20,7 +20,7 @@ export default {
       const { code, userInfo } = yield call(verify, stringify(payload));
       yield put({ type: 'changeStatus' })
       if(code === 'success'){
-        yield call(loginLocalStorage, userInfo);
+        yield call(setLocalStorage, userInfo);
         yield put({ type: 'changeStatus' });
         yield put(routerRedux.push('/home'))
       }else{

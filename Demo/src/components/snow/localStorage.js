@@ -1,5 +1,5 @@
 /* 设置本地存储 */
-export const loginLocalStorage = (...state) => {
+export const setLocalStorage = (...state) => {
   if(state.length){
     state.map((item) => {
       if(item.constructor === Array || item.constructor !== Object) return false;
@@ -22,4 +22,18 @@ export const readLocalStorage = val => {
     if(typeof val === 'string' || typeof val === 'number'){
       return { [val]: localStorage.getItem(val) }
     }
+}
+
+/* 删除本地存储 */
+export const deleteLocalStorage = val => {
+  if(val instanceof Array){
+    val.map(item => {
+      localStorage.removeItem(item)
+    });
+    return 'success'
+  };
+  if(typeof val === 'string' || typeof val === 'number'){
+    localStorage.removeItem(item);
+    return 'success'
+  }
 }

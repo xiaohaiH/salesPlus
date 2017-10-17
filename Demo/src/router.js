@@ -11,16 +11,17 @@ const RouterConfig = ({ history, app }) => {
   const routes = [
     {
       path: '/',
-      models: () => [ import('./models/login/') ],
-      component: () => import('./routes/login/')
+      models: () => [ import('./models/login/index.js') ],
+      component: () => import('./routes/login/index.js')
     },
     {
       path: '/home',
-      models: () => [ import('./models/home/') ],
-      component: () => import('./routes/home/')
+      models: () => [ import('./models/home/index.js') ],
+      component: () => import('./routes/home/index.js')
     },
     {
       path: '/ss',
+      models: () => [ import('./models/snow/leftSidebar/index.js') ],
       component: () => import('./components/snow/leftSidebar/index.js')
     }
   ];

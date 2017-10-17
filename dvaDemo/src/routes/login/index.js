@@ -4,7 +4,7 @@ import { Link } from 'dva/router';
 import styled from './login.less';
 const FormItem = Form.Item;
 
-/* class NormalLoginForm extends React.Component {
+class NormalLoginForm extends React.Component {
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
@@ -60,11 +60,11 @@ const loginCom = Form.create()(NormalLoginForm);
 const stateTo = ({ login }) => {
   return { login }
 };
-export default connect(stateTo)(loginCom) */
+export default connect(stateTo)(loginCom)
 
 /*  */
 
-import { Table } from 'antd';
+/* import { Table } from 'antd';
 
 const data = [{
   key: '1',
@@ -169,7 +169,7 @@ class App extends React.Component {
   }
 }
 
-export default connect()(App)
+export default connect()(App) */
 
 
 /* 

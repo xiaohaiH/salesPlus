@@ -1,0 +1,48 @@
+@menu-background: #2F4050;
+@menu-aHover-color: white;
+@menu-title-color: #8095A8;
+
+.boxStretch{
+  width: 200px;
+}
+.boxShink{
+  width: 64px;
+}
+.box{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  /* 公共样式 */
+  .cursor{
+    cursor: pointer;
+  }
+  a{
+    color: #A7B1BB;
+  }
+  li:hover > span > a{
+    color: @menu-aHover-color;
+  }
+  li.divisionLine{
+    cursor: normal;
+  }
+  /* 头部样式 */
+  .title{
+    background: @menu-background;
+    flex-grow: 1;
+    color: @menu-title-color;
+    padding:0 16px;
+    min-height: 80px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  /* 菜单列表样式 */
+  .list{
+    height: 100%;
+    flex-grow: 1;
+    .leftList{
+      display: inline-block;
+    }
+  }
+}

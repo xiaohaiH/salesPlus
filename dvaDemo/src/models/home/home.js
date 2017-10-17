@@ -1,6 +1,7 @@
 import req from '../../utils/request';
 import { stringify } from 'query-string';
 
+<<<<<<< HEAD
 /* 深度拷贝,数组将其转成字符串在转回数组,对象用 Object.create 来进行深度拷贝 */
 // const deepCopy = obj => obj instanceof Array ? JSON.parse(JSON.stringify(obj)) : Object.create(obj);
 const deepCopy = obj => {
@@ -27,6 +28,31 @@ const deepCopy = obj => {
   };
 };
 
+=======
+/* 深度拷贝数组或者对象 */
+const deepCopy = (obj, ...val) => {
+  let copy = obj instanceof Array ? [] : {};
+  /* 将多个数组或对象集合到一个对象并返回结果 */
+  if(val.length){
+    val.map((item, i) => {
+      for(let key in item){
+        if(item.hasOwnProperty(key)){
+          if(item[key] === item)continue;
+          copy[key] = item[key] instanceof Object ? deepCopy(item[key]) : item[key]
+        }
+      }
+    });
+  };
+  /* 这块是深度拷贝 */
+  for(let key in obj){
+    if(obj[key].hasOwnProperty){
+      if(obj[key] === obj) continue;
+      copy[key] = obj[key] instanceof Object ? deepCopy(obj[key]) : obj[key]
+    }
+  }
+  return copy
+}
+>>>>>>> 30e01a25f54c4e3036be5a72f0271de4a95a8bb8
 const name = localStorage.getItem('name');
 const token = localStorage.getItem('token');
 const permission = localStorage.getItem('permission');

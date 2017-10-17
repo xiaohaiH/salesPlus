@@ -1,6 +1,6 @@
 export default {
   namespace: 'home',
-  state: {},
+  state: {a: 1, b: 2},
   effects: {},
   reducers: {},
   subscriptions: {}

@@ -16,7 +16,7 @@ const RouterConfig = ({ history, app }) => {
     },
     {
       path: '/home',
-      models: () => [ import('./models/home/index.js') ],
+      models: () => [ import('./models/home/index.js'), import('./models/snow/leftSidebar/index.js') ],
       component: () => import('./routes/home/index.js')
     },
     {

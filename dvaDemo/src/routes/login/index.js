@@ -145,6 +145,7 @@ class App extends React.Component {
         this.setState({
           filterDropdownVisible: visible,
         }, () => this.searchInput.focus());
+        console.log(this.setState)
       },
     }, {
       title: 'Age',

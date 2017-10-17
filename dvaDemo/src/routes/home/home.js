@@ -4,8 +4,31 @@ import { Table, Icon, Popconfirm, Input, Button, Form, Radio, Modal, Row, Col, C
 import styled from './home.less';
 const FormItem = Form.Item;
 
-/* 深度拷贝 */
-const deepCopy = obj => JSON.parse(JSON.stringify(obj));
+/* 深度拷贝,数组将其转成字符串在转回数组,对象用 Object.create 来进行深度拷贝 */
+// const deepCopy = obj => obj instanceof Array ? JSON.parse(JSON.stringify(obj)) : Object.create(obj);
+const deepCopy = obj => {
+  if(obj instanceof Array){
+    let arr = obj.concat();
+    arr = arr.map((item, i) => {
+      if(item instanceof Object){
+        let store = Object.create(item);
+        for(let key in store.__proto__){
+          store[key] = store.__proto__[key].constructor === Object ? deepCopy(store.__proto__[key]) : store.__proto__[key];
+        }
+        return store
+      };
+      return item
+    })
+    return arr
+  }
+  if(obj instanceof Object){
+    let store = Object.create(obj);
+    for(let key in store.__proto__){
+      store[key] = store.__proto__[key]
+    }
+    return store
+  };
+};
 
 /* 点击添加后出现的表单 start */
 const Forms = ({ forms }) => {
@@ -117,7 +140,6 @@ class Tables extends Component{
     this.addHandleCancel = this.addHandleCancel.bind(this);
     this.headerTitle = this.headerTitle.bind(this);
     this.filterValue = this.filterValue.bind(this);
-    const { content } = this.props.home;
   }
   /* 删除用户 */
   delete(id){
@@ -125,8 +147,8 @@ class Tables extends Component{
   }
   /* 编辑时状态管理 */
   editStatusManage(id){
-    let { content } = this.props.home;
-    content = deepCopy(content);
+    let { contentBack } = this.props.home;
+    let content = deepCopy(contentBack);
     this.props.dispatch({ type: 'home/resEditStatusManage', payload: { id, content } })
   }
   /* 用户改变 input 框的值的事件 */
@@ -142,8 +164,8 @@ class Tables extends Component{
   }
   /* 用户编辑后保存 */
   save(id){
-    let { content, editValue } = this.props.home;
-    content = deepCopy(content);
+    let { contentBack, editValue } = this.props.home;
+    let content = deepCopy(contentBack);
     editValue = deepCopy(editValue);
     this.props.dispatch({ type: 'home/resSave', payload: { id, content, editValue } })
   }
@@ -154,8 +176,8 @@ class Tables extends Component{
   }
   /* 点击添加按钮后的保存按钮 */
   addHandleOk(){
-    let { home: { addModalStatus, content }, dispatch } = this.props;
-    content = deepCopy(content);
+    let { home: { addModalStatus, contentBack }, dispatch } = this.props;
+    let content = deepCopy(contentBack);
     this.props.form.validateFields((err, val) => {
       if (err) {
         console.error('请填写:',err);
@@ -208,13 +230,12 @@ class Tables extends Component{
       )
       return obj
     }).filter(val => val);
-    console.log(filterResult);
     dispatch({ type: 'home/filterResult', payload: { filterResult } })
   }
   render(){
     let { home: { header, content, addModalStatus, filterStatus }, form } = this.props;
     header = deepCopy(header);
-    // content = deepCopy(content);
+    content = deepCopy(content);
     const eleFlag = (flag, record) => {
       if(!flag){
         return (

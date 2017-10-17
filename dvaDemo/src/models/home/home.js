@@ -1,8 +1,32 @@
 import req from '../../utils/request';
 import { stringify } from 'query-string';
 
-/* 深度拷贝数组或者对象 */
-const deepCopy = obj => JSON.parse(JSON.stringify(obj));
+/* 深度拷贝,数组将其转成字符串在转回数组,对象用 Object.create 来进行深度拷贝 */
+// const deepCopy = obj => obj instanceof Array ? JSON.parse(JSON.stringify(obj)) : Object.create(obj);
+const deepCopy = obj => {
+  if(obj instanceof Array){
+    let arr = obj.concat();
+    arr = arr.map((item, i) => {
+      if(item instanceof Object){
+        let store = Object.create(item);
+        for(let key in store.__proto__){
+          store[key] = store.__proto__[key].constructor === Object ? deepCopy(store.__proto__[key]) : store.__proto__[key];
+        }
+        return store
+      };
+      return item
+    })
+    return arr
+  }
+  if(obj instanceof Object){
+    let store = Object.create(obj);
+    for(let key in store.__proto__){
+      store[key] = store.__proto__[key]
+    }
+    return store
+  };
+};
+
 const name = localStorage.getItem('name');
 const token = localStorage.getItem('token');
 const permission = localStorage.getItem('permission');
@@ -41,10 +65,11 @@ export default {
       }
     },
     /* 编辑用户的状态管理 */
-    editStatusManage(state, { payload: { content } }){
+    editStatusManage(state, { payload: { content, contentBack } }){
       return {
         ...state,
         content,
+        contentBack,
         /* 点击编辑或取消编辑时清空编辑时暂存的值 */
         editValue: {}
       }
@@ -125,7 +150,7 @@ export default {
       }
     },
     *resEditStatusManage({ payload: { id, content } }, { call, put }){
-      let alterValIndex = content.find(val => val.id === id);
+      let alterValIndex = content.findIndex(val => val.id === id);
       let alterVal = content.find(val => val.id === id);
       /* 改变编辑时的状态 */
       for(const k in alterVal){
@@ -134,7 +159,8 @@ export default {
         }
       };
       content[alterValIndex] = alterVal;
-      yield put({ type: 'editStatusManage', payload: { content }})
+      let contentBack = deepCopy(content);
+      yield put({ type: 'editStatusManage', payload: { content, contentBack }})
     },
     *resSave({ payload : { id, content, editValue } }, { call, put }){
       let index = content.findIndex(val => val.id === id); 
@@ -147,6 +173,7 @@ export default {
       content[index] = val;
       // let { code } = yield call(req, 'http://easy-mock.com/mock/59cdb90da0ab222a113b8030/parctice/dataManage', { body: stringify(val) });
       let { code } = yield call(req, 'http://localhost:99/homeSaveData.php', { body: stringify(val) });
+      console.log(content)
       if(code){
         yield put({ type: 'save', payload: { content, contentBack: deepCopy(content) } })
       }

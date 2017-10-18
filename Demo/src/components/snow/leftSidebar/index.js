@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import { Link } from 'dva/router';
 import { deleteLocalStorage } from '../../snow/localStorage';
 import { routerRedux } from 'dva/router';
-import { Menu, Icon, Button, Switch, Dropdown } from 'antd';
+import { Menu, Icon, Button, Switch, Dropdown, Badge, Avatar } from 'antd';
 import styled from './index.less';
 const SubMenu = Menu.SubMenu;
 const MenuItem = Menu.Item;
@@ -62,12 +62,12 @@ class LeftSidebar extends Component{
             menuShink ? 
               <div>
                 <Dropdown trigger={['click']} overlay={Option('#', this.userOptions)}>
-                  <Icon  className={styled.cursor} type="man" />
+                <Badge><Avatar className={`${styled.userPortrait} ${styled.cursor}`} icon='user' /></Badge>
                 </Dropdown>
               </div>
             : 
               <div>
-                <Icon type="man" />
+                <Badge count={1}><Avatar className={`${styled.userPortrait}`} style={{ marginBottom: '.8rem' }} icon='user' /></Badge>
                 <Dropdown trigger={['click']} overlay={Option('#', this.userOptions)}>
                   <p className={styled.cursor}><span>个人选项</span><Icon type="down" /></p>
                 </Dropdown>
@@ -89,4 +89,5 @@ class LeftSidebar extends Component{
     )
   }
 }
-export default connect(({ leftSidebar }) => ({ leftSidebar }))(LeftSidebar)
+export default LeftSidebar
+// export default connect(({ leftSidebar }) => ({ leftSidebar }))(LeftSidebar)

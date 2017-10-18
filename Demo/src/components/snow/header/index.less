@@ -1,0 +1,89 @@
+.box{
+  /* 公共样式 */
+  .cursor{
+    cursor: pointer;
+  }
+  /* 左侧 logo */
+  .logo{
+    display: flex;
+    min-width: 128px;
+  }
+  /* 右侧 */
+  .rightBox{
+    display: flex;
+    align-items: center;
+    max-height: 64px;
+    /* 右侧搜索 */
+    .searchBox{
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      flex: auto;
+      // width: 66%;
+      /* 搜索框 */
+      .search{
+        padding: 0 5px 0 15px;
+        // display: inline-block;
+        border-radius: 15px;
+        height: 30px;
+        border: 1px solid #CCC;
+        display: flex;
+        align-items: center;
+        // justify-content: space-between;
+        flex: auto;
+        input{
+          flex: auto;
+          width: calc(100% - 15px);
+          height: 100%;
+          margin: 0;
+          padding: 0;
+          background: none;
+          border: none;
+          outline: none;
+          box-shadow: none;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        i{
+          padding-top: 3px;
+        }
+      }
+      /* 高级检索 */
+      .advancedSearch{
+        padding-left: .4rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+    /* 右侧按钮 */
+    .rightBtn{
+      display: flex;
+      justify-content: space-between;
+      width: 30%;
+      margin-left: 10px;
+      i{
+        cursor: pointer;
+      }
+    }
+  }
+  img{
+    height: 50px;
+  }
+}
+/* 高级搜索模态框 title */
+.advancedSearchSelectBox{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .advancedSearchSelect{
+    width: 200px;
+    min-width: 200px;
+    margin: 0 0 0 10px;
+  }
+}
+/* 模态框的内容部分 */
+.modalContent{
+  text-align: center;
+}

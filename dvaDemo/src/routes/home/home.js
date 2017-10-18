@@ -4,33 +4,6 @@ import { Table, Icon, Popconfirm, Input, Button, Form, Radio, Modal, Row, Col, C
 import styled from './home.less';
 const FormItem = Form.Item;
 
-<<<<<<< HEAD
-/* 深度拷贝,数组将其转成字符串在转回数组,对象用 Object.create 来进行深度拷贝 */
-// const deepCopy = obj => obj instanceof Array ? JSON.parse(JSON.stringify(obj)) : Object.create(obj);
-const deepCopy = obj => {
-  if(obj instanceof Array){
-    let arr = obj.concat();
-    arr = arr.map((item, i) => {
-      if(item instanceof Object){
-        let store = Object.create(item);
-        for(let key in store.__proto__){
-          store[key] = store.__proto__[key].constructor === Object ? deepCopy(store.__proto__[key]) : store.__proto__[key];
-        }
-        return store
-      };
-      return item
-    })
-    return arr
-  }
-  if(obj instanceof Object){
-    let store = Object.create(obj);
-    for(let key in store.__proto__){
-      store[key] = store.__proto__[key]
-    }
-    return store
-  };
-};
-=======
 /* 深度拷贝 */
 const deepCopy = (obj, ...val) => {
   let copy = obj instanceof Array ? [] : {};
@@ -54,7 +27,6 @@ const deepCopy = (obj, ...val) => {
   }
   return copy
 }
->>>>>>> 30e01a25f54c4e3036be5a72f0271de4a95a8bb8
 
 /* 点击添加后出现的表单 start */
 const Forms = ({ forms }) => {
@@ -222,7 +194,7 @@ class Tables extends Component{
     dispatch({ type: 'home/modalStatus', payload: { addModalStatus: !addModalStatus } })
   }
   /* 这个 table 顶部的添加按钮文字 */
-  headerTitle(text){
+  headerTitleTitle(text){
     return (
       <div className={styled.clearfix}>
         <p className={styled.left}><Button onClick={() => this.handleAdd()}>添加</Button></p>

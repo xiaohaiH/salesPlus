@@ -3,8 +3,12 @@ import { HeaderModalSelect } from '../../../components/verify/AllData';
 export default {
   namespace: 'headerAside',
   state: {
+    // 高级搜索模态框的状态
     advancedSearchModal: false,
-    modalSelectData: []
+    // 模态框标题 select 框的数据
+    modalSelectData: [],
+    // 模态框内容的数据
+    modalContentData: []
   },
   effects: {
     *pressEnter({ payload }, { call, put }){

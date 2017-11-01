@@ -194,7 +194,7 @@ class Tables extends Component{
     dispatch({ type: 'home/modalStatus', payload: { addModalStatus: !addModalStatus } })
   }
   /* 这个 table 顶部的添加按钮文字 */
-  headerTitleTitle(text){
+  headerTitle(text){
     return (
       <div className={styled.clearfix}>
         <p className={styled.left}><Button onClick={() => this.handleAdd()}>添加</Button></p>
@@ -205,7 +205,7 @@ class Tables extends Component{
   /* 筛选按钮状态 */
   handleFilterStatus(visible){
     const { dispatch } = this.props;
-    dispatch({ type: 'home/filterVisible', payload: { visible } })
+    this.props.dispatch({ type: 'home/filterVisible', payload: { visible } }).then(() => {this.ssss.focus()})
   }
   /* 筛选事件 */
   filterValue(e){
@@ -260,7 +260,7 @@ class Tables extends Component{
         if(!val['editable']){
           val['render'] = (text) => <a>{text}</a>
         }
-        val['filterDropdown'] = (<div><Input onChange={this.filterValue} type='text' /></div>);
+        val['filterDropdown'] = (<div><Input ref={ele => this.ssss = ele} onChange={this.filterValue} type='text' /></div>);
         val['filterIcon'] = (<Button style={{ width: 'auto' }}>筛选</Button>);
         val['filtered'] = true;
         val['filterDropdownVisible'] = filterStatus;

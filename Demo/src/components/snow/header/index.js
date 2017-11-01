@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { trim } from '../appMethod';
-import { Row, Col, Input, Icon, Modal, Select, message } from 'antd';
+import { Row, Col, Input, Icon, Modal, Select, message, Form } from 'antd';
 import styled from './index.less';
 const Search = Input.Search;
 const Option = Select.Option;
+const FormItem = Form.Item;
 
 /* 高级搜索模态框的 title */
-const ModalTitle = ({ data }) => {
+const ModalTitle = ({ data, onChange }) => {
   if(typeof data !== 'object' || !(data instanceof Array) || !data.length){
     console.error('搜索->高级搜索中传入的数据不是数组,请重新输入数据')
     data = [{ val: 'null', selected: true}];
@@ -19,15 +20,87 @@ const ModalTitle = ({ data }) => {
         className={styled.advancedSearchSelect}
         showSearch
         defaultValue={selected}
+        onChange={onChange}
       >
         {
-          data.map(({val}) => (
-            <Option key={val} value={val}>{val}</Option>
+          data.map(({val, value}, key) => (
+            <Option key={key} value={value}>{val}</Option>
           ))
         }
       </Select>
     </div>
   );
+}
+/**
+*	联动
+* @optList: select 的 option 选项,数组形式
+*/
+class Linkage extends Component{
+  constructor(props){
+    super(props);
+    this.primaryChange = this.primaryChange.bind(this)
+  }
+  /**
+  *	@primarySelectList: 第一个选择框的值
+  * @conditionList: 第二个选择框的值
+  */
+  state = {
+    primaryList: this.props.primaryList || '',
+    conditionList: this.props.conditionList || ''
+  }
+  // 第一个选框值改变以后
+  primaryChange(value,a,b){
+    console.log(value,a,b)
+  }
+  render(){
+    const { getFieldDecorator } = this.props.form;
+    const options = (optList = []) => {
+      if(!(optList instanceof Array)){
+        console.trace('请输入数组');
+        return null
+      }
+      return optList.map(({ value, val, ...attr }, key) => ( <Option isSelectOptGroup={true} value={value} key={value}>{val}</Option> ))
+    }
+    const ChildList = () => (
+      <div>
+        <FormItem labelCol={3}>
+          {
+            getFieldDecorator('primarySelect',{
+              initialValue: 'b'
+            })(
+              <Select onChange={this.primaryChange}>
+                { options(this.state.conditionList) }
+              </Select>
+            )
+          }
+        </FormItem>
+        <FormItem labelCol={4}>
+          {
+            getFieldDecorator('conditionSelect',{
+              initialValue: 'a'
+            })(
+              <Select>
+                { options(this.state.conditionList) }
+              </Select>
+            )
+          }
+        </FormItem>
+        <FormItem labelCol={4}>
+          {
+            getFieldDecorator('settingValue',{
+              
+            })(<Input style={{width: '90%'}} type='text' />)
+          }
+          <Icon type="delete" />
+        </FormItem>
+      </div>
+    )
+    return (
+      <Form layout='horizontal'>
+        <ChildList />
+      </Form>
+    )
+  }
 }
 class Header extends Component{
   constructor(props){
@@ -35,6 +108,7 @@ class Header extends Component{
     this.pressEnter = this.pressEnter.bind(this);
     this.handleAdvancedSearch = this.handleAdvancedSearch.bind(this);
     this.advancedSearchModalManage = this.advancedSearchModalManage.bind(this);
+    this.advancedSearchSelectChange = this.advancedSearchSelectChange.bind(this);
   }
   pressEnter(str){
     const { dispatch } = this.props;
@@ -53,8 +127,12 @@ class Header extends Component{
     const { dispatch } = this.props;
     dispatch({ type: 'headerAside/advancedSearchModalManage' })
   }
+  /* 高级搜索 select 框 change 事件 */
+  advancedSearchSelectChange(value){
+    console.log(value)
+  }
   render(){
-    const { advancedSearchModal, modalSelectData } = this.props.headerAside;
+    const { advancedSearchModal, modalSelectData, modalContentData } = this.props.headerAside;
     return (
       <header className={styled.box}>
         <Row
@@ -72,14 +150,14 @@ class Header extends Component{
               <p className={styled.advancedSearch}>
                 <span onClick={this.handleAdvancedSearch} className={styled.cursor}>高级检索</span>
                 <Modal
-                  title={<ModalTitle data={modalSelectData} />}
+                  title={<ModalTitle data={modalSelectData} onChange={(value) => this.advancedSearchSelectChange(value)} />}
                   onCancel={this.advancedSearchModalManage}
                   maskClosable={true}
                   visible={advancedSearchModal}
                 >
                   <div className={styled.modalContent}>
                     {
-                      '请选择模块'
+                      !modalContentData ? '请选择模块' : <Linkage primaryList={[{val: 'a', value: 'aa'},{val: 'b', value: 'bb'}]} conditionList={[{val: 'c', value: 'cc'},{val: 'd', value: 'dd'}]} form={this.props.form} />
                     }
                   </div>
                 </Modal>
@@ -98,4 +176,5 @@ class Header extends Component{
     )
   }
 }
+Header = Form.create()(Header)
 export default Header

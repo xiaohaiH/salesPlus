@@ -1,34 +1,6 @@
 import req from '../../utils/request';
 import { stringify } from 'query-string';
 
-<<<<<<< HEAD
-/* 深度拷贝,数组将其转成字符串在转回数组,对象用 Object.create 来进行深度拷贝 */
-// const deepCopy = obj => obj instanceof Array ? JSON.parse(JSON.stringify(obj)) : Object.create(obj);
-const deepCopy = obj => {
-  if(obj instanceof Array){
-    let arr = obj.concat();
-    arr = arr.map((item, i) => {
-      if(item instanceof Object){
-        let store = Object.create(item);
-        for(let key in store.__proto__){
-          store[key] = store.__proto__[key].constructor === Object ? deepCopy(store.__proto__[key]) : store.__proto__[key];
-        }
-        return store
-      };
-      return item
-    })
-    return arr
-  }
-  if(obj instanceof Object){
-    let store = Object.create(obj);
-    for(let key in store.__proto__){
-      store[key] = store.__proto__[key]
-    }
-    return store
-  };
-};
-
-=======
 /* 深度拷贝数组或者对象 */
 const deepCopy = (obj, ...val) => {
   let copy = obj instanceof Array ? [] : {};
@@ -52,7 +24,6 @@ const deepCopy = (obj, ...val) => {
   }
   return copy
 }
->>>>>>> 30e01a25f54c4e3036be5a72f0271de4a95a8bb8
 const name = localStorage.getItem('name');
 const token = localStorage.getItem('token');
 const permission = localStorage.getItem('permission');
@@ -130,7 +101,7 @@ export default {
       }
     },
     /* 筛选用户是否显示的状态 */
-    filterVisible(state, { payload: { visible:filterStatus } }){
+    filterVisibles(state, { payload: { visible:filterStatus } }){
       return {
         ...state,
         filterStatus
@@ -145,6 +116,9 @@ export default {
     }
   },
   effects: {
+    *filterVisible({ payload: { visible:filterStatus }}, { call, put }){
+      yield put({ type: 'filterVisibles', payload: { visible: filterStatus } })
+    },
     *resHeaderData({ payload }, { call, put }){
       const params = {
         header: true,

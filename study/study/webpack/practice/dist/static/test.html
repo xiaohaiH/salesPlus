@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>auto</title>
+  <style type="text/css">
+    *{
+      margin: 0;
+      padding: 0;
+    }
+    #parent{
+      background: green;
+      display: flex;
+      flex-flow: row wrap; /* 屏幕宽度不够时自动换行 */
+    }
+    #child1{
+      background: violet;
+    }
+    #child3{
+      background: purple;
+    }
+    #child4{
+      background: yellowgreen;
+    }
+    .child{
+      flex: 1 1 calc(100% / 3); /* 剩余宽度大于本身宽度时,三个子元素均分剩余宽度,小于本身宽度时,三个子元素等比例缩小,设置放大或缩小的比例 */
+      /*min-width: 300px;*/
+      box-sizing: border-box;
+      border: 1px solid red;
+    }
+  </style>
+</head>
+<body>
+  <input type="number" maxlength="1" name="">
+  <div id="parent">
+    <div class="child" id="child1">child1</div>
+    <div class="child" id="child3">child2</div>
+    <div class="child" id="child4">child3</div>
+  </div>
+</body>
+<script type="text/javascript">
+  console.log('a' ? 'a' : 'b' ? 'b' : 'c');
+  console.log(new Date(2017,13,1))
+</script>
+</html>

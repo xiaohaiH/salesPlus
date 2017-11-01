@@ -20,9 +20,9 @@ const RouterConfig = ({ history, app }) => {
       component: () => import('./routes/home/index.js')
     },
     {
-      path: '/ss',
+      path: '/home/ss',
       models: () => [ import('./models/snow/leftSidebar/index.js') ],
-      component: () => import('./components/snow/leftSidebar/index.js')
+      component: () => import('./components/snow/test/index.js')
     }
   ];
   history.listen(({ pathname }) => {

@@ -1,10 +1,155 @@
 import React, { Component } from 'react';
 import { trim } from '../appMethod';
-import { Row, Col, Input, Icon, Modal, Select, message, Form } from 'antd';
+import { Row, Col, Input, Icon, Modal, Select, message, Form, DatePicker } from 'antd';
 import styled from './index.less';
 const Search = Input.Search;
 const Option = Select.Option;
 const FormItem = Form.Item;
+// import { Select, DatePicker } from 'antd';
+import moment from 'moment';
+// const { Option } = Select;
+const { RangePicker } = DatePicker;
+// const ABC = () => {
+//   let result = [];
+//   result.push(<div>aaaaa</div>);
+//   result.push(<div>aaaaa</div>);
+//   return result
+// }
+
+const aaabbbccc = [
+  {
+    eleOne: {
+      selector: 'select',
+      sources: [
+        {
+          key: 'aaa',
+          value: '啊啊啊',
+          'data-va': 'adf',
+        },
+        {
+          key: 'bbb',
+          value: '不不不',
+          abcde: 's3t3f'
+        }
+      ],
+      attr: {
+        name: 'select1',
+      }
+    },
+    eleTwo: {
+      selector: 'DatePicker',
+      format: 'yyyy/mm/dd',
+      startDate: '2017/10/10',
+      attr: {
+        name: 'settingDate'
+      }
+    },
+    eleThree: {
+      selector: 'RangePicker',
+      format: 'yyyy/mm/dd',
+      startDate: '2017/10/10',
+      deadline: '2017/10/20',
+      attr: {
+        name: 'rangePicker'
+      }
+    }
+  },
+  {
+    eleOne: {
+      selector: 'select',
+      sources: [
+        {
+          key: 'aaa',
+          value: '啊啊啊',
+          'data-va': 'adf',
+        },
+        {
+          key: 'bbb',
+          value: '不不不',
+          abcde: 's3t3f'
+        }
+      ],
+      attr: {
+        name: 'select1',
+      }
+    },
+    eleTwo: {
+      selector: 'DatePicker',
+      format: 'yyyy/mm/dd',
+      startDate: '2017/10/10',
+      attr: {
+        name: 'settingDate'
+      }
+    },
+    eleThree: {
+      selector: 'RangePicker',
+      format: 'yyyy/mm/dd',
+      startDate: '2017/10/10',
+      deadline: '2017/10/20',
+      attr: {
+        name: 'rangePicker'
+      }
+    }
+  }
+];
+
+const Linkages = ({ data = [] }) => {
+  if(!(data instanceof Array)){
+    throw new Error('参数输入格式有误');
+  };
+  let opts = (arr = []) => {
+    if(!(arr instanceof Array)){
+      throw new Error('参数输入格式有误');
+    };
+    let result = arr.map(({ key, value, ...attr }, i) => {
+      console.log(key,value, i, 111)
+      return (<Option key={key} {...attr}>{value}</Option>)
+    });
+    return result
+  };
+  let ele = data.map((item, i) => {
+    let result = [];
+    for(let key in item){
+      if(item[key].selector === 'select'){
+        result.push(
+          <Select  {...item[key].attr}>
+            {opts(item[key].sources)}
+          </Select>
+        );
+      };
+      if(item[key].selector === 'DatePicker'){
+        const startDate = item[key].startDate;
+        const format = item[key].format;
+        const attr = item[key].attr;
+        if(!startDate || !format){
+          throw new Error('参数输入格式有误');
+        }
+        result.push(
+          <DatePicker defaultValue={moment(startDate, format)} format={format} {...attr} />
+        );
+      };
+      if(item[key].selector === 'RangePicker'){
+        const startDate = item[key].startDate;
+        const deadline = item[key].deadline || startDate;
+        const format = item[key].format;
+        const attr = item[key].attr;
+        if(!startDate || !format){
+          console.log(startDate, format)
+          throw new Error('参数输入格式有误');
+        }
+        result.push(
+          <RangePicker defaultValue={[ moment(startDate, format), moment(deadline, format) ]} format={format} {...attr} />
+        );
+      }
+    }
+    return result
+  });
+  return ele
+}
+
+
+
+
 
 /* 高级搜索模态框的 title */
 const ModalTitle = ({ data, onChange }) => {
@@ -93,6 +238,13 @@ class Linkage extends Component{
           }
           <Icon type="delete" />
         </FormItem>
+      </div>
+    );
+    console.log(1234567890)
+    console.log(Linkages({ data: aaabbbccc }))
+    return (
+      <div>
+        {Linkages({ data: aaabbbccc })}
       </div>
     )
     return (

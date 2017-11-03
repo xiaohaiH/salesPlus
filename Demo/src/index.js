@@ -6,7 +6,7 @@ import { message } from 'antd'
 
 // 1. Initialize
 const app = dva({
-  ...createLoading({ effects: true}),
+  ...createLoad({ effects: true}),
   history: createHistory(),
   onError(error){
     message.error(error.message)

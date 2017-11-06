@@ -6,58 +6,11 @@ const Search = Input.Search;
 const Option = Select.Option;
 const FormItem = Form.Item;
 
-// const dataSources = [
-//   {
-//     eleOne: {
-//       selector: 'select',
-//       sources: [
-//         {
-//           key: 'aaa',
-//           value: '啊啊啊',
-//           'data-va': 'adf',
-//           selected: true
-//         },
-//         {
-//           key: 'bbb',
-//           value: '不不不',
-//           'data-va': 'adf',
-//         },
-//         {
-//           key: 'ccc',
-//           value: '吃串串',
-//           'data-va': 'adf',
-//           selected: false
-//         }
-//       ],
-//       attr: {
-//         name: 'select1',
-//       }
-//     },
-//     eleTwo: {
-//       selector: 'DatePicker',
-//       format: 'YYYY/MM/DD',
-//       startDate: '2017/10/10',
-//       attr: {
-//         name: 'settingDate'
-//       }
-//     },
-//     eleThree: {
-//       selector: 'RangePicker',
-//       format: 'YYYY/MM/DD',
-//       startDate: '2017/10/10',
-//       deadline: '2017/10/20',
-//       attr: {
-//       }
-//     }
-//   }
-// ];
-
-
 
 /* 高级搜索模态框的 title */
 const ModalTitle = ({ data, onChange }) => {
   if(typeof data !== 'object' || !(data instanceof Array) || !data.length){
-    console.error('搜索->高级搜索中传入的数据不是数组,请重新输入数据')
+    console.error('搜索->高级搜索中传入的数据不是数组,请重新输入数据');
     data = [{ val: 'null', selected: true}];
   };
   let selected = (data.find(obj => obj.selected) && data.find(obj => obj.selected)['val']) || (data[0] && data[0]['val']);
@@ -113,7 +66,6 @@ class Header extends Component{
   }
   render(){
     const { advancedSearchModal, modalSelectData, modalContentData } = this.props.headerAside;
-    console.log(this.props.headerAside)
     return (
       <header className={styled.box}>
         <Row

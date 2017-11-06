@@ -308,7 +308,6 @@ MapExp.prototype = {
       var triangle = $(e.target).find('i');
       var resultPanel = $('#searchResult');
       if (triangle.is(':animated') || resultPanel.is(':animated')) return;
-      console.log(1231);
       var flag = triangle.data('falg') || triangle.attr('data-flag');
       if (flag === 'on') {
         triangle.css('transform', 'rotate(180deg)').data('flag', 'off').attr('data-flag', 'off')

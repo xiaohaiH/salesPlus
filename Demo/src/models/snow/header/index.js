@@ -1,4 +1,4 @@
-import { HeaderModalSelect, HeaderModalFirstLinkage, HeaderModalSecondLinkage } from '../../../components/verify/AllData';
+import { HeaderModalSelect, HeaderModalFirstLinkage, HeaderModalSecondLinkage, HeaderModalThreeLinkage } from '../../../components/verify/AllData';
 
 const timer = (ms = 1000) => new Promise(resolve => setTimeout(resolve, ms));
 const deepCopy = obj => JSON.parse(JSON.stringify(obj));
@@ -21,7 +21,7 @@ export default {
     /* 请求模态框下拉列表的数据 */
     *resModalData(action, { call, put }){
       // yield call(timer, 1000);
-      const { code, data } = yield call(HeaderModalSelect);
+      let { code, data } = yield call(HeaderModalSelect);
       if(code === 'success'){
         yield put({ type: 'changeModalSelectData', payload: data })
       }
@@ -40,14 +40,11 @@ export default {
               firstOrderLinkage: {
                 selector: 'select',
                 attr: {
-                  onChange(key){
-                    const val = this.children.find(list => list.key === key)['props']['type'];
-                    yield put({ type: 'firstModalChange', payload: val})
-                  }
+                  name: 'firstColumnName'
                 },
                 sources: data
               },
-              sencondOrderLinkage: {
+              secondOrderLinkage: {
                 selector: 'select',
                 sources: [
                   {
@@ -56,13 +53,13 @@ export default {
                   }
                 ],
                 attr: {
-                  name: 'select2'
+                  name: 'firstCondition'
                 }
               },
               threeOrderLinkage: {
                 selector: 'input',
                 attr: {
-                  name: 'select3'
+                  name: 'firstEvaluation'
                 }
               }
             }
@@ -72,14 +69,21 @@ export default {
         yield put({ type: 'getModalContentData', payload: result })
       }
     },
-    *firstModalChange({ payload }, { call, put }){
-      if(!payload){
-        console.error('数据格式错误');
-        return
-      }
-      if(payload === 'T'){
-        yield put({ type: '', payload: [] })
-      }
+    *firstModalChange({ payload: { firstColumnName, firstCondition, index } }, { call, put }){
+      // if (!type){
+      //   console.error('数据格式错误');
+      //   return
+      // };
+      console.log(firstColumnName, firstCondition)
+      
+      const secondOrderLinkage = HeaderModalSecondLinkage(type);
+      const selected = secondOrderLinkage.find(obj => obj.selected);
+      if (!selected) {
+        secondOrderLinkage[0]['selected'] = true
+      };
+      const threeOrderLinkage = HeaderModalThreeLinkage(type);
+      yield put({ type: 'getSecondLinkageValue', payload: { secondOrderLinkage, index }})
+      yield put({ type: 'getThreeLinkageValue', payload: { threeOrderLinkage, index }})
     }
   },
   reducers: {
@@ -101,8 +105,19 @@ export default {
         modalContentData: payload
       }
     },
-    getLinkageValue({ modalContentData: {  }, ...state }, { payload}){
-
+    getSecondLinkageValue({ modalContentData, ...state }, { payload: { index, secondOrderLinkage } }) {
+      modalContentData[index]['secondOrderLinkage']['sources'] = secondOrderLinkage;
+      return {
+        ...state,
+        modalContentData
+      }
+    },
+    getThreeLinkageValue({ modalContentData, ...state }, { payload: { index, threeOrderLinkage } }){
+      modalContentData[index]['threeOrderLinkage'] = threeOrderLinkage;
+      return {
+        ...state,
+        modalContentData
+      }
     }
   },
   subscriptions: {}

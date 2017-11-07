@@ -40,6 +40,7 @@ class Header extends Component{
     this.handleAdvancedSearch = this.handleAdvancedSearch.bind(this);
     this.advancedSearchModalManage = this.advancedSearchModalManage.bind(this);
     this.advancedSearchSelectChange = this.advancedSearchSelectChange.bind(this);
+    this.firstLinkageChange = this.firstLinkageChange.bind(this);
   }
   pressEnter(str){
     const { dispatch } = this.props;
@@ -64,8 +65,45 @@ class Header extends Component{
     const { dispatch } = this.props;
     dispatch({ type: 'headerAside/moduleChange', payload: value })
   }
+  /* 高级搜索三级联动 FirstLinkageChange 事件 */
+  firstLinkageChange(value,index){
+    console.log(value, index)
+    const {firstColumnName, firstCondition} = this.props.form.getFieldsValue(['firstColumnName', 'firstCondition']);
+    console.log(firstColumnName, firstCondition)
+    const { dispatch } = this.props;
+    const type = this.props.headerAside.modalContentData[index]['firstOrderLinkage']['sources'].find(ele => ele.key === value)['type'];
+    // const type = this.refs.firstLinkage.props.children.find(ele => ele.key === value)['props']['type'];
+    // console.log(this.refs.secondLinkage)
+    dispatch({ type: 'headerAside/firstModalChange', payload: { type, firstCondition, index } })
+  }
   render(){
-    const { advancedSearchModal, modalSelectData, modalContentData } = this.props.headerAside;
+    let { advancedSearchModal, modalSelectData, modalContentData } = this.props.headerAside;
+    modalContentData = modalContentData.map((item, index) => {
+      if(item['firstOrderLinkage']){
+        if(item['firstOrderLinkage'].attr){
+          item['firstOrderLinkage'].attr.onChange = (value) => this.firstLinkageChange(value, index);
+          // item['firstOrderLinkage'].attr.ref = 'firstLinkage'
+        } else {
+          item['firstOrderLinkage'].attr = { onChange(value){this.firstLinkageChange(value, index)}}
+        }
+      };
+      // if(item['secondOrderLinkage']){
+      //   if(item['secondOrderLinkage'].attr){
+      //     // item['secondOrderLinkage'].attr.onChange = (value) => this.secondLinkageChange(value, index);
+      //     // item['secondOrderLinkage'].attr.ref = 'secondLinkage'
+      //   } else {
+      //     // item['secondOrderLinkage'].attr = { ref: 'secondLinkage' }
+      //   }
+      // };
+      // if(item['threeOrderLinkage']){
+      //   if(item['threeOrderLinkage'].attr){
+      //     item['threeOrderLinkage'].attr.ref = 'threeLinkage'
+      //   } else {
+      //     item['threeOrderLinkage'].attr = { ref: 'threeLinkage' }
+      //   }
+      // };
+      return item
+    })
     return (
       <header className={styled.box}>
         <Row
@@ -91,7 +129,7 @@ class Header extends Component{
                 >
                   <div className={styled.modalContent}>
                     {
-                      modalContentData.length ? new Linkage({ data: modalContentData }) : '请选择模块'
+                      modalContentData.length ? new Linkage({ data: modalContentData, form: this.props.form}) : '请选择模块'
                     }
                   </div>
                 </Modal>

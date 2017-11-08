@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Select, DatePicker, Input } from 'antd';
+import { Select, DatePicker, Input, Icon } from 'antd';
 import moment from 'moment';
 import styled from './appMethod.less';
 const { Option } = Select;
@@ -12,6 +12,11 @@ export const trim = (str) => {
   return str
 }
 
+/* 判断是否是空对象 */
+export const isEmptyObj = (obj) => {
+  for(let key in obj) return false;
+  return true;
+}
 
 /**
 *	选择框->三级联动
@@ -24,20 +29,6 @@ export class Linkage extends Component{
     this.opts = this.opts.bind(this);
     this.multistageEle = this.multistageEle.bind(this);
     this.error = this.error.bind(this);
-    const { data = [] } = props;
-    if (!(data instanceof Array)) {
-      this.error('参数输入格式有误');
-    };
-    let eleArr = data.map((item) => {
-      let result = [];
-      let index = 0;
-      for (let key in item) {
-        result.push(this.multistageEle(item[key], index))
-        ++index;
-      }
-      return result
-    });
-    return eleArr
   }
   /* 报错 */
   error(text = '参数错误'){
@@ -55,17 +46,23 @@ export class Linkage extends Component{
     return result
   }
   /* 多级列表 -> select */
-  multistageEle({ selector, attr: { name: names = this.error('58行names参数错误'), ...attr }, ...prop}, index){
+  multistageEle({ selector, attr, ...prop}, index){
+    if(typeof attr === 'object'){
+      var { names = this.error('58行names参数错误'), ...attrVal } = attr;
+    }
     if (selector === 'select') {
       const selected = (prop.sources.find(obj => obj.selected) && prop.sources.find(obj => obj.selected)['key']) || (prop.sources[0] && prop.sources[0]['key']);
       const { getFieldDecorator } =  this.props.form;
-      let ran = parseInt(Math.random() * 100);
       return(
         getFieldDecorator(names, {
           name: names,
           initialValue: selected
         })(
-          <Select {...attr} className={`${index === 0 ? styled.first : index === 1 ? styled.second : styled.three}`}>
+          <Select 
+            key={names}
+            {...attrVal}
+            className={`${index === 0 ? styled.first : index === 1 ? styled.second : styled.three}`}
+          >
             {this.opts(prop.sources)}
           </Select>
         )
@@ -76,17 +73,17 @@ export class Linkage extends Component{
       const startDate = prop.startDate;
       const format = prop.format;
       if (!startDate || !format) {
-        this.error('参数输入格式有误')
+        this.error('79行参数输入格式有误')
       };
       return(
         getFieldDecorator(names, {
-          name: names,
+          name: 'date-picker',
           initialValue: moment(startDate, format)
         })(
           <DatePicker
-            defaultValue={moment(startDate, format)}
+            key={names}
             format={format}
-            {...attr}
+            {...attrVal}
             className={`${index === 0 ? styled.first : index === 1 ? styled.second : styled.three}`}
             placeholder="请选择日期"
           />
@@ -98,14 +95,20 @@ export class Linkage extends Component{
       const startDate = prop.startDate;
       const format = prop.format;
       if (!startDate || !format) {
-        this.error('参数输入格式有误');
+        this.error('101行参数输入格式有误');
       };
       return(
         getFieldDecorator(names, {
-          name: names,
+          name: 'month-picker',
           initialValue: moment(startDate, format)
         })(
-          <MonthPicker defaultValue={moment(startDate, format)} format={format} {...attr} className={`${index === 0 ? styled.first : index === 1 ? styled.second : styled.three}`} placeholder="请选择月份" />
+          <MonthPicker
+            key={names}
+            format={format}
+            {...attrVal}
+            className={`${index === 0 ? styled.first : index === 1 ? styled.second : styled.three}`}
+            placeholder="请选择月份"
+           />
         )
       )
     };
@@ -115,30 +118,78 @@ export class Linkage extends Component{
       const deadline = prop.deadline || startDate;
       const format = prop.format;
       if (!startDate || !format) {
-        this.error('参数输入格式有误');
+        this.error('118行参数输入格式有误');
       }
       return(
         getFieldDecorator(names, {
-          name: names,
+          name: 'range-picker',
           initialValue: [moment(startDate, format), moment(deadline, format)]
         })(
-          <RangePicker defaultValue={[moment(startDate, format), moment(deadline, format)]} format={format} {...attr} className={`${index === 0 ? styled.first : index === 1 ? styled.second : styled.three}`} placeholder="请选择开始日期和结束日期" />
+          <RangePicker
+            key={names}
+            format={format}
+            {...attrVal}
+            className={`${index === 0 ? styled.first : index === 1 ? styled.second : styled.three}`}
+            placeholder={['请选择开始日期','请选择结束日期']}
+          />
         )
       )
     };
     if (selector === 'Input' || selector === 'input') {
-      const attr = prop.attr; 
       const { getFieldDecorator } = this.props.form;
       return (
         getFieldDecorator(names, {
           name: names
         })(
-          <Input {...attr} className={`${index === 0 ? styled.first : index === 1 ? styled.second : styled.three}`} />
+          <Input
+            key={names}
+            {...attrVal}
+            className={`${index === 0 ? styled.first : index === 1 ? styled.second : styled.three}`}
+          />
+        )
+      )
+    };
+    if(selector === 'Icon'){
+      const { getFieldDecorator } = this.props.form;
+      return (
+        getFieldDecorator(names, {
+          name: names
+        })(
+          <Icon
+            key={names}
+            { ...attrVal }
+            type="delete"
+            title="删除该条件"
+            className={styled.del}
+          />
         )
       )
     }
     if(!selector){
       return ''
     }
+  }
+  render(){
+    const { data = [] } = this.props;
+    if (!(data instanceof Array)) {
+      this.error('参数输入格式有误');
+    };
+    let eleArr = data.map((item) => {
+      let result = [];
+      let index = 0;
+      for (let key in item) {
+        result.push(this.multistageEle(item[key], index))
+        ++index;
+      }
+      return result
+    });
+    return (
+      <div>
+        { 
+          eleArr.map((ele, key) => <div key={key} className={styled.linkageBox}>{ele}</div>)
+        }
+      </div>
+    )
+    return eleArr
   }
 };

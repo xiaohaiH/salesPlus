@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { trim, Linkage } from '../appMethod';
-import { Row, Col, Input, Icon, Modal, Select, message, Form, DatePicker } from 'antd';
+import { Row, Col, Input, Icon, Modal, Select, message, Form, DatePicker, Button } from 'antd';
 import styled from './index.less';
 const Search = Input.Search;
 const Option = Select.Option;
@@ -8,7 +8,7 @@ const FormItem = Form.Item;
 
 
 /* 高级搜索模态框的 title */
-const ModalTitle = ({ data, onChange }) => {
+const ModalTitle = ({ data, onChange, form }) => {
   if(typeof data !== 'object' || !(data instanceof Array) || !data.length){
     console.error('搜索->高级搜索中传入的数据不是数组,请重新输入数据');
     data = [{ val: 'null', selected: true}];
@@ -17,21 +17,41 @@ const ModalTitle = ({ data, onChange }) => {
   return (
     <div className={styled.advancedSearchSelectBox}>
       <span>搜索范围:</span>
-      <Select
-        className={styled.advancedSearchSelect}
-        showSearch
-        defaultValue={selected}
-        onChange={onChange}
-      >
-        {
-          data.map(({val, value}, key) => (
-            <Option key={key} value={value}>{val}</Option>
-          ))
-        }
-      </Select>
+      {
+        form.getFieldDecorator('searchRange', {
+          name: 'searchRange',
+          initialValue: selected
+        })(
+          <Select
+            className={styled.advancedSearchSelect}
+            showSearch
+            onChange={onChange}
+          >
+            {
+              data.map(({ val, value }, key) => (
+                <Option key={key} value={value}>{val}</Option>
+              ))
+            }
+          </Select>
+        )
+      }
     </div>
   );
 }
+/**
+*	一个完整的 linkage 联动搜索框
+*	@show: 展示条件, @text: 展示的文字, @btnText: 按钮的文字, @onClick: 点击事件, @data: 三级联动的数据源(modalContentData), @form: form 表单事件
+*/
+const LinkageBox = ({ show = false, text = (<b>所有条件</b>), btnText= '添加条件', onChange, data, form }) => {
+  if (!show) return (<div style={{ textAlign: 'center' }}>请选择模块</div>);
+  return (
+    <div className={styled.LinkageBox}>
+      <div>{text}</div>
+      <Linkage data={data} form={form} />
+      <div><Button onClick={onChange}>{btnText}</Button></div>
+    </div>
+  )
+};
 
 class Header extends Component{
   constructor(props){
@@ -39,8 +59,11 @@ class Header extends Component{
     this.pressEnter = this.pressEnter.bind(this);
     this.handleAdvancedSearch = this.handleAdvancedSearch.bind(this);
     this.advancedSearchModalManage = this.advancedSearchModalManage.bind(this);
+    this.advancedSearchModalManageOk = this.advancedSearchModalManageOk.bind(this);
     this.advancedSearchSelectChange = this.advancedSearchSelectChange.bind(this);
     this.firstLinkageChange = this.firstLinkageChange.bind(this);
+    this.delCondition = this.delCondition.bind(this);
+    this.addAllCondition = this.addAllCondition.bind(this);
   }
   pressEnter(str){
     const { dispatch } = this.props;
@@ -59,51 +82,70 @@ class Header extends Component{
     const { dispatch } = this.props;
     dispatch({ type: 'headerAside/advancedSearchModalManage' })
   }
+  /* 高级搜索模态框点击确认后 */
+  advancedSearchModalManageOk(e){
+    const { dispatch } = this.props;
+    const ss = this.props.form.getFieldsValue();
+    console.log(ss)
+    // dispatch({ type: 'headerAside/advancedSearchModalManage' })
+  }
   /* 高级搜索 select 框 change 事件 */
   advancedSearchSelectChange(value){
     console.log(value)
     const { dispatch } = this.props;
-    dispatch({ type: 'headerAside/moduleChange', payload: value })
+    dispatch({ type: 'headerAside/moduleChange', payload: value }).then(() => {
+      if (!this.props.headerAside.modalContentData.length) return ;
+      const firstColumnSrouces = this.props.headerAside.modalContentData[0][0]['sources'];
+      const firstColumnVal = (firstColumnSrouces.find(ele => ele.selected) || firstColumnSrouces[0])['key'];
+      this.props.form.setFieldsValue({
+        'firstColumnName0': firstColumnVal
+      })
+    })
   }
   /* 高级搜索三级联动 FirstLinkageChange 事件 */
-  firstLinkageChange(value,index){
-    console.log(value, index)
-    const {firstColumnName, firstCondition} = this.props.form.getFieldsValue(['firstColumnName', 'firstCondition']);
-    console.log(firstColumnName, firstCondition)
+  firstLinkageChange(value, index){
     const { dispatch } = this.props;
-    const type = this.props.headerAside.modalContentData[index]['firstOrderLinkage']['sources'].find(ele => ele.key === value)['type'];
-    // const type = this.refs.firstLinkage.props.children.find(ele => ele.key === value)['props']['type'];
-    // console.log(this.refs.secondLinkage)
-    dispatch({ type: 'headerAside/firstModalChange', payload: { type, firstCondition, index } })
+    const firstType = this.props.headerAside.modalContentData[index][0]['sources'].find(ele => ele.key === value)['type'];
+    dispatch({ type: 'headerAside/firstModalChange', payload: { firstType, index } }).then(() => {
+      const secondConditionSource = this.props.headerAside.modalContentData[index][1]['sources'];
+      const secondConditionVal = (secondConditionSource.find(ele => ele.selected) || secondConditionSource[0])['key'];
+      this.props.form.setFieldsValue({
+        ['secondCondition' + index]: secondConditionVal
+      })
+    })
+  }
+  /* 高级搜索三级联动 SecondLinkageChange 事件 */
+  secondLinkageChange(value, index){
+    const { dispatch } = this.props;
+    const columnNameVal = 'firstColumnName' + index;
+    const firstColumnName = this.props.form.getFieldsValue([columnNameVal])[columnNameVal];
+    const firstType = this.props.headerAside.modalContentData[index][0]['sources'].find(ele => ele.key === firstColumnName)['type'];
+    dispatch({ type: 'headerAside/secondModalChange', payload: { firstType, firstCondition: value, index } })
+  }
+  /* 删除条件 */
+  delCondition(index){
+    const { dispatch } = this.props;
+    dispatch({ type: 'headerAside/delCondition', payload: index })
+  }
+  /* 所有条件 -> 添加条件 */
+  addAllCondition(){
+    const { dispatch, form: { getFieldsValue } } = this.props;
+    const { searchRange } = getFieldsValue(['searchRange']);
+    dispatch({ type: 'headerAside/addAllCondition', payload: searchRange })
   }
   render(){
     let { advancedSearchModal, modalSelectData, modalContentData } = this.props.headerAside;
     modalContentData = modalContentData.map((item, index) => {
-      if(item['firstOrderLinkage']){
-        if(item['firstOrderLinkage'].attr){
-          item['firstOrderLinkage'].attr.onChange = (value) => this.firstLinkageChange(value, index);
-          // item['firstOrderLinkage'].attr.ref = 'firstLinkage'
-        } else {
-          item['firstOrderLinkage'].attr = { onChange(value){this.firstLinkageChange(value, index)}}
+      Object.keys(item).map(key => {
+        if(Number(key) === 0){
+          item[key]['attr']['onChange'] = (value) => this.firstLinkageChange(value, index)
+        };
+        if (Number(key) === 1){
+          item[key]['attr']['onChange'] = (value) => this.secondLinkageChange(value, index);
         }
-      };
-      // if(item['secondOrderLinkage']){
-      //   if(item['secondOrderLinkage'].attr){
-      //     // item['secondOrderLinkage'].attr.onChange = (value) => this.secondLinkageChange(value, index);
-      //     // item['secondOrderLinkage'].attr.ref = 'secondLinkage'
-      //   } else {
-      //     // item['secondOrderLinkage'].attr = { ref: 'secondLinkage' }
-      //   }
-      // };
-      // if(item['threeOrderLinkage']){
-      //   if(item['threeOrderLinkage'].attr){
-      //     item['threeOrderLinkage'].attr.ref = 'threeLinkage'
-      //   } else {
-      //     item['threeOrderLinkage'].attr = { ref: 'threeLinkage' }
-      //   }
-      // };
+      })
       return item
-    })
+    });
     return (
       <header className={styled.box}>
         <Row
@@ -121,16 +163,15 @@ class Header extends Component{
               <p className={styled.advancedSearch}>
                 <span onClick={this.handleAdvancedSearch} className={styled.cursor}>高级检索</span>
                 <Modal
-                  title={<ModalTitle data={modalSelectData} onChange={(value) => this.advancedSearchSelectChange(value)} />}
+                  title={<ModalTitle data={modalSelectData} onChange={(value) => this.advancedSearchSelectChange(value)} form={this.props.form} />}
                   onCancel={this.advancedSearchModalManage}
+                  onOk={this.advancedSearchModalManageOk}
                   maskClosable={true}
                   visible={advancedSearchModal}
                   className={styled.modalBox}
                 >
                   <div className={styled.modalContent}>
-                    {
-                      modalContentData.length ? new Linkage({ data: modalContentData, form: this.props.form}) : '请选择模块'
-                    }
+                    <LinkageBox onChange={this.addAllCondition} show={modalContentData.length} data={modalContentData} form={this.props.form} />
                   </div>
                 </Modal>
               </p>
@@ -148,5 +189,6 @@ class Header extends Component{
     )
   }
 }
+
 Header = Form.create()(Header)
 export default Header

@@ -574,10 +574,6 @@ export const HeaderModalFirstLinkage = selectedVal => {
         "value": "称谓",
         "type": 'V'
       }, {
-        "key": "name",
-        "value": "名",
-        "type": 'V'
-      }, {
         "key": "number",
         "value": "编号",
         "type": 'V'
@@ -814,10 +810,6 @@ export const HeaderModalFirstLinkage = selectedVal => {
         "value": "状态",
         "type": "V"
       }, {
-        "key": "state",
-        "value": "状态",
-        "type": "V"
-      }, {
         "key": "priority",
         "value": "优先级",
         "type": "V"
@@ -864,10 +856,6 @@ export const HeaderModalFirstLinkage = selectedVal => {
       }, {
         "key": "founder",
         "value": "创建人",
-        "type": "V"
-      }, {
-        "key": "location",
-        "value": "位置",
         "type": "V"
       }, {
         "key": "description",
@@ -1532,10 +1520,7 @@ export const HeaderModalSecondLinkage = selectedVal => {
     ]
   };
   return [
-    {
-      "key": "none",
-      "value": "none"
-    }, {
+     {
       "key": "equals",
       "value": "等于"
     }, {
@@ -1562,33 +1547,45 @@ export const HeaderModalSecondLinkage = selectedVal => {
     }
   ]
 }
-/* Header 头部模态框->三级联动->三级(select) */
-export const HeaderModalThreeLinkage = selectedVal => {
-  if(selectedVal === 'none'){
+/**
+ *	Header 头部模态框->三级联动->三级(select)
+ *	@selectedVal: 一级联动的值, @condition: 二级联动的值(条件), 
+ */
+export const HeaderModalThreeLinkage = (selectedVal, condition) => {
+  if (selectedVal === 'none' || condition === 'none' || condition === 'empty'){
     return []
   }else if(selectedVal === 'T'){
     return {
       selector: 'DatePicker',
       startDate: new Date().toLocaleString().replace(/-/g, '/').split(' ')[0],
-      format: 'YYYY/MM/DD'
+      format: 'YYYY/MM/DD',
+      attr: {
+        names: 'threeEvaluation'
+      }
     }
   } else if (selectedVal === 'D') {
     return {
       selector: 'MonthPicker',
       startDate: new Date().toLocaleString().replace(/-/g, '/').split(' ')[0],
-      format: 'YYYY/MM'
+      format: 'YYYY/MM',
+      attr: {
+        names: 'threeEvaluation'
+      }
     }
   } else if (selectedVal === 'DT') {
     return {
       selector: 'RangePicker',
       startDate: new Date().toLocaleString().replace(/-/g, '/').split(' ')[0],
-      format: 'YYYY/MM/DD'
+      format: 'YYYY/MM/DD',
+      attr: {
+        names: 'threeEvaluation'
+      }
     }
   } else {
     return {
       selector: 'Input',
       attr: {
-        name: 'firstEvaluation'
+        names: 'threeEvaluation'
       }
     }
   }

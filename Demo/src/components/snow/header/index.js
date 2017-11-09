@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { trim, Linkage } from '../appMethod';
 import { Row, Col, Input, Icon, Modal, Select, message, Form, DatePicker, Button } from 'antd';
+import moment from 'moment';
 import styled from './index.less';
 const Search = Input.Search;
 const Option = Select.Option;
@@ -43,7 +44,6 @@ const ModalTitle = ({ data, onChange, form }) => {
 *	@show: 展示条件, @text: 展示的文字, @btnText: 按钮的文字, @onClick: 点击事件, @data: 三级联动的数据源(modalContentData), @form: form 表单事件
 */
 const LinkageBox = ({ show = false, text = (<b>所有条件</b>), btnText= '添加条件', onChange, data, form }) => {
-  if (!show) return (<div style={{ textAlign: 'center' }}>请选择模块</div>);
   return (
     <div className={styled.LinkageBox}>
       <div>{text}</div>
@@ -85,66 +85,124 @@ class Header extends Component{
   /* 高级搜索模态框点击确认后 */
   advancedSearchModalManageOk(e){
     const { dispatch } = this.props;
-    const ss = this.props.form.getFieldsValue();
-    console.log(ss)
+    const result = this.props.form.getFieldsValue();
+    let params = { allCondition: [], anyCondition: [] };
+    let begin = {}
+    let middle = {}
+    let end = {}
+    Object.keys(result).map(key => {
+      if(/First/g.test(key)){
+        begin[key] = result[key]
+      }
+      if(/Second/g.test(key)){
+        middle[key] = result[key]
+      }
+      if(/Three/g.test(key)){
+        end[key] = result[key]
+      }
+    });
+    /* 收集搜索的参数 */
+    const collectParams = (key, bigReg, begin, middle, end ) => {
+      const index = key.match(/\d+$/);
+      let reg = new RegExp(index + "$")
+      let condition = middle[Object.keys(middle).find(key => bigReg.test(key) && reg.test(key))];
+      let flag = end[Object.keys(end).find(key => bigReg.test(key) && reg.test(key))];
+      console.log(flag)
+      let value = flag instanceof Array ? { start: flag[0].format('YYYY/MM/DD'), end: flag[1].format('YYYY/MM/DD') } : flag instanceof Object ? flag.format('YYYY/MM/DD') : flag;
+      return {
+        field: begin[key],
+        condition,
+        value
+      };
+    }
+    Object.keys(begin).map(key => {
+      if (/^all/.test(key)){
+        let store = collectParams(key, /^all/, begin, middle, end);
+        store && params['allCondition'].push(store)
+      }
+      if (/^any/.test(key)){
+        let store = collectParams(key, /^any/, begin, middle, end);
+        store && params['anyCondition'].push(store)
+      }
+    })
+    console.log(params)
     // dispatch({ type: 'headerAside/advancedSearchModalManage' })
   }
   /* 高级搜索 select 框 change 事件 */
   advancedSearchSelectChange(value){
     console.log(value)
     const { dispatch } = this.props;
-    dispatch({ type: 'headerAside/moduleChange', payload: value }).then(() => {
-      if (!this.props.headerAside.modalContentData.length) return ;
-      const firstColumnSrouces = this.props.headerAside.modalContentData[0][0]['sources'];
-      const firstColumnVal = (firstColumnSrouces.find(ele => ele.selected) || firstColumnSrouces[0])['key'];
-      this.props.form.setFieldsValue({
-        'firstColumnName0': firstColumnVal
+    dispatch({ type: 'headerAside/moduleChange', payload: value })
+      .then(() => {
+        if (!Object.keys(this.props.headerAside.modalContentData).length) return ;
+        const firstColumnSrouces = this.props.headerAside.modalContentData['allCondition'][0][0]['sources'];
+        const firstColumnVal = (firstColumnSrouces.find(ele => ele.selected) || firstColumnSrouces[0])['key'];
+        this.props.form.setFieldsValue({
+          'allFirstColumnName0': firstColumnVal,
+          'anyFirstColumnName0': firstColumnVal
+        })
       })
-    })
   }
-  /* 高级搜索三级联动 FirstLinkageChange 事件 */
-  firstLinkageChange(value, index){
+  /* 高级搜索三级联动 FirstLinkageChange 事件 @value: 改变的值, @index: 当前所在行, @type: 0代表所有条件-1代表任一条件 */
+  firstLinkageChange(value, index, type){
+    let types = this.backProperty(type);
     const { dispatch } = this.props;
-    const firstType = this.props.headerAside.modalContentData[index][0]['sources'].find(ele => ele.key === value)['type'];
-    dispatch({ type: 'headerAside/firstModalChange', payload: { firstType, index } }).then(() => {
-      const secondConditionSource = this.props.headerAside.modalContentData[index][1]['sources'];
-      const secondConditionVal = (secondConditionSource.find(ele => ele.selected) || secondConditionSource[0])['key'];
-      this.props.form.setFieldsValue({
-        ['secondCondition' + index]: secondConditionVal
+    const firstType = this.props.headerAside.modalContentData[types][index][0]['sources'].find(ele => ele.key === value)['type'];
+    dispatch({ type: 'headerAside/firstModalChange', payload: { firstType, index, type } })
+      .then(() => {
+        console.log(this.props.form.getFieldsValue([this.backProperty(type, 'ThreeEvaluation0')]))
+        const allSecondConditionSource = this.props.headerAside.modalContentData[types][index][1]['sources'];
+        const allSecondConditionVal = (allSecondConditionSource.find(ele => ele.selected) || allSecondConditionSource[0])['key'];
+        this.props.form.setFieldsValue({
+          [this.backProperty(type, 'SecondCondition') + index]: allSecondConditionVal
+        })
       })
-    })
   }
-  /* 高级搜索三级联动 SecondLinkageChange 事件 */
-  secondLinkageChange(value, index){
+  /* 高级搜索三级联动 SecondLinkageChange 事件 @value: 改变的值, @index: 当前所在行, @type: 0代表所有条件-1代表任一条件 */
+  secondLinkageChange(value, index, type){
     const { dispatch } = this.props;
-    const columnNameVal = 'firstColumnName' + index;
+    let types = this.backProperty(type);
+    const columnNameVal = this.backProperty(type, 'FirstColumnName') + index;
     const firstColumnName = this.props.form.getFieldsValue([columnNameVal])[columnNameVal];
-    const firstType = this.props.headerAside.modalContentData[index][0]['sources'].find(ele => ele.key === firstColumnName)['type'];
-    dispatch({ type: 'headerAside/secondModalChange', payload: { firstType, firstCondition: value, index } })
+    const firstType = this.props.headerAside.modalContentData[types][index][0]['sources'].find(ele => ele.key === firstColumnName)['type'];
+    dispatch({ type: 'headerAside/secondModalChange', payload: { firstType: firstType, firstCondition: value, index, type } })
   }
-  /* 删除条件 */
-  delCondition(index){
+  /* 删除条件 @index: 当前所在行, @type: 0代表所有条件-1代表任一条件 */
+  delCondition(index, type) {
     const { dispatch } = this.props;
-    dispatch({ type: 'headerAside/delCondition', payload: index })
+    dispatch({ type: 'headerAside/delCondition', payload: {index, type} })
   }
-  /* 所有条件 -> 添加条件 */
-  addAllCondition(){
+  /* 所有条件 -> 添加条件 @type: 0代表所有条件-1代表任一条件 */
+  addAllCondition(type) {
     const { dispatch, form: { getFieldsValue } } = this.props;
     const { searchRange } = getFieldsValue(['searchRange']);
-    dispatch({ type: 'headerAside/addAllCondition', payload: searchRange })
+    dispatch({ type: 'headerAside/addAllCondition', payload: { searchRange, type } })
+  }
+  /* 返回 model 数据属性名, @modelName: 数据源名字, eleName: 元素名称 */
+  backProperty(modelName, eleName){
+    if(eleName === 'model' || eleName === undefined){
+      return modelName ? 'anyCondition' : 'allCondition'
+    };
+    return modelName ? 'any' + eleName : 'all' + eleName
   }
   render(){
-    let { advancedSearchModal, modalSelectData, modalContentData } = this.props.headerAside;
-    modalContentData = modalContentData.map((item, index) => {
-      Object.keys(item).map(key => {
-        if(Number(key) === 0){
-          item[key]['attr']['onChange'] = (value) => this.firstLinkageChange(value, index)
-        };
-        if (Number(key) === 1){
-          item[key]['attr']['onChange'] = (value) => this.secondLinkageChange(value, index);
-        }
-      })
-      return item
+    let { advancedSearchModal, modalSelectData, modalContentData: { showCondition, allCondition, anyCondition } } = this.props.headerAside;
+    [allCondition, anyCondition] = [allCondition, anyCondition].map((itemArr, type) => {
+      itemArr.map((item, index) => {
+        Object.keys(item).map(key => {
+          if (Number(key) === 0) {
+            item[key]['attr']['onChange'] = (value) => this.firstLinkageChange(value, index, type)
+          };
+          if (Number(key) === 1) {
+            item[key]['attr']['onChange'] = (value) => this.secondLinkageChange(value, index, type);
+          }
+          if (Number(key) === 3) {
+            item[key]['attr']['onClick'] = () => this.delCondition(index, type);
+          }
+        })
+        return item
+      });
+      return itemArr
     });
     return (
       <header className={styled.box}>
@@ -171,7 +229,15 @@ class Header extends Component{
                   className={styled.modalBox}
                 >
                   <div className={styled.modalContent}>
-                    <LinkageBox onChange={this.addAllCondition} show={modalContentData.length} data={modalContentData} form={this.props.form} />
+                    {
+                      showCondition ? 
+                        <div>
+                          <LinkageBox onChange={() => this.addAllCondition(0)} data={allCondition} form={this.props.form} />
+                          <LinkageBox text={(<b>任一条件</b>)} onChange={() => this.addAllCondition(1)} data={anyCondition} form={this.props.form} />
+                        </div>
+                      :
+                        <div style={{ textAlign: 'center' }}>请选择模块</div>
+                    }
                   </div>
                 </Modal>
               </p>
@@ -189,6 +255,34 @@ class Header extends Component{
     )
   }
 }
+
+/* class Sss extends Component{
+  aaa(e){
+    // e.preventDefault();
+    console.log(this.props.form.validateFields((err, value) => {
+      console.log(value.aa.format('YYYY-MM-DD'))
+    }));
+  }
+  render(){
+    // console.log(this.props.form)
+    return (
+      <Form onSubmit={this.aaa.bind(this)}>
+        <FormItem>
+          {
+            this.props.form.getFieldDecorator('aa', {
+              name: 'aa',
+              initialValue: moment('2017/10/9', 'YYYY/MM/DD')
+            })(
+              <DatePicker onOpenChange={this.aaa.bind(this)} onOk={this.aaa.bind(this)} />
+            )
+          }
+          <button type="submit">提交</button>
+        </FormItem>
+      </Form>
+    )
+  }
+}
+Sss = Form.create()(Sss) */
 
 Header = Form.create()(Header)
 export default Header

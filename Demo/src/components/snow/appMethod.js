@@ -51,7 +51,7 @@ export class Linkage extends Component{
       var { names = this.error('58行names参数错误'), ...attrVal } = attr;
     }
     if (selector === 'select') {
-      const selected = (prop.sources.find(obj => obj.selected) && prop.sources.find(obj => obj.selected)['key']) || (prop.sources[0] && prop.sources[0]['key']);
+      const selected = ((prop.sources.find(obj => obj.selected) && prop.sources.find(obj => obj.selected)) || (prop.sources[0] && prop.sources[0]))['key'];
       const { getFieldDecorator } =  this.props.form;
       return(
         getFieldDecorator(names, {
@@ -77,8 +77,8 @@ export class Linkage extends Component{
       };
       return(
         getFieldDecorator(names, {
-          name: 'date-picker',
-          initialValue: moment(startDate, format)
+          name: names,
+          initialValue: moment(startDate, format),
         })(
           <DatePicker
             key={names}
@@ -99,8 +99,8 @@ export class Linkage extends Component{
       };
       return(
         getFieldDecorator(names, {
-          name: 'month-picker',
-          initialValue: moment(startDate, format)
+          name: names,
+          initialValue: moment(startDate, format),
         })(
           <MonthPicker
             key={names}
@@ -122,8 +122,8 @@ export class Linkage extends Component{
       }
       return(
         getFieldDecorator(names, {
-          name: 'range-picker',
-          initialValue: [moment(startDate, format), moment(deadline, format)]
+          name: names,
+          initialValue: [moment(startDate, format), moment(deadline, format)],
         })(
           <RangePicker
             key={names}
@@ -153,7 +153,7 @@ export class Linkage extends Component{
       const { getFieldDecorator } = this.props.form;
       return (
         getFieldDecorator(names, {
-          name: names
+          name: names,
         })(
           <Icon
             key={names}

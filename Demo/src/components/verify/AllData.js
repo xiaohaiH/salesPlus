@@ -565,6 +565,204 @@ export const HeaderModalFirstLinkage = selectedVal => {
         "type": 'V'
       }
     ],
+    market: [
+      {
+        "key": "select-field",
+        "value": "选择字段"
+      }, {
+        "key": "market-name",
+        "value": "销售名称",
+        "type": 'V'
+      }, {
+        "key": "market-number",
+        "value": "销售编号",
+        "type": 'V'
+      }, {
+        "key": "site",
+        "value": "网站",
+        "type": 'V'
+      }, {
+        "key": "commonly-used-the-phone",
+        "value": "常用电话",
+        "type": 'V'
+      }, {
+        "key": "stock-code",
+        "value": "股票代码",
+        "type": 'V'
+      }, {
+        "key": "fax",
+        "value": "传真",
+        "type": 'V'
+      }, {
+        "key": "parent-company",
+        "value": "母公司",
+        "type": 'V'
+      }, {
+        "key": "phone",
+        "value": "备用电话",
+        "type": 'V'
+      }, {
+        "key": "employee-number",
+        "value": "雇员数量",
+        "type": 'V'
+      }, {
+        "key": "Commonly-used-Email",
+        "value": "常用邮箱",
+        "type": 'V'
+      }, {
+        "key": "owner",
+        "value": "备用邮箱",
+        "type": 'V'
+      }, {
+        "key": "industry",
+        "value": "所有者",
+        "type": 'V'
+      }, {
+        "key": "evaluate",
+        "value": "行业",
+        "type": 'V'
+      }, {
+        "key": "type",
+        "value": "评价",
+        "type": 'V'
+      }, {
+        "key": "standard-industrial",
+        "value": "类型",
+        "type": 'V'
+      }, {
+        "key": "classification-code",
+        "value": "标准产业分类代码",
+        "type": 'V'
+      }, {
+        "key": "annual-revenue",
+        "value": "年度营收",
+        "type": 'V'
+      }, {
+        "key": "head",
+        "value": "负责人",
+        "type": 'V'
+      }, {
+        "key": "remind-head",
+        "value": "提醒负责人",
+        "type": 'V'
+      }, {
+        "key": "modified-time",
+        "value": "修改时间",
+        "type": 'DT'
+      }, {
+        "key": "creation-time",
+        "value": "创建时间",
+        "type": 'DT'
+      }, {
+        "key": "the-final-revision",
+        "value": "最后修订者",
+        "type": 'V'
+      }, {
+        "key": "whether-by-potential-customers-conversion",
+        "value": "是否由潜在客户转换而来",
+        "type": 'V'
+      }, {
+        "key": "founder",
+        "value": "创建人",
+        "type": 'V'
+      }, {
+        "key": "integer-test-field",
+        "value": "整数测试字段",
+        "type": 'V'
+      }, {
+        "key": "customer-photo",
+        "value": "客户照片",
+        "type": 'V'
+      }, {
+        "key": "list",
+        "value": "列表",
+        "type": 'V'
+      }, {
+        "key": "test-text",
+        "value": "测试文本",
+        "type": 'V'
+      }, {
+        "key": "test",
+        "value": "测试自动编号",
+        "type": 'V'
+      }, {
+        "key": "assets",
+        "value": "资产",
+        "type": 'V'
+      }, {
+        "key": "city/county",
+        "value": "市/县区",
+        "type": 'V'
+      }, {
+        "key": "level-of-industry",
+        "value": "一级行业",
+        "type": 'V'
+      }, {
+        "key": "secondary-industry",
+        "value": "二级行业",
+        "type": 'V'
+      }, {
+        "key": "test-drop-down-list",
+        "value": "测试下拉单",
+        "type": 'V'
+      }, {
+        "key": "contact-time",
+        "value": "联系时间",
+        "type": 'T'
+      }, {
+        "key": "the-customer-time",
+        "value": "客户时间",
+        "type": 'DT'
+      }, {
+        "key": "picture-fields",
+        "value": "图片字段",
+        "type": 'V'
+      }, {
+        "key": "image-field",
+        "value": "图片字段",
+        "type": 'V'
+      }, {
+        "key": "test-image",
+        "value": "测试图片",
+        "type": 'V'
+      }, {
+        "key": "is-set-to-head",
+        "value": "是否设为负责人",
+        "type": 'V'
+      }, {
+        "key": "check",
+        "value": "复选",
+        "type": 'V'
+      }, {
+        "key": "record-type",
+        "value": "记录类型",
+        "type": 'V'
+      }, {
+        "key": "the-current-approver",
+        "value": "当前审批人",
+        "type": 'V'
+      }, {
+        "key": "shipping-address",
+        "value": "收货地址",
+        "type": 'V'
+      }, {
+        "key": "post-office-box",
+        "value": "邮政信箱",
+        "type": 'V'
+      }, {
+        "key": "zip-code",
+        "value": "邮政编码",
+        "type": 'V'
+      }, {
+        "key": "national",
+        "value": "国家",
+        "type": 'V'
+      }, {
+        "key": "description",
+        "value": "描述",
+        "type": 'V'
+      }
+    ],
     potentialClient: [
       {
         "key": "select-field ",
@@ -1520,7 +1718,10 @@ export const HeaderModalSecondLinkage = selectedVal => {
     ]
   };
   return [
-     {
+    {
+      "key": "none",
+      "value": "none"
+    }, {
       "key": "equals",
       "value": "等于"
     }, {
@@ -1549,9 +1750,9 @@ export const HeaderModalSecondLinkage = selectedVal => {
 }
 /**
  *	Header 头部模态框->三级联动->三级(select)
- *	@selectedVal: 一级联动的值, @condition: 二级联动的值(条件), 
+ *	@selectedVal: 一级联动的值, @condition: 二级联动的值(条件), @names: name 属性
  */
-export const HeaderModalThreeLinkage = (selectedVal, condition) => {
+export const HeaderModalThreeLinkage = (selectedVal, condition, names) => {
   if (selectedVal === 'none' || condition === 'none' || condition === 'empty'){
     return []
   }else if(selectedVal === 'T'){
@@ -1560,7 +1761,7 @@ export const HeaderModalThreeLinkage = (selectedVal, condition) => {
       startDate: new Date().toLocaleString().replace(/-/g, '/').split(' ')[0],
       format: 'YYYY/MM/DD',
       attr: {
-        names: 'threeEvaluation'
+        names
       }
     }
   } else if (selectedVal === 'D') {
@@ -1569,7 +1770,7 @@ export const HeaderModalThreeLinkage = (selectedVal, condition) => {
       startDate: new Date().toLocaleString().replace(/-/g, '/').split(' ')[0],
       format: 'YYYY/MM',
       attr: {
-        names: 'threeEvaluation'
+        names
       }
     }
   } else if (selectedVal === 'DT') {
@@ -1578,14 +1779,14 @@ export const HeaderModalThreeLinkage = (selectedVal, condition) => {
       startDate: new Date().toLocaleString().replace(/-/g, '/').split(' ')[0],
       format: 'YYYY/MM/DD',
       attr: {
-        names: 'threeEvaluation'
+        names
       }
     }
   } else {
     return {
       selector: 'Input',
       attr: {
-        names: 'threeEvaluation'
+        names
       }
     }
   }

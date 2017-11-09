@@ -8,10 +8,10 @@ const createLinkageSources = (dataArr = [], dataSources = []) => {
   const index = dataSources.length && Number(dataSources[dataSources.length - 1][0]['attr']['names'].split(/\w+[^\d]/)[1]) + 1
   let result = [];
   dataArr.map((item, i) => {
-    if (!item || (item instanceof Array && !item.length)) return false;
+    if (!item || (item instanceof Array && !item.length) || (item instanceof Object && !Object.keys(item).length)) return false;
     let generate = {};
     Object.keys(item).map(key => {
-      if (!item[key] || (item[key] instanceof Array && !item[key].length)) return false;
+      if (!item[key] || (item[key] instanceof Array && !item[key].length) || (item[key] instanceof Object && !Object.keys(item[key]).length)) return false;
       const { selector, attr: { names, ...attr }, ...props } = item[key];
       generate[key] = {
         selector: item[key]['selector'],
@@ -29,7 +29,7 @@ const createLinkageSources = (dataArr = [], dataSources = []) => {
 /**
 *	数据源 @type: 元素类型, @names: 元素 ID, @firstSources: 第一个元素的数据, @secondSources: 第二个元素的数据, @threeSources: 第三个元素的数据,
 */
-const dataSources = ({ type = 'select', firstNames = 'firstColumnName', secondNames = 'secondCondition', firstSources = [], secondSources = [], threeSources = {} }) => {
+const dataSources = ({ type = 'select', firstNames = 'allFirstColumnName', secondNames = 'allSecondCondition', firstSources = [], secondSources = [], threeSources = {} }) => {
   return [
     {
       '0': {
@@ -56,7 +56,13 @@ const dataSources = ({ type = 'select', firstNames = 'firstColumnName', secondNa
     }
   ]
 }
-
+  /* 返回 model 数据属性名, @modelName: 数据源名字, eleName: 元素名称 */
+const backProperty = (modelName, eleName) => {
+  if (eleName === 'model' || eleName === undefined) {
+    return modelName ? 'anyCondition' : 'allCondition'
+  };
+  return modelName ? 'any' + eleName : 'all' + eleName
+}
 
 
 export default {
@@ -66,8 +72,13 @@ export default {
     advancedSearchModal: false,
     // 模态框标题 select 框的数据
     modalSelectData: [],
-    // 模态框内容的数据
-    modalContentData: []
+    // 模态框内容的数据 @showCondition: 是否显示条件筛选框, @allCondition: 所有条件, @anyCondition: 任一条件
+    modalContentData: {
+      showCondition: false,
+      allCondition: [],
+      anyCondition: []
+    },
+    // modalContentData: []
   },
   effects: {
     *pressEnter({ payload }, { call, put }){
@@ -85,30 +96,32 @@ export default {
     /* 模态下拉框数据改变后 */
     *moduleChange({ payload }, { call, put }){
       if(payload === 'none'){
-        yield put({ type: 'getModalContentData', payload: [] })
+        yield put({ type: 'getModalContentData', payload: { result: { allCondition: [], anyCondition: [] }, showCondition: false } })
       } else {
-        yield call(timer, 1000);
+        // yield call(timer, 1000);
         let { code, data: firstSources } = yield call(HeaderModalFirstLinkage, payload);
-        // console.log(firstSources)
-        let result = [];
+        let result = {};
         if (code === 'success'){
           if (firstSources.length){
             const secondSources = yield call(HeaderModalSecondLinkage, firstSelected);
             const firstSelected = (firstSources.find(ele => ele.selected) && firstSources.find(ele => ele.selected)['key']) || firstSources[0]['key'];
             const secondSelected = (secondSources.find(ele => ele.selected) && secondSources.find(ele => ele.selected)['key']) || secondSources[0]['key'];
-            const threeSources = yield call(HeaderModalThreeLinkage, firstSelected, secondSelected);
-            const sources = dataSources({ firstSources, secondSources, threeSources });
-            result = yield call(createLinkageSources, sources);
+            const allThreeSources = yield call(HeaderModalThreeLinkage, firstSelected, secondSelected, 'allThreeEvaluation');
+            const anyThreeSources = yield call(HeaderModalThreeLinkage, firstSelected, secondSelected, 'anyThreeEvaluation');
+            const allSources = dataSources({ firstSources, secondSources, threeSources: allThreeSources });
+            const anySources = dataSources({ firstSources, secondSources, threeSources: anyThreeSources, firstNames: 'anyFirstColumnName', secondNames: 'anySecondCondition'});
+            result.allCondition = yield call(createLinkageSources, allSources);
+            result.anyCondition = yield call(createLinkageSources, anySources);
           }
         };
-        yield put({ type: 'getModalContentData', payload: result })
+        yield put({ type: 'getModalContentData', payload: { result, showCondition: true } });
       }
     },
     /* 三级联动 first 下拉框 */
-    *firstModalChange({ payload: { firstType, index } }, { call, put }){
+    *firstModalChange({ payload: { firstType, index, type } }, { call, put }){
       const secondOrderLinkage = yield call(HeaderModalSecondLinkage, firstType);
       const selected = (secondOrderLinkage.find(obj => obj.selected) || ((secondOrderLinkage[0]['selected'] = true) && secondOrderLinkage[0]))['key'];
-      let threeOrderLinkage = yield call(HeaderModalThreeLinkage, firstType, selected);
+      let threeOrderLinkage = yield call(HeaderModalThreeLinkage, firstType, selected, backProperty(type, 'ThreeEvaluation'));
       if (!(threeOrderLinkage instanceof Array)) {
         const atr = {
           attr: {
@@ -117,12 +130,12 @@ export default {
         }
         threeOrderLinkage = Object.assign(threeOrderLinkage, atr)
       };
-      yield put({ type: 'getSecondLinkageValue', payload: { secondOrderLinkage, index }});
-      yield put({ type: 'getThreeLinkageValue', payload: { threeOrderLinkage, index }})
+      yield put({ type: 'getSecondLinkageValue', payload: { secondOrderLinkage, index, type: backProperty(type) }});
+      yield put({ type: 'getThreeLinkageValue', payload: { threeOrderLinkage, index, type: backProperty(type) }})
     },
     /* 三级联动 second 下拉框 */
-    *secondModalChange({ payload: { firstType, firstCondition, index} }, { call, put }){
-      let threeOrderLinkage = yield call(HeaderModalThreeLinkage, firstType, firstCondition);
+    *secondModalChange({ payload: { firstType, firstCondition, index, type } }, { call, put }){
+      let threeOrderLinkage = yield call(HeaderModalThreeLinkage, firstType, firstCondition, backProperty(type, 'ThreeEvaluation'));
       // console.log(threeOrderLinkage)
       if (!(threeOrderLinkage instanceof Array)) {
         const atr = {
@@ -132,24 +145,25 @@ export default {
         }
         threeOrderLinkage = Object.assign(threeOrderLinkage, atr)
       };
-      yield put({ type: 'getThreeLinkageValue', payload: { threeOrderLinkage, index } })
+      yield put({ type: 'getThreeLinkageValue', payload: { threeOrderLinkage, index, type: backProperty(type) } })
     },
     /* 添加条件 */
-    *addAllCondition({ payload }, { call, put, select }){
-      let { code, data: firstSources } = yield call(HeaderModalFirstLinkage, payload);
-      const allDataSources = yield select(state => state.headerAside.modalContentData)
+    *addAllCondition({ payload: { searchRange, type } }, { call, put, select }){
+      let { code, data: firstSources } = yield call(HeaderModalFirstLinkage, searchRange);
+      const allDataSources = yield select(state => state.headerAside.modalContentData[backProperty(type)])
       let result = [];
       if (code === 'success') {
         if (firstSources.length) {
           const secondSources = yield call(HeaderModalSecondLinkage, firstSelected);
           const firstSelected = (firstSources.find(ele => ele.selected) && firstSources.find(ele => ele.selected)['key']) || firstSources[0]['key'];
           const secondSelected = (secondSources.find(ele => ele.selected) && secondSources.find(ele => ele.selected)['key']) || secondSources[0]['key'];
-          const threeSources = yield call(HeaderModalThreeLinkage, firstSelected, secondSelected);
-          const sources = dataSources({ firstSources, secondSources, threeSources });
+          const threeSources = yield call(HeaderModalThreeLinkage, firstSelected, secondSelected, backProperty(type, 'ThreeEvaluation'));
+          const sources = dataSources({ firstSources, secondSources, threeSources, firstNames: backProperty(type, 'FirstColumnName'), secondNames: backProperty(type, 'SecondCondition') });
           result = yield call(createLinkageSources, sources, allDataSources);
         }
       };
-      yield put({ type: 'addModalContentData', payload: result })
+      console.log(result)
+      yield put({ type: 'addModalContentData', payload: { result, type: backProperty(type) } })
     }
   },
   reducers: {
@@ -165,36 +179,46 @@ export default {
         modalSelectData
       }
     },
-    getModalContentData({ modalContentData, ...state }, { payload }){
+    getModalContentData({ modalContentData, ...state }, { payload: { result, showCondition } }){
       return {
         ...state,
-        modalContentData: payload
+        modalContentData: {
+          ...modalContentData,
+          showCondition,
+          ...result
+        }
       }
     },
-    getSecondLinkageValue({ modalContentData, ...state }, { payload: { index, secondOrderLinkage } }) {
-      modalContentData[index][1]['sources'] = secondOrderLinkage;
+    getSecondLinkageValue({ modalContentData, ...state }, { payload: { index, secondOrderLinkage, type } }) {
+      modalContentData[type][index][1]['sources'] = secondOrderLinkage;
       return {
         ...state,
         modalContentData
       }
     },
-    getThreeLinkageValue({ modalContentData, ...state }, { payload: { index, threeOrderLinkage } }){
-      modalContentData[index][2] = threeOrderLinkage;
+    getThreeLinkageValue({ modalContentData, ...state }, { payload: { index, threeOrderLinkage, type } }){
+      modalContentData[type][index][2] = threeOrderLinkage;
       return {
         ...state,
         modalContentData
       }
     },
-    delCondition({ modalContentData, ...state }, { payload }){
+    delCondition({ modalContentData, ...state }, { payload: { index, type } }){
       return {
         ...state,
-        modalContentData: modalContentData.filter((e, i) => i !== payload)
+        modalContentData: {
+          ...modalContentData,
+          [type]: modalContentData[type].filter((e, i) => i !== index)
+        }
       }
     },
-    addModalContentData({ modalContentData, ...state }, { payload }){
+    addModalContentData({ modalContentData, ...state }, { payload: { result, type } }){
       return {
         ...state,
-        modalContentData: modalContentData.concat(payload)
+        modalContentData: {
+          ...modalContentData,
+          [type]: modalContentData[type].concat(result)
+        }
       }
     }
   },

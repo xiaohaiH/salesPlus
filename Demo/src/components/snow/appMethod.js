@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
+import { connect } from 'dva';
 import { Select, DatePicker, Input, Icon } from 'antd';
 import moment from 'moment';
 import styled from './appMethod.less';
 const { Option } = Select;
 const { RangePicker, MonthPicker } = DatePicker;
-
 
 /* 去空 */
 export const trim = (str) => {

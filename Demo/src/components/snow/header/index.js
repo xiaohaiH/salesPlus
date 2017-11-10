@@ -107,7 +107,7 @@ class Header extends Component{
       let reg = new RegExp(index + "$")
       let condition = middle[Object.keys(middle).find(key => bigReg.test(key) && reg.test(key))];
       let flag = end[Object.keys(end).find(key => bigReg.test(key) && reg.test(key))];
-      console.log(flag)
+      // console.log(flag)
       let value = flag instanceof Array ? { start: flag[0].format('YYYY/MM/DD'), end: flag[1].format('YYYY/MM/DD') } : flag instanceof Object ? flag.format('YYYY/MM/DD') : flag;
       return {
         field: begin[key],
@@ -126,22 +126,26 @@ class Header extends Component{
       }
     })
     console.log(params)
-    // dispatch({ type: 'headerAside/advancedSearchModalManage' })
+    dispatch({ type: 'headerAside/advancedSearchModalManage' })
   }
   /* 高级搜索 select 框 change 事件 */
   advancedSearchSelectChange(value){
-    console.log(value)
+    // console.log(value)
     const { dispatch } = this.props;
     dispatch({ type: 'headerAside/moduleChange', payload: value })
-      .then(() => {
-        if (!Object.keys(this.props.headerAside.modalContentData).length) return ;
-        const firstColumnSrouces = this.props.headerAside.modalContentData['allCondition'][0][0]['sources'];
-        const firstColumnVal = (firstColumnSrouces.find(ele => ele.selected) || firstColumnSrouces[0])['key'];
-        this.props.form.setFieldsValue({
-          'allFirstColumnName0': firstColumnVal,
-          'anyFirstColumnName0': firstColumnVal
-        })
-      })
+      // .then(() => {
+      //   if (!Object.keys(this.props.headerAside.modalContentData).length) return ;
+      //   const firstColumnSrouces = this.props.headerAside.modalContentData['allCondition'][0][0]['sources'];
+      //   const firstColumnVal = (firstColumnSrouces.find(ele => ele.selected) || firstColumnSrouces[0])['key'];
+      //   const secondConditionSrouces = this.props.headerAside.modalContentData['allCondition'][0][1]['sources'];
+      //   const secondConditionVal = (secondConditionSrouces.find(ele => ele.selected) || secondConditionSrouces[0])['key'];
+      //   this.props.form.setFieldsValue({
+      //     'allFirstColumnName0': firstColumnVal,
+      //     'allSecondCondition': secondConditionVal,
+      //     'anyFirstColumnName0': firstColumnVal,
+      //     'anySecondCondition': secondConditionVal
+      //   })
+      // })
   }
   /* 高级搜索三级联动 FirstLinkageChange 事件 @value: 改变的值, @index: 当前所在行, @type: 0代表所有条件-1代表任一条件 */
   firstLinkageChange(value, index, type){
@@ -150,7 +154,7 @@ class Header extends Component{
     const firstType = this.props.headerAside.modalContentData[types][index][0]['sources'].find(ele => ele.key === value)['type'];
     dispatch({ type: 'headerAside/firstModalChange', payload: { firstType, index, type } })
       .then(() => {
-        console.log(this.props.form.getFieldsValue([this.backProperty(type, 'ThreeEvaluation0')]))
+        // console.log(this.props.form.getFieldsValue([this.backProperty(type, 'ThreeEvaluation0')]))
         const allSecondConditionSource = this.props.headerAside.modalContentData[types][index][1]['sources'];
         const allSecondConditionVal = (allSecondConditionSource.find(ele => ele.selected) || allSecondConditionSource[0])['key'];
         this.props.form.setFieldsValue({

@@ -22,7 +22,8 @@ module.exports = {
       {
         test: /\.js(x)?$/,
         use: [
-          {loader: 'babel-loader'}
+          { loader: 'babel-loader', query: {presets:['react']}},
+          // {loader: 'react'}
         ]
       },
       {
@@ -78,5 +79,10 @@ module.exports = {
       }
     }),
     new Ex('home.css')
-  ]
+  ],
+  devServer: {
+    prot: 8082,
+    contentBase: __dirname,
+    inline: true
+  }
 }

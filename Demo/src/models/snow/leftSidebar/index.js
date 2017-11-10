@@ -5,6 +5,11 @@ export default {
   namespace: 'leftSidebar',
   state: {
     data: [],
+    /* 显示隐藏菜单 */
+    showMenu: document.body.clientWidth > 800,
+    /* 菜单外部的按钮 */
+    showOutsideBtn: document.body.clientWidth > 800,
+    /* 菜单收缩 */
     menuShink: false
   },
   effects: {
@@ -13,6 +18,13 @@ export default {
       if(code === 'success'){
         data = deepCopy(data);
         yield put({ type: 'receptionData', payload: data })
+      }
+    },
+    /* 菜单展示 */
+    *handleAutoShowMenu({ payload }, { call, put, select }) {
+      const { leftSidebar: { showOutsideBtn } } = yield select(_ => _);
+      if (showOutsideBtn !== payload){
+        yield put({ type: 'autoShowMenu', payload })
       }
     }
   },
@@ -29,6 +41,23 @@ export default {
         ...state,
         menuShink: !menuShink
       }
+    },
+    /* 菜单自动展示 */
+    autoShowMenu({ showMenu, menuShink, showOutsideBtn, ...state }, { payload }){
+      return {
+        ...state,
+        showMenu: payload,
+        showOutsideBtn: payload,
+        menuShink: !menuShink
+      }
+    },
+    /* 用户控制菜单的展示 */
+    handleBtnShowMenu({ showMenu, ...state }){
+      return {
+        ...state,
+        showMenu: !showMenu,
+        menuShink: true
+      }
     }
   },
   subscriptions: {
@@ -38,6 +67,14 @@ export default {
           dispatch({ type: 'resData' })
         }
       })
+    },
+    onResize({ history, dispatch }){
+      return window.onresize = (e) => {
+        const usableWidth = document.body.clientWidth > 800;
+        // if(!usableWidth){
+          dispatch({ type: 'handleAutoShowMenu', payload: usableWidth })
+        // }
+      }
     }
   }
 }

@@ -114,7 +114,9 @@ export default {
             result.anyCondition = yield call(createLinkageSources, anySources);
           }
         };
-        yield put({ type: 'getModalContentData', payload: { result, showCondition: true } });
+        // yield put({ type: 'getModalContentData', payload: { result, showCondition: true } });
+        yield put({ type: 'all', payload: { result: result.allCondition, showCondition: true } });
+        yield put({ type: 'any', payload: { result: result.anyCondition, showCondition: true } });
       }
     },
     /* 三级联动 first 下拉框 */
@@ -162,7 +164,6 @@ export default {
           result = yield call(createLinkageSources, sources, allDataSources);
         }
       };
-      console.log(result)
       yield put({ type: 'addModalContentData', payload: { result, type: backProperty(type) } })
     }
   },

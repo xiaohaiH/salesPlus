@@ -6,10 +6,11 @@ import styled from './index.less';
 const { Header, Content, Footer, Sider } = Layout;
 
 const MainLayout = ({ children, location, ...val }) => {
+  window.dispatch = val.dispatch;
   const { menuShink } = val['leftSidebar'];
   return (
     <Layout className={styled.box}>
-      <Sider collapsed={menuShink} className={styled.leftAside} ><LeftSidebar {...val} /></Sider>
+      <LeftSidebar {...val} />
       <Layout>
         <Header className={styled.header}><HeaderAside {...val} /></Header>
         {children}  

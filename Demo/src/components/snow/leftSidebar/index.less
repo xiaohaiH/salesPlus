@@ -1,6 +1,11 @@
+// 背景颜色
 @menu-background: #2F4050;
 @menu-aHover-color: white;
-@menu-title-color: #8095A8;
+@menu-title-color: #A7B1C2;
+//头像颜色
+@portrait: #58A3D2;
+/* 菜单收缩过渡 */
+@transition: all .6s ease-in;
 
 .boxStretch{
   width: 200px;
@@ -8,13 +13,17 @@
 .boxShink{
   width: 64px;
 }
-.box{
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+.aside{
+  box-sizing: border-box;
+  box-sizing: border-box;
+  position: relative;
+  background: @menu-background;
   /* 公共样式 */
   .cursor{
     cursor: pointer;
+  }
+  .hide{
+    display: none!important;
   }
   a{
     color: #A7B1BB;
@@ -25,30 +34,55 @@
   li.divisionLine{
     cursor: normal;
   }
-  /* 头部样式 */
-  .title{
-    background: @menu-background;
-    flex-grow: 1;
-    color: @menu-title-color;
-    padding:0 16px;
-    min-height: 100px;
-    text-align: center;
+  .zeroWidth{
+    width: 0!important;
+    overflow: hidden;
+  }
+  .noTtransition{
+    transition: none!important;
+  }
+  .box{
+    transition: @transition;
+    height: 100%;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    /* 头像颜色 */
-    .userPortrait{
-      background: #58A3D2;
-      // margin-bottom: .8rem;
+    flex-direction: column;
+    /* 头部样式 */
+    .title{
+      // background: @menu-background;
+      flex-grow: 1;
+      color: @menu-title-color;
+      padding:0 16px;
+      min-height: 100px;
+      text-align: center;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      /* 头像颜色 */
+      .userPortrait{
+        background: @portrait;
+        // margin-bottom: .8rem;
+      }
+    }
+    /* 菜单列表样式 */
+    .list{
+      height: 100%;
+      flex-grow: 1;
+      .leftList{
+        display: inline-block;
+      }
     }
   }
-  /* 菜单列表样式 */
-  .list{
-    height: 100%;
-    flex-grow: 1;
-    .leftList{
-      display: inline-block;
-    }
+  
+  /* 外部按钮样式 */
+  .outsideBtn{
+    position: absolute;
+    transition: @transition;
+    top: 10px;
+    left: 100%;
+    background: @menu-background;
+    color: @menu-title-color;
+    padding: 9px 4px;
+    font-size: 14px;
   }
 }

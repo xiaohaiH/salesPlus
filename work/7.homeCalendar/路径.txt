@@ -1,0 +1,2 @@
+tpl: D:\snow_dev\apps\SalesNow_Origin\layouts\vlayout\modules\snow\dashboards\DashBoardContents.tpl
+js: D:\snow_dev\apps\SalesNow_Origin\layouts\vlayout\modules\snow\resources\dashboards\dashboardsDateTodo.js

@@ -13,7 +13,7 @@ const MainLayout = ({ children, location, ...val }) => {
       <LeftSidebar {...val} />
       <Layout>
         <Header className={styled.header}><HeaderAside {...val} /></Header>
-        {children}  
+        {children}
       </Layout>
     </Layout>
   )

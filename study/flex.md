@@ -7,6 +7,17 @@ flex-direction: 决定项目的排列方向, 有四个选项
   column: 主轴为垂直方向，起点在上沿.
   column-reverse: 主轴为垂直方向，起点在下沿.
 ```
+##  flex-worp 属性
+```
+flex-worp : 项目空间不足时是否换行,有三个选项
+  nowrap(默认值): 不换行.
+  wrap: 换行.
+  wrap-reverse: 换行,第一行在下方.
+```
+##  flex-flow 属性
+```
+flex-flow : 是 flex-direction 属性和 flex-wrap 属性的简写形式, 默认值 row nowrap;
+```
 ## justify-content 属性
 ```
 justify-content: 定义项目水平对齐方式,有五个选项
@@ -43,5 +54,15 @@ flex-basis: 分配多余空间前,项目所占据主轴的空间,默认值为 au
 ```
 flex属性是 flex-grow, flex-shrink 和 flex-basis 的简写，默认值为0 1 auto.后两个属性可选.
   这个属性有两个快捷值: auto (1 1 auto) 和 none (0 0 auto).
+```
+## align-self 属性
+```
+align-self: 属性允许单个项目有与其他项目不一样的对齐方式,可覆盖 align-items 属性,有六个选项.
+  auto(默认值): 继承父元素
+  flex-start: 起点对齐
+  flex-end: 终点对齐
+  center: 居中
+  baseline: 项目的第一行文字的基线对齐
+  stretch: 如果项目未设置高度或设为 auto ,将占满整个容器的高度
 ```
 

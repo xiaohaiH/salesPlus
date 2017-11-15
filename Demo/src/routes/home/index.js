@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Card, Select, Button } from 'antd';
+import { Card, Select, Button, message, Icon, Dropdown, Menu, Input } from 'antd';
 import MainLayout from '../../components/snow/Layout/index';
+import { SelectOptions } from '../../components/snow/appMethod';
 import styled from './index.less';
 /* 富文本 */
 import { Editor } from 'react-draft-wysiwyg';
 import '../../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-const { Option } = Select;
+const { Option } = Select
+const { Item: MenuItem, ItemGroup } = Menu
 
 
 import PropTypes from 'prop-types';
 import { EditorState, Modifier } from 'draft-js';
-
 
 class Home extends Component{
   /* 富文本上传图片后的回调函数 */
@@ -23,8 +24,8 @@ class Home extends Component{
   }
   /* 改变富文本状态 */
   editRichText(){
-    const { dispatch } = this.props;
-    dispatch({ type: 'home/changeRichTextState' })
+    const { dispatch, home: { richTextState: { richTextEditing } } } = this.props;
+    dispatch({ type: 'home/changeRichTextValue', payload: { key: 'richTextEditing', value: !richTextEditing } })
   }
   /**
    * @onContentStateChange: { blocks(Array+Object): [] - 每个对象代表一行, entityMap: {} } 参数详解
@@ -41,43 +42,66 @@ class Home extends Component{
    */
   /* 富文本的值改变后 */
   onContentStateChange(onContentStateChange) {
-    console.log('onContentStateChange:', onContentStateChange)
+    // console.log('onContentStateChange:', onContentStateChange)
+    dispatch({ type: 'home/changeRichTextValue', payload: { key: 'richTextValue', value: onContentStateChange } })
+  }
+  /* 富文本类别改变 */
+  groupChange(value){
+    const { dispatch } = this.props;
+    dispatch({ type: 'home/changeRichTextValue', payload: value })
   }
   /* 提交富文本 */
   submitRichText(){
-
+    const { home: { richTextState: { richTextValue, group, richTextEditing } }, dispatch } = this.props;
+    const flag = richTextValue && richTextValue.blocks.map(item => item.text).filter(value => value);
+    if ((flag instanceof Array && !flag.length) || !flag){
+      message.error('输入值不能为空')
+      return false;
+    };
+    const groupFilter = group.find(ele => ele.selected);
+    let params = {
+      richTextValue,
+      group: groupFilter
+    };
+    dispatch({ type: 'home/changeRichTextValue', payload: { key: 'richTextEditing', value: !richTextEditing } });
+    message.success('发布成功');
+    console.log(params)
+  }
+  /* 搜索框状态 */
+  searchboxState(state){
+    if (state === 'show'){
+      Object.assign(this.searchInput.style, { display: 'block' })
+      setTimeout(() => {
+        Object.assign(this.searchInput.style, { width: '200px' })
+      }, 0);
+    } else {
+      Object.assign(this.searchInput.style, { width: 0 })
+      setTimeout(() => {
+        Object.assign(this.searchInput.style, { display: 'none' })
+      }, 800);
+    }
   }
   
   render(){
-    const { location, home: { richTextEditing } } = this.props;
-    class CustomOption extends Component {
-      static propTypes = {
-        onChange: PropTypes.func,
-        editorState: PropTypes.object,
-      };
-
-      addStar() {
-        const { editorState, onChange } = this.props;
-        const contentState = Modifier.replaceText(
-          editorState.getCurrentContent(),
-          editorState.getSelection(),
-          '⭐',
-          editorState.getCurrentInlineStyle(),
-        );
-        onChange(EditorState.push(editorState, contentState, 'insert-characters'));
-      };
-
-      render() {
-        return (
-          <div onClick={this.addStar}>⭐</div>
-        );
-      }
-    }
-    
+    const { location, home: { richTextState: { richTextEditing, group } } } = this.props;
+    const list = (
+      <Menu>
+        <ItemGroup className={styled.filterGroup} title="显示">
+          <MenuItem className={styled.fdsa}>aabbcc</MenuItem>
+          <MenuItem className={styled.fdsa}>31321</MenuItem>
+        </ItemGroup>
+        <ItemGroup className={styled.filterGroup} title="排序标准">
+          <MenuItem className={styled.fdsa}>fda21</MenuItem>
+          <MenuItem className={styled.fdsa}>aavv21</MenuItem>
+          <MenuItem className={styled.fdsa}>5456fdsa</MenuItem>
+        </ItemGroup>
+      </Menu>
+    );
     return (
       <MainLayout location={location} >
         <div className={styled.box}>
           <div className={styled.messageBox}>
+            {/* 富文本 */}
             {
               richTextEditing ? 
                 <Card className={styled.richTextBox} bodyStyle={{padding: 0}} bordered={false}>
@@ -122,7 +146,6 @@ class Home extends Component{
                       /* 内嵌 */
                       embedded: { className: styled.hide }
                     }}
-                    // toolbarCustomButtons={<CustomOption />}
 
                     /* 设置提及 */
                     mention={{
@@ -137,18 +160,46 @@ class Home extends Component{
                   <div className={styled.richTextSubmitBox}>
                     <div>
                       <span>发表到</span>
-                      <Select defaultValue="公共组">
-                        <Option value="public">公共组</Option>
-                        <Option value="dev">前端组</Option>
-                        <Option value="market">销售组</Option>
+                      <Select onChange={this.groupChange.bind(this)} className={styled.group} defaultValue="公共组">
+                        {
+                          SelectOptions(group)
+                        }
                       </Select>
                     </div>
-                    <Button onClick={this.submitRichText.bind(this)}>发送</Button>
+                    <div className={styled.richTextBtnBox}>
+                      <Button onClick={this.editRichText.bind(this)}>取消</Button>
+                      <Button onClick={this.submitRichText.bind(this)}>发送</Button>
+                    </div>
                   </div>
                 </Card>
               :
                 <div onClick={this.editRichText.bind(this)} className={styled.richTextPlaceholder}>发布消息</div>
             }
+            {/* 主体内容 */}
+            <div className={styled.content}>
+              <div className={styled.filterBox}>
+                <span className={styled.searchBox}>
+                  <Icon onClick={() => this.searchboxState.bind(this)('show')} type="search" className={styled.search} />
+                  <span ref={(input) => this.searchInput = input} className={styled.beginSearch}>
+                    <label>
+                      <Icon type="search" onClick={() => this.searchboxState.bind(this)('none')} className={styled.search} />
+                      <Input type="text" placeholder="请输入摘要,按回车搜索" name="search" id="success" />
+                      <Icon type="close" className={styled.close} />
+                    </label>
+                  </span>
+                </span>
+                <span className={styled.spaceLine}></span>
+                <Dropdown getPopupContainer={() => document.getElementsByClassName(styled.filterConditionBox)[0]} trigger={['click']} overlay={list}>
+                  <p className={styled.filterConditionBox}>
+                    <span className={styled.fixationCondition}>显示</span>
+                    <span className={styled.classes}>类别</span>
+                    <Icon type="down" />
+                  </p>
+                </Dropdown>
+              </div>
+              <section>
+              </section>
+            </div>
           </div>
           <div className={styled.NCharBox}>
             NChar

@@ -193,3 +193,16 @@ export class Linkage extends Component{
     return eleArr
   }
 };
+
+/**
+*	渲染 selected 菜单列表
+*/
+ export const SelectOptions = (arr = []) => {
+     if (!(arr instanceof Array)) {
+       throw new Error('参数输入格式有误');
+     };
+     let result = arr.map(({ key, value, ...attr }, i) => {
+       return (<Option key={key} {...attr}>{value}</Option>)
+     });
+     return result
+ }

@@ -54,6 +54,119 @@
         padding: 0 10px;
         justify-content: space-between;
         align-items: center;
+        .richTextBtnBox{
+          button:nth-child(1){
+            margin-right: 10px;
+          }
+        }
+      }
+      .group{
+        padding-left: 10px;
+      }
+    }
+    /* 主体内容 */
+    .content{
+      /* 过滤条件 */
+      .filterBox{
+        display: flex;
+        align-items: center;
+        margin: 20px 10px;
+        height: 30px;
+        .searchBox{
+          position: relative;
+          cursor: pointer;
+          height: inherit;
+          &::before{
+            content: '';
+            width: 0;
+            height: inherit;
+            display: inline-block;
+            vertical-align: middle;
+          }
+          &:hover{
+            .search{
+              color: #397AB7;
+            }
+          }
+          .search{
+            font-weight: bold;
+            color: #A5A8BD;
+            vertical-align: middle;
+            cursor: pointer;
+          }
+          .beginSearch{
+            width: 0;
+            height: inherit;
+            border-radius: 5px;
+            overflow: hidden;
+            transition: all 1s;
+            background: white;
+            border: 1px solid #d9d9d9;
+            position: absolute;
+            left: 0;
+            top: 0;
+            z-index: 5;
+            display: none;
+            label{
+              display: flex;
+              align-items: center;
+              height: inherit;
+              padding-left: 6px;
+              cursor: text;
+              input{
+                margin: 0;
+                padding: 0 0 0 4px;
+                height: auto;
+                border: none;
+                flex: auto;
+                &:focus{
+                  box-shadow: none;
+                }
+              }
+              .close{
+                background: #D9D9D9;
+                padding: 2px;
+                border-radius: 50%;
+                color: white;
+                font-weight: bold;
+                transform: scale(.7);
+                margin-right: 3px;
+                cursor: pointer;
+                &:hover{
+                  background:red;
+                }
+              }
+            }
+          }
+        }
+        .spaceLine{
+          margin: 0 10px 0 14px;
+          width: 0px;
+          height: 11px;
+          border-right: 1px solid #B06D33;
+          display: inline-block;
+        }
+        .filterConditionBox{
+          cursor: pointer;
+          padding: 4px;
+          padding-right: 8px;
+          border-radius: 5px;
+          border: 1px solid transparent;
+          &:hover{
+            background: #FBFBFB;
+            border-color: #EEEEEE;
+            .fixationCondition{
+              color: #333333;
+            }
+          }
+          .fixationCondition{
+            color: #C1BBCA;
+          }
+          .classes{
+            color: #337AB7;
+            padding: 0 4px;
+          }
+        }
       }
     }
   }
@@ -63,6 +176,17 @@
     height: inherit;
   }
 }
+
 .hide{
   display: none;
+}
+/* 首页筛选条件下拉列表样式 */
+.filterGroup{
+  & > div{
+  color: #777777;
+  }
+  .fdsa{
+    color: #333333;
+    padding-left: 20px;
+  }
 }

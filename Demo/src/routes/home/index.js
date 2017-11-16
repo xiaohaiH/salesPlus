@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
+import { Link } from 'dva/router';
 import { Card, Select, Button, message, Icon, Dropdown, Menu, Input } from 'antd';
 import MainLayout from '../../components/snow/Layout/index';
 import { SelectOptions } from '../../components/snow/appMethod';
@@ -13,6 +14,7 @@ const { Item: MenuItem, ItemGroup } = Menu
 
 import PropTypes from 'prop-types';
 import { EditorState, Modifier } from 'draft-js';
+
 
 class Home extends Component{
   /* 富文本上传图片后的回调函数 */
@@ -70,33 +72,70 @@ class Home extends Component{
   /* 搜索框状态 */
   searchboxState(state){
     if (state === 'show'){
-      Object.assign(this.searchInput.style, { display: 'block' })
+      Object.assign(this.searchInputBox.style, { display: 'block' })
       setTimeout(() => {
-        Object.assign(this.searchInput.style, { width: '200px' })
+        Object.assign(this.searchInputBox.style, { width: '200px' })
       }, 0);
-    } else {
-      Object.assign(this.searchInput.style, { width: 0 })
+    } else if(state === 'none') {
+      Object.assign(this.searchInputBox.style, { width: '22px' })
       setTimeout(() => {
-        Object.assign(this.searchInput.style, { display: 'none' })
-      }, 800);
+        Object.assign(this.searchInputBox.style, { display: 'none' })
+      }, 700);
+    }else{
+      this.searchInput.refs.input.value = '';
     }
+  }
+  /* 生成筛选列表 */
+  menuOptions(arr = []){
+    if (!(arr instanceof Array)) {
+      throw new Error('数据输入有误--89行');
+      return false
+    };
+    return arr.map((item, key) => {
+      if (item.children) {
+        const options = this.menuOptions(item.children)
+        return (
+          <ItemGroup className={styled.filterGroup} key={key} {...item.attr} title={item.value}>{options}</ItemGroup>
+        )
+      };
+      if (item.placeholder.key) {
+        return <MenuItem key={key} {...item.attr}><span className={styled.check}>{item.placeholder.type && <Icon type={item.placeholder.type} />}</span>{item.value}</MenuItem>
+      }
+      return <MenuItem className={styled.fdsa} key={key} {...item.attr}>{item.value}</MenuItem>
+    })
+  }
+  /* 生成消息列表 */
+  messageOption(arr = []){
+    let result = arr.map((item, key) => {
+      return (
+        <figure key={key} className={styled.messagePanel}>
+          <img src="../../assets.jpg" />
+          <figcaption>
+            <p className={styled.title}>
+              <Link to="/">组别</Link>
+              <span className={styled.divideDot}></span>
+              <Link to="/">人员</Link>
+            </p>
+            <div className={styled.details}>
+              aaaabbbcccddd
+                    </div>
+            <div className={styled.leaveWord}>
+              <p>
+                <span className={`${styled.cursor}`}>留言</span>
+                <span className={styled.divideDot}></span>
+                <span className={styled.publishTime}>2017-07-21 15:21:12</span>
+              </p>
+            </div>
+          </figcaption>
+        </figure>
+      )
+    })
+    return result
   }
   
   render(){
-    const { location, home: { richTextState: { richTextEditing, group } } } = this.props;
-    const list = (
-      <Menu>
-        <ItemGroup className={styled.filterGroup} title="显示">
-          <MenuItem className={styled.fdsa}>aabbcc</MenuItem>
-          <MenuItem className={styled.fdsa}>31321</MenuItem>
-        </ItemGroup>
-        <ItemGroup className={styled.filterGroup} title="排序标准">
-          <MenuItem className={styled.fdsa}>fda21</MenuItem>
-          <MenuItem className={styled.fdsa}>aavv21</MenuItem>
-          <MenuItem className={styled.fdsa}>5456fdsa</MenuItem>
-        </ItemGroup>
-      </Menu>
-    );
+    const { location, home: { richTextState: { richTextEditing, group }, filterList } } = this.props;
+
     return (
       <MainLayout location={location} >
         <div className={styled.box}>
@@ -180,16 +219,16 @@ class Home extends Component{
               <div className={styled.filterBox}>
                 <span className={styled.searchBox}>
                   <Icon onClick={() => this.searchboxState.bind(this)('show')} type="search" className={styled.search} />
-                  <span ref={(input) => this.searchInput = input} className={styled.beginSearch}>
+                  <span ref={(input) => this.searchInputBox = input} className={styled.beginSearch}>
                     <label>
                       <Icon type="search" onClick={() => this.searchboxState.bind(this)('none')} className={styled.search} />
-                      <Input type="text" placeholder="请输入摘要,按回车搜索" name="search" id="success" />
-                      <Icon type="close" className={styled.close} />
+                      <Input ref={(input) => this.searchInput = input} type="text" placeholder="请输入摘要,按回车搜索" name="search" id="success" />
+                      <Icon onClick={() => this.searchboxState.bind(this)('clear')} type="close" className={styled.close} />
                     </label>
                   </span>
                 </span>
                 <span className={styled.spaceLine}></span>
-                <Dropdown getPopupContainer={() => document.getElementsByClassName(styled.filterConditionBox)[0]} trigger={['click']} overlay={list}>
+                <Dropdown getPopupContainer={() => document.getElementsByClassName(styled.filterConditionBox)[0]} trigger={['click']} overlay={<Menu>{this.menuOptions(filterList)}</Menu>}>
                   <p className={styled.filterConditionBox}>
                     <span className={styled.fixationCondition}>显示</span>
                     <span className={styled.classes}>类别</span>
@@ -198,6 +237,9 @@ class Home extends Component{
                 </Dropdown>
               </div>
               <section>
+                {
+                  this.messageOption([1,1,1,1,1,1,1,1,1,1,1,1,1])
+                }
               </section>
             </div>
           </div>

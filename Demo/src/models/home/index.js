@@ -1,3 +1,5 @@
+import { HomeFilterList } from '../../components/verify/AllData'
+
 export default {
   namespace: 'home',
   state: {
@@ -22,7 +24,9 @@ export default {
           value: '销售组'
         },
       ]
-    }
+    },
+    /* 筛选框列表 */
+    filterList: {}
   },
   effects: {
     /* 改变富文本提交的类别 */
@@ -33,6 +37,13 @@ export default {
         return item;
       })
       yield put({ type: 'changeRichTextValue', payload: { key: 'group', value: getGroup } })
+    },
+    /* 添加筛选列表 */
+    *addFilterList(action, { put, call }){
+      const { code, data } = yield call(HomeFilterList);
+      if(code === 'success'){
+        yield put({ type: 'getFilterList', payload: data })
+      }
     }
   },
   reducers: {
@@ -46,23 +57,20 @@ export default {
         }
       }
     },
-    /* 改变富文本的值 */
-    // richTextValue({ richTextState: { richTextEditing, ...val }, ...state }, { payload }){
-    //   return {
-    //     richTextValue: payload
-    //   }
-    // },
-    // assignmentGroup({ richTextState: { group, ...val }, ...state }, { payload }){
-    //   return {
-    //     ...state,
-    //     richTextState: {
-    //       ...val,
-    //       group: payload
-    //     }
-    //   }
-    // }
+    getFilterList({ filterList, ...state }, { payload }){
+      return {
+        ...state,
+        filterList: payload
+      }
+    }
   },
   subscriptions: {
-
+    setup({ history, dispatch }){
+      return history.listen(({ pathname }) => {
+        if(pathname === '/home'){
+          dispatch({ type: 'addFilterList'})
+        }
+      })
+    }
   }
 }

@@ -1791,3 +1791,73 @@ export const HeaderModalThreeLinkage = (selectedVal, condition, names) => {
     }
   }
 }
+/**
+*	首页筛选列表的值
+*/
+export const HomeFilterList = () => {
+  return {
+    code: 'success',
+    data: [
+      {
+        value: '显示',
+        key: 'show',
+        children: [
+          {
+            value: '所有更新',
+            key: 'allUpdate',
+            placeholder: {
+              type: 'check',
+              key: true
+            }
+          },
+          {
+            value: '小组',
+            key: 'group',
+            placeholder: {
+              type: '',
+              key: true
+            }
+          },
+          {
+            value: '文件',
+            key: 'file',
+            placeholder: {
+              type: '',
+              key: true
+            }
+          }
+        ]
+      },
+      {
+        value: '排序标准',
+        key: 'sortNorm',
+        children: [
+          {
+            value: '最新帖子',
+            key: 'latestPost',
+            placeholder: {
+              type: 'check',
+              key: true
+            }
+          },
+          {
+            value: '最新回复',
+            key: 'latestReply',
+            placeholder: {
+              type: '',
+              key: true
+            }
+          }
+        ]
+      },
+      {
+        value: '只是想给你看看',
+        key: 'thinkusee',
+        placeholder: {
+          type: '',
+          key: true
+        }
+      }
+    ]
+  }
+}

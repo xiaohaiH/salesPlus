@@ -88,7 +88,7 @@ module.exports = {
     hot: true,
     /* 这里是配置热更新的,需要安装插件(HotModuleReplacementPlugin),官方提供 */
     // historyApiFallback: true, /* 开发单页应用时使用,设置为 true 时,所有跳转将指向 index.html,可以对象的方法自行配置,具体请见官网 */
-    compress: true,
+    // compress: true,
     /* 启用所有服务器的 gzip 压缩 */
     open: true,
     /* 当服务器启动时,自动打开浏览器 */
